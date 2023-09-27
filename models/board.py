@@ -1,147 +1,167 @@
 import random
 
+from models.mountain_range import MountainRange
 from models.cell import Cell
 
 
 class Board:
 
-    def __init__(self, rows, cols, baseRangeDimentions):
+    def __init__(self, rows, cols, base_range_dimentions):
         self.rows = rows
         self.cols = cols
         self.board = self.create_board()
-        self.aliens = {} # Dictionary with Key = position on the board, Value = list of aliens in that position
-        self.baseRangeDimentions = baseRangeDimentions
-        self.green_nave_range = (baseRangeDimentions - 1, baseRangeDimentions - 1)
-        self.blue_nave_range = (rows - 1 - baseRangeDimentions - 1, cols - 1 - baseRangeDimentions - 1)
+        self.aliens = {}  # Dictionary with Key = position on the board, Value = list of aliens in that position
+        self.base_range_dimentions = base_range_dimentions
+        self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
+        self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
 
+    """
+    Creates the initial board full of Cells and
+    default modifiers: MountainRange, Killer, Multiplier
+    that are setted outside the ovnis ranges
+    """
 
-    # Creates the initial board with Cells and Modifiers
     def create_board(self):
         rows = self.rows
         cols = self.cols
-        board = [[Cell() for _ in range(cols)] for _ in range(rows)]  # Creates the board with Cells
+        board = [[Cell() for _ in range(rows)] for _ in range(cols)]  # creates the board with Cells
 
         # Setting the default Modifiers in free random positions
         for i in range(2):
-            r, c = self.get_random_free_pos()
-            board[r][c].modifier = MountainCordon()
+            # setting mountains
+            x, y = self.get_random_free_pos()
+            mountain_list = MountainRange(x, y)
+            # TODO iterar la lista de listas(posiciones) que devuelve un constructor de MountainCordon
+            #   y setearlas como tal
+            #   chequear tambien que las posiciones que me devuelve son validas
+            for m in mountain_list:     # something like this
+                x, y = mountain_list[i][0], mountain_list[i][1]
+                self.get_cell(x, y).modifier = Mountain
 
-            r, c = self.get_random_free_pos()
-            board[r][c].modifier = Killer()
+            # setting killers
+            x, y = self.get_random_free_pos()
+            self.get_cell(x, y).modifier = Killer()
 
-            r, c = self.get_random_free_pos()
-            board[r][c].modifier = Multiplier()
+            # setting multipliers
+            x, y = self.get_random_free_pos()
+            self.get_cell(x, y).modifier = Multiplier()
 
         return board
 
     """
-    Returns a free position of the board which is not
-    a modifier, nor an alterator or is in the nave range 
+    Returns a free position of the board which it is not
+    a modifier, nor an alterator or is in any ovnis ranges
     """
+
     def get_random_free_pos(self):
-        r = random.randint(0, self.rows)
-        c = random.randint(0, self.cols)
-        if not self.is_free_position(r, c):
-            self.get_random_free_pos()
+        x = random.randint(0, self.rows-1)
+        y = random.randint(0, self.cols-1)
+        if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
+            self.get_random_free_pos()  # calls the method again
         else:
-            return r, c
-    
+            return x, y
 
     """
-    Returns True if the position is on the board range, it's not on both
-     nave ranges and it's not a modifier or alterator already.
+    Returns True if 
+    the position is on the board range and 
+    it's not a modifier or an alterator
     """
+
     def is_free_position(self, x, y):
-        if 0 < x < self.rows and 0 < y < self.rows:
-            if (self.board[x][y].modifier is None or
-                    self.board[x][y].alterator is None or
-                        not self.is_pos_on_any_range(x, y)):
-                    return True
+        if 0 <= x < self.rows and 0 <= y < self.cols:
+            if self.get_cell(x, y).modifier is None and self.get_cell(x, y).alterator is None:
+                return True
             else:
                 return False
         else:
             return False
 
+    """
+    Returns True if the position is on any of the ranges of the ovnis
+    """
 
-    # Returns True if the position is on any of the ranges of the spaceships
     def is_pos_on_any_range(self, x, y):
         return self.is_position_in_blue_range(x, y) or self.is_position_in_green_range(x, y)
 
+    """
+    Returns True if the position is on the blue base range
+    """
 
-    
-    # Returns True if the position is on the blue base
     def is_position_in_blue_range(self, x, y):
-        if (x <= self.blue_nave_range[0] and x >= 0 and y <= self.blue_nave_range[1] and y <= 0):
+        if 0 <= x <= self.blue_ovni_range[0] and 0 <= y <= self.blue_ovni_range[1]:
             return True
         else:
             return False
 
+    """
+    Returns True if the position is on the green base range
+    """
 
-    # Returns True if the position is on the blue base
     def is_position_in_green_range(self, x, y):
-        if (x >= self.green_nave_range[0] and x <= self.rows-1 and y >= self.green_nave_range[1] and y <= self.cols-1):
+        if self.green_ovni_range[0] <= x < self.rows and self.green_ovni_range[1] <= y < self.cols:
             return True
         else:
             return False
 
+    """
+    Returns the Cell that's at a specific position
+    """
 
-    # Returns the Cell that's at a specific position
     def get_cell(self, x, y):
         return self.board[x][y]
-        
 
     """ 
     Sets an Alterator on a specific Cell
     only if on that cell there's no Modifier or Alterator already placed there
     """
-    def set_alterator(self, alterator, row, col):
-        if (self.board[row][col].alterator == None and self.board[row][col].modifier == None):
-            self.board[row][col].alterator == alterator
+    #   TODO agregar condicion que no sea el rango de las naves?
+    def set_alterator(self, alterator, x, y):
+        if self.is_free_position(x, y):
+            self.get_cell(x, y).alterator = alterator
         else:
-            raise AttributeError("There's already an Alterator or a Modifier on that cell")
-        
+            raise AttributeError("There's already an Alterator on that cell")
+
     """ 
     Sets a Modifier on a specific Cell only if on that cell 
     there's no Modifier or Alterator already placed there
     """
-    def set_modifier(self, modifier, row, col):
-        if (self.board[row][col].modifier == None and self.board[row][col].modifier == None):
-            self.board[row][col].modifier == modifier
-        else:
-            raise AttributeError("There's already an Alterator or a Modifier on that cell")
-        
 
-    # Method that sets an Alien in a specific position of the board
-    def set_alien(self, row, col, alien):
-        self.board[row][col].alien.append(alien)
-        self.set_alien_in_dictionary(row, col, alien)
-        
-        
-    # Method that sets an alien on the dictionary
+    def set_modifier(self, modifier, x, y):
+        if self.is_free_position(x, y):
+            self.get_cell(x, y).modifier = modifier
+        else:
+            raise AttributeError("There's already a Modifier on that cell")
+
+
+    """
+    Method that sets an alien on the alives aliens dictionary
+    """
     def set_alien_in_dictionary(self, x, y, alien):
         position = (x, y)
         # if there's already aliens at that position
-        if position in self.aliens:  
-            self.aliens[position].append(alien)  # we add it to the list of aliens 
+        if position in self.aliens:
+            self.aliens[position].append(alien)  # we add it to the list of aliens
         else:
-            self.aliens[position] = [alien] # Key doesn't exist, create new list of aliens 
-
+            self.aliens[position] = [alien]  # Key doesn't exist, create new list of aliens
 
     """
-    Updates the board by moving each alien to a free random adjacent position
+    Updates the board by moving each alien to a free random adjoining position
     and solving each fight and/or reproduction that may occur in the new position
     """
+
     def refresh_board(self):
         # first we move all the aliens to the new random position
         for key in self.aliens:
-            listOfAliens = self.aliens[key]  # list of aliens in that key
-            for alien in listOfAliens:
-                self.move_alien(key[0], key[1], alien)
+            list_of_aliens = self.aliens[key]  # list of aliens in that key
+            for alien in list_of_aliens:
+                x = key[0]
+                y = key[1]
+                self.move_alien(x, y, alien)
 
+        # TODO no es parte del board_act??
         # now we update each cell
         for key in self.aliens:
             self.board[key[0]][key[1]].action()
-
 
     """
     Moves an alien to a free random and adjacent position.
@@ -149,57 +169,35 @@ class Board:
     It updates both the dictionary and board.
     """
     def move_alien(self, x, y, alien):
-        flag = False
-        invalid = []    #si la posicion es invalida no la mira mas
-        while flag is False:
-            newPos = Methods.random(4)    # TODO como funciona ese random?
-            if (newPos == 0 and newPos not in invalid):
-                if (self.is_free_position(x-1,y)):  # newPos on the left of current position
-                    self.board[x][y].remove_alien(alien)    # update the board
-                    self.board[x-1][y].add_alien(alien)
-                    # update the dictionary
-                    if ((x,y) in self.aliens and alien in self.aliens[(x,y)]):
-                        self.aliens[(x,y)].remove(alien)  
-                        self.set_alien_in_dictionary(x-1, y, alien)
-                    flag = True
-                else:
-                    invalid.append(newPos)  # the position is invalid
-                
-            if (newPos is 1 and newPos not in invalid): 
-                if (self.is_valid_position(x,y-1)):     # newPos is at the bottom of current position
-                    self.board[x][y].remove_alien(alien)
-                    self.board[x][y-1].add_alien(alien)
-                    # update the dictionary
-                    if ((x,y) in self.aliens and alien in self.aliens[(x,y)]):
-                        self.aliens[(x,y)].remove(alien)  
-                        self.set_alien_in_dictionary(x, y-1, alien)
-                    flag = True
-                else:
-                    invalid.append(newPos)
+        new_x, new_y = self.get_adjoining_valid_pos(x, y)
+        # updates the cell
+        self.get_cell(x, y).remove_alien(alien)
+        self.get_cell(new_x, new_y).add_alien(alien)
 
-            if (newPos is 2 and newPos not in invalid): 
-                if (self.is_valid_position(x+1,y)):    # newPos is on the right of current position
-                    self.board[x][y].remove_alien(alien)
-                    self.board[x+1][y].add_alien(alien)
-                    # update the dictionary
-                    if ((x,y) in self.aliens and alien in self.aliens[(x,y)]):
-                        self.aliens[(x,y)].remove(alien)  
-                        self.set_alien_in_dictionary(x+1, y, alien)
-                    flag = True
-                else:
-                    invalid.append(newPos)
+        # update the dictionary
+        if (x, y) in self.aliens and alien in self.aliens[(x, y)]:
+            self.aliens[(x, y)].remove(alien)
+            self.set_alien_in_dictionary(new_x, new_y, alien)
+        else:
+            raise
 
-            if (newPos is 3 and newPos not in invalid): 
-                if(self.is_valid_position(x,y+1)):     # newPos is at the top of current position
-                    self.board[x][y].remove_alien(alien)
-                    self.board[x][y+1].add_alien(alien)
-                    # update the dictionary
-                    if ((x,y) in self.aliens and alien in self.aliens[(x,y)]):
-                        self.aliens[(x,y)].remove(alien)  
-                        self.set_alien_in_dictionary(x, y+1, alien)
-                    flag = True
-                else:
-                    invalid.append(newPos)
+    """
+    Returns a position that 
+    it is on the board dimension and 
+    it is not a modifier nor an alterator
+    """
 
-
-    
+    def get_adjoining_valid_pos(self, x, y):
+        move_to = random.randint(0, 3)
+        if move_to == 0:    # move to the left
+            new_x, new_y = x-1, y
+        elif move_to == 1:  # move to the right
+            new_x, new_y = x+1, y
+        elif move_to == 2:  # move up
+            new_x, new_y = x, y-1
+        elif move_to == 3:  # move down
+            new_x, new_y = x, y+1
+        if not self.is_free_position(new_x, new_y):
+            self.get_adjoining_valid_pos(x, y)  # calls the method again
+        else:
+            return new_x, new_y

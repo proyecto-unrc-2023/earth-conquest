@@ -1,0 +1,25 @@
+import TOrientation
+
+
+class MountainRange:
+
+    # Each Mountain occupies three cells on the board
+    def __init__(self, initial_position, orientation):
+        self.initial_position = initial_position  # tuple with the initial (x,y) position of the mountain
+        self.orientation = orientation
+        self.mountain = self.create_mountain()   # list of tuples representing the three cells where the mountain is placed
+
+    """
+    Creates a mountain as a list of tuples, each tuple represents
+    a position of each part of the mountain
+    """
+    def create_mountain(self):
+        mountain_aux = [self.initial_position]
+        if self.orientation == TOrientation.VERTICAL:
+            mountain_aux.append(self.initial_position[0], self.initial_position[1] - 1)
+            mountain_aux.append(self.initial_position[0], self.initial_position[1] - 2)
+        else:
+            mountain_aux.append(self.initial_position[0] + 1, self.initial_position[1])
+            mountain_aux.append(self.initial_position[0] + 2, self.initial_position[1])
+
+        return mountain_aux
