@@ -1,6 +1,6 @@
 import random
 
-from models.mountain_range import MountainRange
+from app.backend.models.mountain_range import MountainRange
 from models.cell import Cell
 
 

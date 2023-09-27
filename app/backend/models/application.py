@@ -1,4 +1,4 @@
-from models.game import Game
+from app.backend.models.game import Game
 
 
 class Application:

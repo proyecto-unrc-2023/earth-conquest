@@ -1,8 +1,7 @@
-from flask import url_for
 from behave import *
 
-from models.application import Application
-from models.board import Board
+from app.backend.models.application import Application
+from app.backend.models import Board
 
 
 @given(u'that the application was initiated')

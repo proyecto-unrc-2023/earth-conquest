@@ -1,6 +1,6 @@
 from enum import Enum
 
-from app.models.alien import Alien, Team
+from app.backend.models.alien import Alien, Team
 
 
 class Cell:

@@ -1,8 +1,8 @@
 import random
 
-from models.TGame import TGame
-from models.TTeam import TTeam
-from models.board import Board
+from app.backend.models.TGame import TGame
+from app.backend.models.TTeam import TTeam
+from app.backend.models.board import Board
 
 INIT_CREW = 6
 

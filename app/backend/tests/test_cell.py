@@ -1,7 +1,7 @@
 import pytest
 
-from app.models.alien import Team, Alien
-from app.models.cell import Cell
+from app.backend.models.alien import Team, Alien
+from app.backend.models.cell import Cell
 
 
 @pytest.fixture
