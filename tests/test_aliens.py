@@ -51,5 +51,5 @@ def test_add_eyes(reset_id):
 
 def test_elimination_alien(reset_id):
     alien1 = Alien(Team.BLUE)
-    alien1.add_eyes(10)
-    assert alien1.__eq__(None)
+    eliminated_object = alien1.add_eyes(10)
+    assert eliminated_object is None
