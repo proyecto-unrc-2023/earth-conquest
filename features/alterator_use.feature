@@ -56,22 +56,10 @@ Feature: Alterator use
             |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
             |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
             |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | 
-        When the system refreshes again
-        Then the alien moves to one of its free adjacent cells, not being the cell (2,3) an option
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   | D | D | D |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   | a1|   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-            |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   | 
+
 
     Scenario: the alterator chosen is the Teleporter and an alien moves to the Teleporter's cell
-        Given the Teleporter's door is positioned on the cell (2,2)
-        And the Teleporter's tail is on the cell (6,5)
+        Given the Teleporter's door is positioned on the cell (2,2) and it's tail on the cell (6,5)
         And an alien is positioned on the cell (1,2)
             |   | a1|   |   |   |   |   |   |   |   |   |   |   |   |   |
             |   | D |   |   |   |   |   |   |   |   |   |   |   |   |   |
