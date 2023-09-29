@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class TOrientation(Enum):
+class Orientation(Enum):
     VERTICAL = 1
     HORIZONTAL = 2
