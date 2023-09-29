@@ -96,13 +96,7 @@ class Cell:
         return all_aliens
 
 
-class Alterator(Enum):
-    TELEPORT = 1
-    TRAP = 2
-    DIRECTIONER = 3
 
 
-class Modifier(Enum):
-    KILLER = 1
-    MULTIPLICATOR = 2
-    MOUNTAIN = 3
+
+

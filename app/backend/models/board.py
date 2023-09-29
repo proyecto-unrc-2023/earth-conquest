@@ -1,7 +1,9 @@
 import random
 
+
+from app.backend.models.cell import Cell
+from app.backend.models.modifier import Modifier
 from app.backend.models.mountain_range import MountainRange
-from models.cell import Cell
 
 
 class Board:
@@ -14,7 +16,7 @@ class Board:
         self.base_range_dimentions = base_range_dimentions
         self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
         self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
-
+        # TODO llevar vidas de las naves
     """
     Creates the initial board full of Cells and
     default modifiers: MountainRange, Killer, Multiplier
@@ -36,15 +38,14 @@ class Board:
             #   chequear tambien que las posiciones que me devuelve son validas
             for m in mountain_list:     # something like this
                 x, y = mountain_list[i][0], mountain_list[i][1]
-                self.get_cell(x, y).modifier = Mountain
-
+                self.get_cell(x, y).modifier = mountain_range()
             # setting killers
             x, y = self.get_random_free_pos()
-            self.get_cell(x, y).modifier = Killer()
+            self.get_cell(x, y).modifier = Modifier.KILLER
 
             # setting multipliers
             x, y = self.get_random_free_pos()
-            self.get_cell(x, y).modifier = Multiplier()
+            self.get_cell(x, y).modifier = Modifier.MULTIPLIER
 
         return board
 
@@ -146,11 +147,9 @@ class Board:
 
     """
     Updates the board by moving each alien to a free random adjoining position
-    and solving each fight and/or reproduction that may occur in the new position
     """
 
     def refresh_board(self):
-        # first we move all the aliens to the new random position
         for key in self.aliens:
             list_of_aliens = self.aliens[key]  # list of aliens in that key
             for alien in list_of_aliens:
@@ -158,10 +157,15 @@ class Board:
                 y = key[1]
                 self.move_alien(x, y, alien)
 
-        # TODO no es parte del board_act??
-        # now we update each cell
+    """
+    solving each fight and/or reproduction that may occur in aliens positions
+    """
+    def act_board(self):
         for key in self.aliens:
-            self.board[key[0]][key[1]].action()
+            x = key[0]
+            y = key[1]
+            cell = self.get_cell(x, y)
+            cell.action()
 
     """
     Moves an alien to a free random and adjacent position.
@@ -195,9 +199,13 @@ class Board:
             new_x, new_y = x+1, y
         elif move_to == 2:  # move up
             new_x, new_y = x, y-1
-        elif move_to == 3:  # move down
+        else:  # move down
             new_x, new_y = x, y+1
         if not self.is_free_position(new_x, new_y):
             self.get_adjoining_valid_pos(x, y)  # calls the method again
         else:
             return new_x, new_y
+
+    def set_alien(self, x, y, alien):
+        self.get_cell(x, y).add_alien(alien)
+        self.set_alien_in_dictionary(x, y, alien)
