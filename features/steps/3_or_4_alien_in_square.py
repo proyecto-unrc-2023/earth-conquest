@@ -26,7 +26,6 @@ def step_result(context):
     assert (context.board[5][5].get_alien().team == Team.BLUE)
 
 
-
 @given(u'3 aliens on the blue team, in the positions (5,5)')
 def step_impl(context):
     context.alien1 = Alien(Team.BLUE)
