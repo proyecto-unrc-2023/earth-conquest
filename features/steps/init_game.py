@@ -1,7 +1,7 @@
 from behave import *
 
 from app.backend.models.application import Application
-from app.backend.models import Board
+from app.backend.models.board import Board
 
 
 @given(u'that the application was initiated')

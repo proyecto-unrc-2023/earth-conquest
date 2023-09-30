@@ -1,5 +1,8 @@
 from behave import *
 
+from app.backend.models.alien import Alien
+from app.backend.models.board import Board
+
 
 @given(u'the aliens has been generated')
 def step_impl(context):
@@ -43,4 +46,3 @@ def step_then_in_square(context):
     elif isinstance(context.modifier, Killer):
         aliens = context.board.get_position(2, 2).get_aliens()
         assert aliens[0] is None
-3

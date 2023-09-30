@@ -10,6 +10,6 @@ def create_app(config_name="development"):
 
     @app.route("/")
     def hello_world():
-        return "<p>Hello, World!</p>"
+        return "<p>This is EARTH CONQUEST!</p>"
 
     return app

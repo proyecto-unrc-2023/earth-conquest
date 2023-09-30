@@ -1,5 +1,7 @@
 from enum import Enum
 
+from app.backend.models.team import Team
+
 
 class Alien:
     _id_counter = 0
@@ -21,8 +23,3 @@ class Alien:
             del self
         else:
             self.eyes += new_eyes
-
-
-class Team(Enum):
-    BLUE = 1
-    GREEN = 2

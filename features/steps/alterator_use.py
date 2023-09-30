@@ -1,5 +1,9 @@
 from behave import *
 
+from app.backend.models.application import Application
+from app.backend.models.game_enum import TGame
+
+
 @given(u'the game has started')
 def step_impl(context):
     context.app = Application()

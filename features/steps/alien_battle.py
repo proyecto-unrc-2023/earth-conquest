@@ -1,6 +1,8 @@
 from behave import *
 
-from app.models.alien import Alien, Team
+from app.backend.models.alien import Alien
+from app.backend.models.board import Board
+from app.backend.models.team import Team
 
 
 # TODO agregar los :d o equivalente a cada parametro

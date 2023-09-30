@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class TTeam(Enum):
+class Team(Enum):
     BLUE = 1
     GREEN = 2
