@@ -1,4 +1,4 @@
-import orientation
+from app.backend.models import orientation
 
 
 class MountainRange:
@@ -15,11 +15,11 @@ class MountainRange:
     """
     def create_mountain(self):
         mountain_aux = [self.initial_position]
-        if self.orientation == TOrientation.VERTICAL:
-            mountain_aux.append(self.initial_position[0], self.initial_position[1] - 1)
-            mountain_aux.append(self.initial_position[0], self.initial_position[1] - 2)
+        if self.orientation == orientation.Orientation.VERTICAL:
+            mountain_aux.append((self.initial_position[0], self.initial_position[1] - 1))
+            mountain_aux.append((self.initial_position[0], self.initial_position[1] - 2))
         else:
-            mountain_aux.append(self.initial_position[0] + 1, self.initial_position[1])
-            mountain_aux.append(self.initial_position[0] + 2, self.initial_position[1])
+            mountain_aux.append((self.initial_position[0] + 1, self.initial_position[1]))
+            mountain_aux.append((self.initial_position[0] + 2, self.initial_position[1]))
 
         return mountain_aux

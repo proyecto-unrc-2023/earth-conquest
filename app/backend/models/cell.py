@@ -1,5 +1,6 @@
 from enum import Enum
 
+from app.backend.models import modifier
 from app.backend.models.alien import Alien, Team
 
 
@@ -95,8 +96,13 @@ class Cell:
         all_aliens = [aliens_team1, aliens_team2]
         return all_aliens
 
-
-
-
-
-
+    def __str__(self):
+        if self.aliens:
+            return 'A'
+        if self.modifier is modifier.Modifier.MOUNTAIN:
+            return 'M'
+        if self.modifier is modifier.Modifier.KILLER:
+            return 'K'
+        if self.modifier is modifier.Modifier.MULTIPLIER:
+            return '2'
+        return ' '

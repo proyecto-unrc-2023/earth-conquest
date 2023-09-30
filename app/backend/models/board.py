@@ -12,11 +12,12 @@ class Board:
     def __init__(self, rows, cols, base_range_dimentions):
         self.rows = rows
         self.cols = cols
-        self.board = self.create_board()
         self.aliens = {}  # Dictionary with Key = position on the board, Value = list of aliens in that position
         self.base_range_dimentions = base_range_dimentions
         self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
         self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
+        self.board = []
+        self.create_board()
         # TODO llevar vidas de las naves
 
     """
@@ -27,7 +28,7 @@ class Board:
     def create_board(self):
         rows = self.rows
         cols = self.cols
-        board = [[Cell() for _ in range(rows)] for _ in range(cols)]  # creates the board with Cells
+        self.board = [[Cell() for _ in range(cols)] for _ in range(rows)]
 
         # Setting the default Modifiers in free random positions
         for i in range(2):
@@ -43,33 +44,29 @@ class Board:
             x, y = self.get_random_free_pos()
             self.get_cell(x, y).modifier = Modifier.MULTIPLIER
 
-        return board
-
-
     """
     This method sets a mountain range on the board with a random orientation and on a random, 
     valid and free position of the board.
     """
+
     def set_mountain_range_on_board(self):
-        # setting the mountain range
-        x, y = self.get_random_free_pos()
-        initial_position = (x,y)
-        orientations = [Orientation.VERTICAL, Orientation.HORIZONTAL]
-        mountain_list = MountainRange(initial_position, random.choice(orientations))
-            
-        are_all_pos_valid = True
+        while True:
+            x, y = self.get_random_free_pos()
+            initial_position = (x, y)
+            orientations = [Orientation.VERTICAL, Orientation.HORIZONTAL]
+            mountain_list = MountainRange(initial_position, random.choice(orientations))
 
-        # Iterate through the mountain range and check if all its positions are free and valid
-        for pos in mountain_list:
-            if not self.is_free_position(pos[0], pos[1]):
-                are_all_pos_valid = False
-                self.set_mountain_range_on_board()
+            are_all_pos_valid = True
 
-        if are_all_pos_valid == True:   
-            for pos in mountain_list:
-                self.set_modifier(Modifier.MOUNTAIN_RANGE, pos[0], pos[1])
-            
+            for pos in mountain_list.mountain:
+                if not self.is_free_position(pos[0], pos[1]):
+                    are_all_pos_valid = False
+                    break
 
+            if are_all_pos_valid:
+                for pos in mountain_list.mountain:
+                    self.set_modifier(Modifier.MOUNTAIN, pos[0], pos[1])
+                break
 
     """
     Returns a free position of the board which it is not
@@ -79,7 +76,7 @@ class Board:
         x = random.randint(0, self.rows-1)
         y = random.randint(0, self.cols-1)
         if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
-            self.get_random_free_pos()  # calls the method again
+            return self.get_random_free_pos()  # calls the method again
         else:
             return x, y
 
@@ -110,7 +107,7 @@ class Board:
     Returns True if the position is on the blue base range
     """
     def is_position_in_blue_range(self, x, y):
-        if 0 <= x <= self.blue_ovni_range[0] and 0 <= y <= self.blue_ovni_range[1]:
+        if self.blue_ovni_range[0] <= x < self.rows and self.blue_ovni_range[1] <= y < self.cols:
             return True
         else:
             return False
@@ -120,7 +117,7 @@ class Board:
     Returns True if the position is on the green base range
     """
     def is_position_in_green_range(self, x, y):
-        if self.green_ovni_range[0] <= x < self.rows and self.green_ovni_range[1] <= y < self.cols:
+        if 0 <= x <= self.green_ovni_range[0] and 0 <= y <= self.green_ovni_range[1]:
             return True
         else:
             return False
@@ -244,3 +241,22 @@ class Board:
     def set_alien(self, x, y, alien):
         self.get_cell(x, y).add_alien(alien)
         self.set_alien_in_dictionary(x, y, alien)
+
+    @staticmethod
+    def _row_to_string(row):
+        res = ''
+        columns = len(row)
+        for col in range(columns):
+            res += row[col].__str__()
+            if col < columns - 1:
+                res += '|'
+        return res
+
+    def __str__(self):
+        res = ''
+        for row_num in range(self.rows):
+            res += Board._row_to_string(self.board[row_num])
+            if row_num < self.rows - 1:
+                res += '\n'
+        return res
+
