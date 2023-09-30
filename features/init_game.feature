@@ -4,19 +4,10 @@ Feature: Game initialization
 		And player Juan has created a game as blue player
 		And player Jose has joined the game as green player
 		And the game board dimension is 10 by 15
+        And two randomly orientated mountains ranges are randomly generated on free positions
+		And two killers are randomly generated on free positions
+        And two multipliers are randomly generated on free positions
 		And the game has not started
 		When the game is started
-		And a vertical mountain obstacle is randomly generated on (4,1)
-		And a horizontal mountain obstacle is randomly generated on (4,11)
-		Then both players should see the following board
-          | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14|
-          |GB |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   | M | M | M |   |   |   |   |   |   |   | M |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   | M |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   | M |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-          |   |   |   |   |   |   |   |   |   |   |   |   |   |   | BB|
+        Then the placed modifiers end up positioned outside of each team's area
+        Then six aliens of each team are setted on their respectively areas
