@@ -87,6 +87,7 @@ class Board:
             return x, y
     """
 
+    # TODO la uso en el test move_alien
     """
     Checks if a given position is within the board's perimeter
     """
@@ -100,7 +101,7 @@ class Board:
     it's not a modifier or an alterator
     """
     def is_free_position(self, x, y):
-        if 0 <= x < self.rows and 0 <= y < self.cols:
+        if self.is_within_board_range(x,y):
             if self.get_cell(x, y).modifier is None and self.get_cell(x, y).alterator is None:
                 return True
             else:
@@ -137,7 +138,7 @@ class Board:
             return False
 
 
-    """ TODO 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    """
     Returns the Cell that's at a specific position
     """
     def get_cell(self, x, y):
@@ -186,7 +187,7 @@ class Board:
 
 
 
-    """ TODO 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    """ 
     Updates the board by moving each alien to a free random adjoining position
     """
     def refresh_board(self):
@@ -267,7 +268,6 @@ class Board:
                 return False
         else:
             return False
-
 
 
 

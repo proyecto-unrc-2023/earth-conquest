@@ -21,27 +21,12 @@ def step_an_alien_is_on_the_cell(context, row, column):
     context.game.board.set_alien(row, column, context.alien)
 
 
-
-# TODO: con is_free_position checkeo ademas que no haya modificador y necesito que no haya una montana nomas
-#@given("the cell {end_row:d} {end_column:d} is both free of mountains and within the board's perimeter")
-#def step_check_cell_is_valid(context, end_row, end_column):
-  #context.game.board.is_free_position(end_row,end_column)
-#  context.game.board.get_cell(end_row,end_column).alterator != Modifier.MOUNTAIN 
-#  context.game.board.is_within_board_range(end_row, end_column)
-
-
 @when("the game refreshes")
 def step_game_refreshes(context):
   context.game.refresh_board()
 
 
-# TODO tuve que crear el metodo get_alien_position()
-#@then("the alien moves to the cell {end_row:d} {end_column:d}")
-#def step_alien_in_expected_position(context, end_row, end_column):
-#  assert(context.game.board.get_alien_position(context.alien) == (end_row, end_column))
-
-
-@then("the alien moves to one of its adjoining, free of mountains and withing the board's perimeter cell")
+@then("the alien moves to one of its adjoining, free of mountains and within the board's perimeter cell")
 def step_alien_moves_to_adjoining_cell(context):
   new_pos = context.game.board.get_alien_position(context.alien)
   assert(is_position_adjacent(context.alien_position,new_pos))
