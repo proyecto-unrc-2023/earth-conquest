@@ -59,7 +59,7 @@ class Board:
             are_all_pos_valid = True
 
             for pos in mountain_list.mountain:
-                if not self.is_free_position(pos[0], pos[1]):
+                if not self.is_free_position(pos[0], pos[1]) or self.is_pos_on_any_range(pos[0], pos[1]):
                     are_all_pos_valid = False
                     break
 
@@ -259,4 +259,3 @@ class Board:
             if row_num < self.rows - 1:
                 res += '\n'
         return res
-
