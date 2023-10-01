@@ -85,8 +85,3 @@ class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
             print("Invalid cell selected. Can not place a alterator there")
 
     # TODO implementar cuando un alien pisa el rango de las naves
-
-
-game = Game(10, 15)
-game.set_initial_crew()
-print(game.board)
