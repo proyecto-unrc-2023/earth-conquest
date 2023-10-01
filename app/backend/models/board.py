@@ -78,14 +78,8 @@ class Board:
             y = random.randint(0, self.cols - 1)
             if self.is_free_position(x, y) and not self.is_pos_on_any_range(x, y):
                 return x, y
-        """
-        x = random.randint(0, self.rows-1)
-        y = random.randint(0, self.cols-1)
-        if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
-            return self.get_random_free_pos()  # calls the method again
-        else:
-            return x, y
-    """
+            
+            
 
     # TODO la uso en el test move_alien
     """
@@ -142,20 +136,19 @@ class Board:
     Returns the Cell that's at a specific position
     """
     def get_cell(self, x, y):
-        #return self.board[x][y]
         if 0 <= x < self.rows and 0 <= y < self.cols:
             return self.board[x][y]
         else:
             raise IndexError("Index out of range")
     
 
+    #   TODO agregar condicion que no sea el rango de las naves?
+    # TODO si es un direccionador necesito recibir la direccion, si es un teleporter necesito 
+    # recibir la posicion inicial y decidir si la salida va a ser fija o la decide el usuario
     """ 
     Sets an Alterator on a specific Cell
     only if on that cell there's no Modifier or Alterator already placed there
     """
-    #   TODO agregar condicion que no sea el rango de las naves?
-    # TODO si es un direccionador necesito recibir la direccion, si es un teleporter necesito 
-    # recibir la posicion inicial y decidir si la salida va a ser fija o la decide el usuario
     def set_alterator(self, alterator, x, y):
         if self.is_free_position(x, y):
             self.get_cell(x, y).alterator = alterator
