@@ -2,6 +2,7 @@ import pytest
 
 from app.backend.models.alien import Alien
 from app.backend.models.cell import Cell
+from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
 
 
@@ -196,3 +197,21 @@ def test_action_cell_with_aliens_of_the_same_team(add_two_same_team_aliens_in_a_
     cell.action()
     assert len(cell.aliens) is 1
     assert cell.aliens[0].eyes is 2
+
+
+def test_cell_with_modifier_killer():
+    cell = Cell()
+    cell.modifier = Modifier.KILLER
+    cell.add_alien(Team.GREEN)
+    cell.action()
+    assert cell.aliens == []
+
+
+def test_cell_with_modifier_multiplier():
+    cell = Cell()
+    cell.modifier = Modifier.MULTIPLIER
+    alien = Alien(Team.GREEN)
+    cell.add_alien(alien)
+    cell.action()
+    assert cell.aliens[0] == alien
+    assert cell.aliens[1] == alien

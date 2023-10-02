@@ -1,6 +1,5 @@
 import random
-
-
+from app.backend.models.alterator import Alterator
 from app.backend.models.cell import Cell
 from app.backend.models.modifier import Modifier
 from app.backend.models.orientation import Orientation
@@ -44,11 +43,11 @@ class Board:
             x, y = self.get_random_free_pos()
             self.get_cell(x, y).modifier = Modifier.MULTIPLIER
 
+
     """
     This method sets a mountain range on the board with a random orientation and on a random, 
     valid and free position of the board.
     """
-
     def set_mountain_range_on_board(self):
         while True:
             x, y = self.get_random_free_pos()
@@ -57,7 +56,8 @@ class Board:
             mountain_list = MountainRange(initial_position, random.choice(orientations))
 
             are_all_pos_valid = True
-
+            
+            
             for pos in mountain_list.mountain:
                 if not self.is_free_position(pos[0], pos[1]) or self.is_pos_on_any_range(pos[0], pos[1]):
                     are_all_pos_valid = False
@@ -65,7 +65,7 @@ class Board:
 
             if are_all_pos_valid:
                 for pos in mountain_list.mountain:
-                    self.set_modifier(Modifier.MOUNTAIN, pos[0], pos[1])
+                    self.set_modifier(Modifier.MOUNTAIN_RANGE, pos[0], pos[1])
                 break
 
     """
@@ -73,12 +73,20 @@ class Board:
     a modifier, nor an alterator or is in any ovnis ranges
     """
     def get_random_free_pos(self):
-        x = random.randint(0, self.rows-1)
-        y = random.randint(0, self.cols-1)
-        if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
-            return self.get_random_free_pos()  # calls the method again
-        else:
-            return x, y
+        while True: # se ejecuta infinitamente hasta que se le isntruccione salir del bucle
+            x = random.randint(0, self.rows - 1)
+            y = random.randint(0, self.cols - 1)
+            if self.is_free_position(x, y) and not self.is_pos_on_any_range(x, y):
+                return x, y
+            
+            
+
+    # TODO la uso en el test move_alien
+    """
+    Checks if a given position is within the board's perimeter
+    """
+    def is_within_board_range(self, x, y):
+        return 0 <= x < self.rows and 0 <= y < self.cols
 
 
     """
@@ -87,13 +95,14 @@ class Board:
     it's not a modifier or an alterator
     """
     def is_free_position(self, x, y):
-        if 0 <= x < self.rows and 0 <= y < self.cols:
+        if self.is_within_board_range(x,y):
             if self.get_cell(x, y).modifier is None and self.get_cell(x, y).alterator is None:
                 return True
             else:
                 return False
         else:
             return False
+
 
 
     """
@@ -127,16 +136,19 @@ class Board:
     Returns the Cell that's at a specific position
     """
     def get_cell(self, x, y):
-        return self.board[x][y]
+        if 0 <= x < self.rows and 0 <= y < self.cols:
+            return self.board[x][y]
+        else:
+            raise IndexError("Index out of range")
+    
 
-
+    #   TODO agregar condicion que no sea el rango de las naves?
+    # TODO si es un direccionador necesito recibir la direccion, si es un teleporter necesito 
+    # recibir la posicion inicial y decidir si la salida va a ser fija o la decide el usuario
     """ 
     Sets an Alterator on a specific Cell
     only if on that cell there's no Modifier or Alterator already placed there
     """
-    #   TODO agregar condicion que no sea el rango de las naves?
-    # TODO si es un direccionador necesito recibir la direccion, si es un teleporter necesito 
-    # recibir la posicion inicial y decidir si la salida va a ser fija o la decide el usuario
     def set_alterator(self, alterator, x, y):
         if self.is_free_position(x, y):
             self.get_cell(x, y).alterator = alterator
@@ -167,16 +179,19 @@ class Board:
             self.aliens[position] = [alien]  # Key doesn't exist, create new list of aliens
 
 
-    """
+
+    """ 
     Updates the board by moving each alien to a free random adjoining position
     """
     def refresh_board(self):
-        for key in self.aliens:
-            list_of_aliens = self.aliens[key]  # list of aliens in that key
+        aliens_copy = dict(self.aliens)     # dictionary copy
+        for key in aliens_copy:
+            list_of_aliens = aliens_copy[key]  # list of aliens in that key
             for alien in list_of_aliens:
                 x = key[0]
                 y = key[1]
                 self.move_alien(x, y, alien)
+
 
 
     """ 
@@ -217,7 +232,6 @@ class Board:
     it is on the board dimension and 
     it is not a modifier nor an alterator
     """
-
     def get_adjoining_valid_pos(self, x, y):
         move_to = random.randint(0, 3)
         if move_to == 0:    # move to the left
@@ -228,10 +242,26 @@ class Board:
             new_x, new_y = x, y-1
         else:  # move down
             new_x, new_y = x, y+1
-        if not self.is_free_position(new_x, new_y):
-            self.get_adjoining_valid_pos(x, y)  # calls the method again
+        if not self.can_alien_move_to_pos(new_x, new_y):
+           return self.get_adjoining_valid_pos(x, y)  # calls the method again
         else:
             return new_x, new_y
+
+
+    """
+    Given a position, return True if the alien can move there.
+    The alien can move there if the position is within the board's perimeter and
+    there's no mountain there.
+    """
+    def can_alien_move_to_pos(self, x, y):
+        if 0 <= x < self.rows and 0 <= y < self.cols:
+            if self.get_cell(x, y).alterator is not Modifier.MOUNTAIN_RANGE:
+                return True
+            else:
+                return False
+        else:
+            return False
+
 
 
     """
@@ -241,6 +271,19 @@ class Board:
     def set_alien(self, x, y, alien):
         self.get_cell(x, y).add_alien(alien)
         self.set_alien_in_dictionary(x, y, alien)
+
+
+    """
+    Given an alien, this method returns the position were the alien is placed
+    on the board. The position is returned in the form of a tuple.
+    """
+    def get_alien_position(self, alien):
+        for key in self.aliens:
+            list_of_aliens = self.aliens[key]  # list of aliens in that key
+            for alien_aux in list_of_aliens:
+                if alien_aux == alien:
+                    return (key[0], key[1])
+
 
     @staticmethod
     def _row_to_string(row):
