@@ -9,13 +9,13 @@ INIT_CREW = 6
 
 
 class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
-
+    
     def __init__(self):
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
         self.board = Board(10, 15, 4)
-
+    
     def __init__(self, rows: int, cols: int):
         self.status = TGame.NOT_STARTED
         self.green_player = None

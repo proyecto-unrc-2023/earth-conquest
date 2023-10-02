@@ -1,19 +1,16 @@
-Feature: Move an alien
+Feature: Alien Movement on the Board
 
 Background:
-  Given the game is on
+  Given a new game has started
 
-  Scenario Outline: alien moves to an adjoining position only
-    Given an alien is in cell <row> <column>
-    And the game is in refresh mode
-    And the cell <end_row> <end_column> is not a mountain
-    And the cell <end_row> <end_column> is within range
-    When the alien moves to <end_row> <end_column>
-    Then the alien should be in cell <end_row> <end_column>
+  Scenario Outline: alien moves to an adjoining position when the game refreshes
+    Given an alien is on the cell <row> <column>
+    When the game refreshes
+    Then the alien moves to one of its adjoining, free of mountains and within the board's perimeter cell
 
     Examples:
-        | row    | column | number | end_row | end_column |
-        |     5  |      4 |      0 |       4 |          4 |
-        |     3  |      4 |      1 |       3 |          3 |
-        |     1  |      2 |      2 |       2 |          2 |
-        |     2  |      2 |      3 |       2 |          3 |
+        | row    | column | 
+        |     2  |      2 |
+        |     5  |      5 | 
+        |     3  |      7 |
+        |     8  |      0 |
