@@ -4,6 +4,7 @@ Background:
   Given a new game has started
 
 
+
   Scenario: 3 aliens with one eyes, are on the cell (5,5), 2 of them are on the blue team and the other is green team
     Given two blue aliens and one green alien in the position (5,5) 
     When the cell acts

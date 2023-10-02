@@ -10,6 +10,7 @@ from app.backend.models.team import Team
 def step_game_started(context):
    context.game = Game(10, 15)
 
+
 @given(u'two blue aliens and one green alien in the position (5,5)')
 def step_set_alien(context):
     context.alien1 = Alien(Team.BLUE)
