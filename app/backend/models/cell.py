@@ -99,7 +99,7 @@ class Cell:
     def __str__(self):
         if self.aliens:
             return 'A'
-        if self.modifier is modifier.Modifier.MOUNTAIN:
+        if self.modifier is modifier.Modifier.MOUNTAIN_RANGE:
             return 'M'
         if self.modifier is modifier.Modifier.KILLER:
             return 'K'

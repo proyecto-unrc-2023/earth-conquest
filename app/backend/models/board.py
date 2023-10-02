@@ -65,7 +65,7 @@ class Board:
 
             if are_all_pos_valid:
                 for pos in mountain_list.mountain:
-                    self.set_modifier(Modifier.MOUNTAIN, pos[0], pos[1])
+                    self.set_modifier(Modifier.MOUNTAIN_RANGE, pos[0], pos[1])
                 break
 
     """

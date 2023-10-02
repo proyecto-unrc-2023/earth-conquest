@@ -25,9 +25,3 @@ def test_set_alien(init_a_10_15_3_board):
     board.set_alien(5, 5, alien)
     assert board.aliens.__len__() == 1
     assert board.aliens[(5, 5)] == [alien]
-
-
-
-
-
-
