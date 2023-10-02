@@ -255,7 +255,7 @@ class Board:
     """
     def can_alien_move_to_pos(self, x, y):
         if 0 <= x < self.rows and 0 <= y < self.cols:
-            if self.get_cell(x, y).alterator is not Modifier.MOUNTAIN:
+            if self.get_cell(x, y).alterator is not Modifier.MOUNTAIN_RANGE:
                 return True
             else:
                 return False

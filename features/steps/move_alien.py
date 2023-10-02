@@ -30,7 +30,7 @@ def step_game_refreshes(context):
 def step_alien_moves_to_adjoining_cell(context):
   new_pos = context.game.board.get_alien_position(context.alien)
   assert(is_position_adjacent(context.alien_position,new_pos))
-  assert(context.game.board.get_cell(new_pos[0],new_pos[1]).alterator != Modifier.MOUNTAIN)
+  assert(context.game.board.get_cell(new_pos[0],new_pos[1]).alterator != Modifier.MOUNTAIN_RANGE)
   assert(context.game.board.is_within_board_range(new_pos[0], new_pos[0])) 
 
 
