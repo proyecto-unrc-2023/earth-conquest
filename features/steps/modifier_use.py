@@ -1,48 +1,51 @@
-from behave import *
+from behave import given, then, when
 
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board
+from app.backend.models.modifier import Modifier
+from app.backend.models.team import Team
 
 
-@given(u'the aliens has been generated')
+@given(u'the aliens has been generate in the board')
 def step_impl(context):
-    context.alien = Alien(1, 'BLUE')
-
-
-@given(u'there is an aliens in the square (2,2)')
-def step_impl(context):
-    board = Board()
-    board[2][2].get_cell().get_aliens().add(context.alien)
+    board = Board(10, 10, 2)
+    context.alien = Alien(Team.BLUE)
+    board.set_alien(2, 2, context.alien)
     context.board = board
 
 
-@given(u'aliens arrive at a \'{modifier}\'')
-def step_given(context, modifier):
-    if isinstance(modifier, Cloner):
-        context.modifier = Cloner()
-    elif isinstance(modifier, Killer):
-        context.modifier = Killer()
+@given(u'there is an "{modifier}" in the square (2, 2)')
+def step_impl(context, modifier):
+    if context.board.is_free_position(2, 2):
+        if modifier == "multiplier":
+            context.board.set_modifier(Modifier.MULTIPLIER, 2, 2)
+        else:
+            context.board.set_modifier(Modifier.KILLER, 2, 2)
+    else:
+        if modifier == "multiplier":
+            context.board.board[2][2].modifier = Modifier.MULTIPLIER
+        else:
+            context.board.board[2][2].modifier = Modifier.KILLER
 
 
-@when(u'\'{modifier}\' activates')
-def step_when(context):
-    context.modifier.activate()
+@given(u'alien arrive at the square (2, 2)')
+def step_impl(context):
+    alien = Alien(Team.BLUE)
+    context.alien = alien
+    context.board.set_alien(2, 2, alien)
 
 
-@then(u'\'{action_modifier}\'')
-def step_then(context):
-    if isinstance(context.modifier, Cloner):
-        context.modifier.clone(context.alien)
-    elif isinstance(context.modifier, Killer):
-        context.modifier.kill(context.alien)
+@when(u'"{modifier}" activates')
+def step_when(context, modifier):
+    cell = context.board.get_cell(2, 2)
+    cell.action()
+    context.board.board[2][2] = cell
 
 
-@then(u'in the square \'{result_modifier}\'')
-def step_then_in_square(context):
-    if isinstance(context.modifier, Cloner):
-        aliens = context.board.get_position(2, 2).get_aliens()
-        assert aliens[0].__eq__(context.alien)
-        assert isinstance(aliens[1], Alien)
-    elif isinstance(context.modifier, Killer):
-        aliens = context.board.get_position(2, 2).get_aliens()
-        assert aliens[0] is None
+@then(u'"{action_modifier}" and "{result_modifier}"')
+def step_when(context, action_modifier, result_modifier):
+    cell = context.board.get_cell(2, 2)
+    if cell.modifier == Modifier.MULTIPLIER:
+        assert len(cell.aliens) == 2
+    else:
+        assert not cell.aliens
