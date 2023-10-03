@@ -9,6 +9,3 @@ class Application:
     def new_game(self, team):
         pass
         # self.game = Game(team)
-
-
-game = Game(10, 15)

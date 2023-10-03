@@ -9,18 +9,12 @@ INIT_CREW = 6
 
 
 class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
-    
+
     def __init__(self):
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
-        self.board = Board(10, 15, 4)
-    
-    def __init__(self, rows: int, cols: int):
-        self.status = TGame.NOT_STARTED
-        self.green_player = None
-        self.blue_player = None
-        self.board = Board(rows, cols, 4)
+        self.board = Board()
 
     def join_as_green(self):
         if self.green_player is not None:
@@ -31,6 +25,13 @@ class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
         self.blue_player = team.Team.BLUE
+
+    def set_board_dimentions(self, rows, cols):
+        self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
+
+    def start_game(self):
+        self.set_initial_crew()
+        self.status = TGame.STARTED
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
