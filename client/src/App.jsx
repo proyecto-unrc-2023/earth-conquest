@@ -8,28 +8,40 @@ import {modifier} from "./constants.js"
 console.log(data.grid)
 
 //futuro componente celda
-const Cell = ({ updateBoard, aliens, row, col, elem, cell_modifier }) => {
+const Cell = ({ updateBoard, aliens, row, col, elem, cell_modifier, cell_alterator}) => {
   const handleClick = () => {
     updateBoard(row, col, alien);
   }
 
-  const checkContent = () => {
-    if (aliens.length !== 0) {
-      return("Alien")
-      
-    } else if (cell_modifier === "modifier.mountain"){
-      return("Modifier")
-    }
-  }
-
-  return (
-    <div onClick={handleClick} className="cell" row={row} col={col}>
-      <{
-        checkContent
-      }/>
+  return(
+   <div className="cell" row={row} col={col}>
+      { 
+        <Content aliens={aliens} cell_modifier={cell_modifier} cell_alterator={cell_alterator}/>
+      }
     </div>
   )
 
+}
+
+const Content = ({ aliens, cell_modifier, cell_alterator}) =>{
+
+  if (aliens.length !== 0) {
+    return(
+    <Alien/>
+    )
+    
+  } 
+  if (cell_modifier === "modifier.mountain"){
+    return(
+    <Modifier/>
+    )
+  }
+
+  if (cell_alterator === null){
+    return(
+    <Alterator/>
+    )
+  }
 }
 
 const Alien = () => {
@@ -43,6 +55,13 @@ const Modifier = () => {
   //const className = `${hayAlien ? 'alien' : ''}`
   return (
     <div> M </div>
+  )
+}
+
+const Alterator = () => {
+  //const className = `${hayAlien ? 'alien' : ''}`
+  return (
+    <div> A </div>
   )
 }
 
@@ -75,6 +94,7 @@ function App() {
                     row={i}
                     aliens={cell.aliens}
                     cell_modifier={cell.modifier}
+                    cell_alterator={cell.alterator}
                     updateBoard={updateBoard}>
                       {cell}
                   </Cell>
