@@ -8,7 +8,7 @@ from app.backend.models.mountain_range import MountainRange
 
 class Board:
 
-    def __init__(self, rows, cols, base_range_dimentions):
+    def __init__(self, rows=10, cols=15, base_range_dimentions=4):
         self.rows = rows
         self.cols = cols
         self.aliens = {}  # Dictionary with Key = position on the board, Value = list of aliens in that position
