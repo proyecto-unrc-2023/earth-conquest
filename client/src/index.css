@@ -39,7 +39,7 @@ h1 {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   width: fit-content;
   text-align: center;
 }
@@ -58,6 +58,13 @@ h1 {
   height: 15px;
   background-color: red;
   border-radius: 50%;
+}
+
+.modifier{
+  width: 15px;
+  height: 15px;
+  background-color: rgb(42, 58, 165);
+  border-radius: 20%;
 }
 
 

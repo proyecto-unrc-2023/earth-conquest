@@ -1,102 +1,35 @@
 import { useState } from "react"
+import data from "./data.json"
+import {modifier} from "./constants.js"
 
-//enums
-const alterator = {
-  teleport: 'teleport',
-  trap: 'trap',
-  directioner: 'directioner'
-}
-const modifier = {
-  killer: 'killer',
-  multiplier: 'multiplier',
-  mountain: 'mountain'
-}
 
-const team = {
-  blue: 'blue',
-  green: 'green'
-}
 
-const gameStatus = {
-  started: 'started',
-  notStarted: 'notStarted'
-}
-
-//Json posible de board
-const boardJson = [
-  [
-    {
-      aliens: [
-        {
-          id: null,
-          eyes: 1,
-          team: team.blue,
-        }
-      ],
-      alterator: alterator.trap,
-      modifier: modifier.mountain,
-    },
-    {
-      aliens: [
-        {
-          id: null,
-          eyes: 1,
-          team: team.blue,
-        }
-      ],
-      alterator: alterator.trap,
-      modifier: modifier.mountain,
-    },
-    {
-      aliens: [
-        {
-          id: null,
-          eyes: 1,
-          team: team.blue,
-        }
-      ],
-      alterator: alterator.trap,
-      modifier: modifier.mountain,
-    },
-    {
-      aliens: [
-        {
-          id: null,
-          eyes: 1,
-          team: team.blue,
-        }
-      ],
-      alterator: alterator.trap,
-      modifier: modifier.mountain,
-    },
-    {
-      aliens: [
-        {
-          id: null,
-          eyes: 1,
-          team: team.blue,
-        }
-      ],
-      alterator: alterator.trap,
-      modifier: modifier.mountain,
-    }
-  ]
-]
-console.log(boardJson)
+//leer el js 
+console.log(data.grid)
 
 //futuro componente celda
-const Cell = ({ updateBoard, alien, row, col, elem }) => {
+const Cell = ({ updateBoard, aliens, row, col, elem, cell_modifier }) => {
   const handleClick = () => {
-    updateBoard(row, col, elem);
+    updateBoard(row, col, alien);
+  }
+
+  const checkContent = () => {
+    if (aliens.length !== 0) {
+      return("Alien")
+      
+    } else if (cell_modifier === "modifier.mountain"){
+      return("Modifier")
+    }
   }
 
   return (
     <div onClick={handleClick} className="cell" row={row} col={col}>
-      {elem && 
-        <Alien/>
-      }
+      <{
+        checkContent
+      }/>
     </div>
   )
+
 }
 
 const Alien = () => {
@@ -106,17 +39,20 @@ const Alien = () => {
   )
 }
 
+const Modifier = () => {
+  //const className = `${hayAlien ? 'alien' : ''}`
+  return (
+    <div> M </div>
+  )
+}
+
 function App() {
 
   const [winner, setWinner] = useState(null)
   const [alien, setAlien] = useState(false)
   
-  const grid = [Array(3).fill(false),
-                Array(3).fill(false),
-                Array(3).fill(false)]
   
-  const [board, setBoard] = useState(grid)
-  console.log(board)
+  const [board, setBoard] = useState(data.grid)
   
   const updateBoard = (row, col, elem) => {
     const newBoard = [...board]
@@ -137,7 +73,8 @@ function App() {
                     key={j}
                     col={j}
                     row={i}
-                    elem={board[i][j]}
+                    aliens={cell.aliens}
+                    cell_modifier={cell.modifier}
                     updateBoard={updateBoard}>
                       {cell}
                   </Cell>
@@ -148,6 +85,7 @@ function App() {
         }
       </section>
       <section className="modifiers">
+        <h1>Modificadores</h1>
         
       </section>
     </>
