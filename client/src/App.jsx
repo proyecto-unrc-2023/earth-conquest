@@ -1,5 +1,89 @@
 import { useState } from "react"
 
+//enums
+const alterator = {
+  teleport: 'teleport',
+  trap: 'trap',
+  directioner: 'directioner'
+}
+const modifier = {
+  killer: 'killer',
+  multiplier: 'multiplier',
+  mountain: 'mountain'
+}
+
+const team = {
+  blue: 'blue',
+  green: 'green'
+}
+
+const gameStatus = {
+  started: 'started',
+  notStarted: 'notStarted'
+}
+
+//Json posible de board
+const boardJson = [
+  [
+    {
+      aliens: [
+        {
+          id: null,
+          eyes: 1,
+          team: team.blue,
+        }
+      ],
+      alterator: alterator.trap,
+      modifier: modifier.mountain,
+    },
+    {
+      aliens: [
+        {
+          id: null,
+          eyes: 1,
+          team: team.blue,
+        }
+      ],
+      alterator: alterator.trap,
+      modifier: modifier.mountain,
+    },
+    {
+      aliens: [
+        {
+          id: null,
+          eyes: 1,
+          team: team.blue,
+        }
+      ],
+      alterator: alterator.trap,
+      modifier: modifier.mountain,
+    },
+    {
+      aliens: [
+        {
+          id: null,
+          eyes: 1,
+          team: team.blue,
+        }
+      ],
+      alterator: alterator.trap,
+      modifier: modifier.mountain,
+    },
+    {
+      aliens: [
+        {
+          id: null,
+          eyes: 1,
+          team: team.blue,
+        }
+      ],
+      alterator: alterator.trap,
+      modifier: modifier.mountain,
+    }
+  ]
+]
+console.log(boardJson)
+
 //futuro componente celda
 const Cell = ({ updateBoard, alien, row, col, elem }) => {
   const handleClick = () => {
@@ -35,10 +119,8 @@ function App() {
   console.log(board)
   
   const updateBoard = (row, col, elem) => {
-    console.log(board)
     const newBoard = [...board]
     newBoard[row][col] = !elem
-    console.log(board)
     setBoard(newBoard)
   }
 
