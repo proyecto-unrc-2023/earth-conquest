@@ -64,9 +64,27 @@ h1 {
   width: 15px;
   height: 15px;
   background-color: rgb(42, 58, 165);
-  border-radius: 20%;
+  border-radius: 30%;
 }
 
+
+.alterator{
+  width: 15px;
+  height: 15px;
+  background-color: rgba(205, 215, 5, 0.92);
+  border-radius: 10%;
+}
+
+.alter{
+  display: grid;
+  place-items: center;
+  color: rgb(0, 0, 0);
+  width: 30px;
+  height: 30px;
+  background-color: rgba(4, 224, 176, 0.72);
+  border-radius: 10%;
+  cursor: pointer;
+}
 
 button {
   border-radius: 8px;

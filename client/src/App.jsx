@@ -1,12 +1,11 @@
 import { useState } from "react"
 import data from "./data.json"
-import unitario from "./unitario.json"
 import {alterator, modifier} from "./constants.js"
 
 
 
 //leer el js 
-console.log(unitario.grid)
+console.log(data.grid)
 
 //futuro componente celda
 const Cell = ({ updateBoard, row, col, children}) => {
@@ -129,7 +128,7 @@ function App() {
       
       
       <section className="modifiers">
-        <h1>Modificadores</h1> 
+        <h1>Alteradores</h1> 
         <div className="alter"> <Alterator setAlter={setAlter} /> </div>
         
       </section>
