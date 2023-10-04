@@ -13,15 +13,15 @@ def step_set_alien(context):
     context.alien3 = Alien(Team.GREEN)
    
     board = Board(10, 15, 5)
-    board.set_alien(5,5,context.alien1) 
-    board.set_alien(5,5,context.alien2)
-    board.set_alien(5,5,context.alien3)
+    board.set_alien(5,5, context.alien1)
+    board.set_alien(5,5, context.alien2)
+    board.set_alien(5,5, context.alien3)
     context.board = board
 
 
 @when(u'the cell acts')
 def step_action(context):
-    context.board.get_cell(5,5).action()
+    context.board.get_cell(5, 5).action()
 
 
 @then(u'there is a blue alien left, with one eye')

@@ -45,18 +45,9 @@ def step_impl(context):
     context.game.act_board()
 
 
-@when(u'the system refreshes again')
-def step_impl(context):
-    context.game.refresh_board()
-
-
 @then(u'the alien moves to the cell (2,3)')
 def step_impl(context):
     context.game.move_alien(context.alien, (2,3))
-
-@when(u'the system refreshes again')
-def step_impl(context):
-    context.game.refresh_board()
 
 @then(u'the alien moves to the cell (2,4)')
 def step_impl(context):

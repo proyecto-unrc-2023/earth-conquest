@@ -5,7 +5,7 @@ Background:
 
   Scenario Outline: alien moves to an adjoining position when the game refreshes
     Given an alien is on the cell <row> <column>
-    When the game refreshes
+    When the board refreshes
     Then the alien moves to one of its adjoining, free of mountains and within the board's perimeter cell
 
     Examples:
