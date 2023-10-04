@@ -22,8 +22,15 @@ Feature: Game initialization
 		And there are 6 living one-eyed aliens per team
 		And the aliens are set on their respective areas
 
-	Scenario: Dimensions of the areas
-		When the board dimension is set in 25 by 45
-		Then the dimensions of the ovnis ranges should be 11 by 11
-		And the range of the "green" ovni should be 10 10
-		And the range of the "blue" ovni should be 14 34
+	Scenario Outline: Dimensions of the areas
+		When the board dimension is set in <rows> by <cols>
+		Then the dimensions of the ovnis ranges should be <range> by <range>
+		And the range of the "green" ovni should be <green_row> <green_col>
+		And the range of the "blue" ovni should be <blue_row> <blue_col>
+
+		Examples:
+		  | rows | cols | range | green_row | green_col | blue_row | blue_col |
+		  |  25  |  45  |   11  |    10     |     10    |     14   |    34    |
+		  |  10  |  15  |   4   |    3      |     3     |     6    |    11    |
+		  |  4   |  6   |   2   |    1      |     1     |     2    |    4     |
+
