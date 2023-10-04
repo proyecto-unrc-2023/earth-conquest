@@ -2,6 +2,7 @@ from enum import Enum
 
 from app.backend.models import modifier
 from app.backend.models.alien import Alien, Team
+from app.backend.models.alterator import Alterator
 from app.backend.models.modifier import Modifier
 
 
@@ -75,6 +76,8 @@ class Cell:
             self.reproduce()
         if self.modifier == Modifier.MULTIPLIER or self.modifier == Modifier.KILLER:
             self.action_modifier()
+        if self.alterator == Alterator.TRAP:
+            self.action_alterator()
 
 
     def sum_aliens_eyes(self):
@@ -111,8 +114,14 @@ class Cell:
             return '2'
         return ' '
 
+
     def action_modifier(self):
         if self.modifier == Modifier.KILLER:
             self.aliens = []
         elif self.modifier == Modifier.MULTIPLIER:
             self.aliens.append(self.aliens[0])
+
+
+    def action_alterator(self):
+        if self.alterator == Alterator.TRAP:
+            self.aliens = []
