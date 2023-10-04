@@ -68,8 +68,7 @@ const Alterator = ({setAlter}) => {
   }
 
   return (
-    //<div className="alterator"/>
-    <div onClick={agregarAlt}> A </div>
+    <div className="alterator" onClick={agregarAlt}> A </div>
   )
 }
 
@@ -80,7 +79,7 @@ function App() {
 
   const [winner, setWinner] = useState(null)
   const [alien, setAlien] = useState(false)
-  const [alter, setAlterator] = useState(null)
+  const [alterator, setAlterator] = useState(null)
   
   //setea el board con la grilla del JSON
   const [board, setBoard] = useState(data.grid)
@@ -90,19 +89,21 @@ function App() {
   }
 
   const updateBoard = (row, col) => {
-    if (alter === null) return
+    if (alterator === null) return
     if (board[row][col].alterator !== null) return
+    if (board[row][col].modifier !== null ) return
     const newBoard = [...board]
-    const newAlterator = alter
+  
     
-    newBoard[row][col].alterator =  newAlterator
+    newBoard[row][col].alterator =  alterator
     
     setBoard(newBoard)
+    console.log(board)
   }
 
   
 
-  console.log(alter)
+  console.log(alterator)
   return (
     <>
       <h1>Earth conquest</h1>
