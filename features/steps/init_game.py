@@ -44,7 +44,7 @@ def step_impl(context):
 
 @when(u'the board dimension is set in {rows:d} by {cols:d}')
 def step_impl(context, rows, cols):
-    context.game.set_board_dimentions(rows, cols)
+    context.game.set_board_dimensions(rows, cols)
 
 
 @then(u'the game status is set on start mode')
@@ -144,5 +144,5 @@ def step_impl(context, range):
 @then(u'the range of the "{team}" ovni should be {row:d} {col:d}')
 def step_impl(context, team, row, col):
     board = context.game.board
-    assert (row, col) == board.green_ovni_range if team == "green" else board.blue_ovni_range
+    assert board.green_ovni_range if team == "green" else board.blue_ovni_range == (row, col)
 

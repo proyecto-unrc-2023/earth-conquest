@@ -20,7 +20,7 @@ def step_an_alien_is_on_the_cell(context, row, column):
     context.game.board.set_alien(row, column, context.alien)
 
 
-@when("the game refreshes")
+@when("the board refreshes")
 def step_game_refreshes(context):
     context.game.refresh_board()
 

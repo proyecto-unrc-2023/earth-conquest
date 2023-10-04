@@ -32,20 +32,10 @@ def step_impl(context):
     context.game.board.remove_alien_from_board(5, 2, context.alien)
 
 
-@when(u'the system refreshes')
-def step_impl(context):
-    context.game.refresh_board()
-
-
 @then(u'the alien moves to the cell (6,3)')
 def step_impl(context):
     new_pos = context.game.board.get_alien_position(context.alien)
     assert(new_pos == (6,3))
-
-
-@when(u'the system refreshes again')
-def step_impl(context):
-    context.game.refresh_board()
 
 
 @then(u'the alien moves to the cell (6,4)')
