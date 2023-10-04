@@ -394,3 +394,52 @@ class Board:
             if row_num < self.rows - 1:
                 res += '\n'
         return res
+
+    @staticmethod
+    def from_string(board_str):
+        rows = board_str.split('\n')
+        n_rows = len(rows)
+        if n_rows < 1:
+            raise ValueError(f'Invalid number of rows: {n_rows}')
+        matrix = [row.split('|') for row in rows]
+        n_cols = len(matrix[0])
+        if n_cols < 1:
+            raise ValueError(f'Invalid number of columns: {n_cols}')
+        for row in range(n_rows):
+            row_len = len(matrix[row])
+            if row_len != n_cols:
+                raise ValueError(f'Invalid number of columns: {row_len}')
+
+        return Board._from_string_matrix(n_rows, n_cols, matrix)
+
+    @staticmethod
+    def _from_string_matrix(rows, cols, matrix):
+        new_board = Board(rows, cols)
+        for row in range(rows):
+            for col in range(cols):
+                board_cell = new_board.get_cell(row, col)
+                board_cell.modifier = None
+                board_cell.alterator = None
+
+                curr_cell = matrix[row][col]
+                new_board.put_cell(row, col, Cell.from_string(curr_cell))
+        return new_board
+
+    def put_cell(self, row, column, cell):
+        self.board[row][column] = cell
+
+
+
+
+board = Board.from_string(
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   | G |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   | D | D | D |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
+                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   ')
+print(board)

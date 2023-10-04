@@ -1,6 +1,6 @@
 from enum import Enum
 
-from app.backend.models import modifier
+from app.backend.models import modifier, directioner
 from app.backend.models.alien import Alien, Team
 from app.backend.models.alterator import Alterator
 from app.backend.models.modifier import Modifier
@@ -112,7 +112,40 @@ class Cell:
             return 'K'
         if self.modifier is modifier.Modifier.MULTIPLIER:
             return '2'
+        if self.alterator is directioner:
+            return 'D'
         return ' '
+
+    @staticmethod
+    def from_string(cell_str):
+        if cell_str == '   ':
+            return Cell()
+        elif cell_str == ' B ':
+            cell = Cell()
+            cell.add_alien(Team.BLUE)
+            return cell
+        elif cell_str == ' G ':
+            cell = Cell()
+            cell.add_alien(Team.GREEN)
+            return cell
+        elif cell_str == ' D ':
+            cell = Cell()
+            cell.alterator = directioner
+            return cell
+        elif cell_str == ' M ':
+            cell = Cell()
+            cell.modifier = Modifier.MOUNTAIN_RANGE
+            return cell
+        elif cell_str == ' K ':
+            cell = Cell()
+            cell.modifier = Modifier.KILLER
+            return cell
+        elif cell_str == ' 2 ':
+            cell = Cell()
+            cell.modifier = Modifier.MULTIPLIER
+            return cell
+        else:
+            raise ValueError(f'Invalid cell string: {cell_str}')
 
 
     def action_modifier(self):
