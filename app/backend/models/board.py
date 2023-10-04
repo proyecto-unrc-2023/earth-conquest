@@ -42,14 +42,10 @@ class Board:
             # setting a killer
             x, y = self.get_random_free_pos()
             self.get_cell(x, y).modifier = Modifier.KILLER
-            print(f"KILLER at position ({x}, {y}).")
 
             # setting a multiplier
             x, y = self.get_random_free_pos()
             self.get_cell(x, y).modifier = Modifier.MULTIPLIER
-            print(f"MULITPLIER at position ({x}, {y}).")
-
-        print(self.__str__())
 
 
     """
@@ -74,7 +70,6 @@ class Board:
             if are_all_pos_valid:
                 for pos in mountain_list.mountain:
                     self.set_modifier(Modifier.MOUNTAIN_RANGE, pos[0], pos[1])
-                    print(f"MOUNTAIN at position ({pos[0]}, {pos[1]}).")
                 break
 
     """
