@@ -1,9 +1,13 @@
 import random
+from app.backend.models.alien import Alien
 from app.backend.models.alterator import Alterator
 from app.backend.models.cell import Cell
+from app.backend.models.direction import Direction
 from app.backend.models.modifier import Modifier
 from app.backend.models.orientation import Orientation
 from app.backend.models.mountain_range import MountainRange
+from app.backend.models.directioner import Directioner
+from app.backend.models.teleporter import Teleporter
 
 
 class Board:
@@ -18,6 +22,7 @@ class Board:
         self.board = []
         self.create_board()
         # TODO llevar vidas de las naves
+
 
     """
     Creates the initial board full of Cells and
@@ -68,6 +73,7 @@ class Board:
                     self.set_modifier(Modifier.MOUNTAIN_RANGE, pos[0], pos[1])
                 break
 
+
     """
     Returns a free position of the board which it is not
     a modifier, nor an alterator or is in any ovnis ranges
@@ -81,7 +87,6 @@ class Board:
             
             
 
-    # TODO la uso en el test move_alien
     """
     Checks if a given position is within the board's perimeter
     """
@@ -142,18 +147,56 @@ class Board:
             raise IndexError("Index out of range")
     
 
-    #   TODO agregar condicion que no sea el rango de las naves?
-    # TODO si es un direccionador necesito recibir la direccion, si es un teleporter necesito 
-    # recibir la posicion inicial y decidir si la salida va a ser fija o la decide el usuario
+
     """ 
-    Sets an Alterator on a specific Cell
+    Sets a Trap on a specific Cell
     only if on that cell there's no Modifier or Alterator already placed there
     """
-    def set_alterator(self, alterator, x, y):
-        if self.is_free_position(x, y):
-            self.get_cell(x, y).alterator = alterator
+    def set_trap(self, x, y):
+        if self.is_free_position(x,y) and not self.is_pos_on_any_range(x,y):
+            self.get_cell(x,y).alterator = Alterator.TRAP
         else:
-            raise AttributeError("There's already an Alterator on that cell")
+            raise ValueError("Position isn't free or valid")
+
+
+
+    """ 
+    Sets a Teleporter on two specific Cells (door and exit) only if on those 
+    cells there's no Modifier or Alterator already placed there.
+    """
+    def set_teleporter(self, teleporter):
+        door_row, door_col = teleporter.door_pos
+        exit_row, exit_col = teleporter.exit_pos
+
+        if (
+            self.is_free_position(door_row, door_col)
+            and self.is_free_position(exit_row, exit_col)
+            and not self.is_pos_on_any_range(door_row, door_col)
+            and not self.is_pos_on_any_range(exit_row, exit_col)
+        ):
+            self.get_cell(door_row, door_col).alterator = teleporter
+            self.get_cell(exit_row, exit_col).alterator = teleporter
+        else:
+            raise ValueError("Positions of the teleporter aren't free or valid")
+
+
+    """ 
+    Sets a Directioner on three specific Cells only if on those 
+    cells there's no Modifier or Alterator already placed there.
+    """
+    def set_directioner(self, directioner):
+        positions = [
+            directioner.init_pos,
+            directioner.snd_pos,
+            directioner.thrd_pos,
+        ]
+
+        for row, col in positions:
+            if not (self.is_free_position(row, col) and not self.is_pos_on_any_range(row, col)):
+                raise ValueError("Positions of the directioner aren't free or valid")
+
+        for row, col in positions:
+            self.get_cell(row, col).alterator = directioner
 
 
     """ 
@@ -179,7 +222,6 @@ class Board:
             self.aliens[position] = [alien]  # Key doesn't exist, create new list of aliens
 
 
-
     """ 
     Updates the board by moving each alien to a free random adjoining position
     """
@@ -193,11 +235,10 @@ class Board:
                 self.move_alien(x, y, alien)
 
 
-
     """ 
     This method solves each fight and/or reproduction that may occur between aliens 
     on each cell. 
-    It also solves any action that may occur between aliens and Alterators/Modifiers. # TODO alterators
+    It also solves any action that may occur between aliens and Alterators/Modifiers.
     """
     def act_board(self):
         for key in self.aliens:
@@ -214,7 +255,15 @@ class Board:
     It updates both the dictionary and board.
     """
     def move_alien(self, x, y, alien):
-        new_x, new_y = self.get_adjoining_valid_pos(x, y)
+        alterator = self.get_cell(x,y).alterator    # alterator on the cell
+        if isinstance(alterator,Teleporter):
+            new_x, new_y = self.new_alien_pos_with_teleporter(x, y, alterator)
+        elif isinstance(alterator,Directioner):
+            new_x, new_y = self.new_alien_pos_with_directioner(x, y, alterator)
+        else:   
+            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+
+    
         # updates the cell
         self.get_cell(x, y).remove_alien(alien)
         self.get_cell(new_x, new_y).add_alien(alien)
@@ -225,6 +274,35 @@ class Board:
             self.set_alien_in_dictionary(new_x, new_y, alien)
         else:
             raise ValueError("The key provided does not have the alien on its list of aliens")
+
+
+
+    """
+    An alien is placed at a (x,y) position where a teleporter is placed.
+    This method returns the position where the alien has to move to.
+    """
+    def new_alien_pos_with_teleporter(self, x, y, teleporter):
+        if x == teleporter.door_pos[0] and y == teleporter.door_pos[1]:
+            return teleporter.exit_pos
+        else:
+            return self.get_adjoining_valid_pos(x, y)
+
+
+    """
+    An alien is placed at a (x,y) position where a directioner is placed.
+    This method returns the position where the alien has to move to.
+    """
+    def new_alien_pos_with_directioner(self, x, y, directioner):
+        if x == directioner.init_pos[0] and y == directioner.init_pos[1]:
+            return directioner.snd_pos
+        if x == directioner.snd_pos[0] and y == directioner.snd_pos[1]:
+            return directioner.thrd_pos
+        if x == directioner.thrd_pos[0] and y == directioner.thrd_pos[1]:
+            if self.can_alien_move_to_pos(directioner.last_pos[0], directioner.last_pos[1]):
+                return directioner.last_pos
+        else:
+            return self.get_adjoining_valid_pos(x, y)
+
 
 
     """
@@ -249,16 +327,16 @@ class Board:
 
 
     """
-    Given a position, return True if the alien can move there.
+    Given a position, returns True if the alien can move there.
     The alien can move there if the position is within the board's perimeter and
     there's no mountain there.
     """
     def can_alien_move_to_pos(self, x, y):
         if 0 <= x < self.rows and 0 <= y < self.cols:
-            if self.get_cell(x, y).alterator is not Modifier.MOUNTAIN_RANGE:
-                return True
-            else:
+            if self.get_cell(x, y).modifier is Modifier.MOUNTAIN_RANGE:
                 return False
+            else:
+                return True
         else:
             return False
 
@@ -273,6 +351,20 @@ class Board:
         self.set_alien_in_dictionary(x, y, alien)
 
 
+
+    # TODO lo use para el test de alterator use
+    """
+    Methods that removes an alien on the board at a given position.
+    The dictionary of aliens is updated.
+    """
+    def remove_alien_from_board(self, x, y, alien):
+        if isinstance(alien, Alien):
+            self.get_cell(x, y).remove_alien(alien)
+            self.aliens[(x,y)].remove(alien)
+        else:
+            raise ValueError(f'you can only remove aliens')
+
+
     """
     Given an alien, this method returns the position were the alien is placed
     on the board. The position is returned in the form of a tuple.
@@ -281,7 +373,7 @@ class Board:
         for key in self.aliens:
             list_of_aliens = self.aliens[key]  # list of aliens in that key
             for alien_aux in list_of_aliens:
-                if alien_aux == alien:
+                if alien_aux is alien:
                     return (key[0], key[1])
 
 

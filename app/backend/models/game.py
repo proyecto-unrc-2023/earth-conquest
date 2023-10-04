@@ -81,10 +81,10 @@ class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
         self.blue_player = None
         self.green_player = None
 
-    def set_alterator(self, x, y, alterator):
+    def set_alterator(self, alterator, x, y):
         try:
-            self.board.set_alterator(x, y, alterator)
+            self.board.set_alterator(alterator, x, y)
         except Exception:
-            print("Invalid cell selected. Can not place a alterator there")
+            print("Invalid cell selected. Can not place an alterator there")
 
     # TODO implementar cuando un alien pisa el rango de las naves
