@@ -26,7 +26,9 @@ class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
             raise Exception("Player blue is already taken")
         self.blue_player = team.Team.BLUE
 
-    def set_board_dimentions(self, rows, cols):
+    def set_board_dimensions(self, rows, cols):
+        if rows < 4 or rows > 25 or cols < 6 or cols > 45:
+            raise Exception("Invalid dimensions. Minimum board is 4x6. Max is 25x45")
         self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
