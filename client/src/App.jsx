@@ -12,7 +12,7 @@ const Cell = ({ updateBoard, row, col, children}) => {
   const handleClick = () => {
     updateBoard(row, col);
   }
- 
+
   return(
    <div onClick={handleClick} className="cell" row={row} col={col}>
       { 
@@ -26,31 +26,35 @@ const Cell = ({ updateBoard, row, col, children}) => {
 
 
 
-const Content = ({aliens, cell_modifier, cell_alterator}) =>{
-
-  if (aliens.length !== 0) {
-    return(
-     <Alien/>
-    )
-  }
-   
-  if (cell_modifier === "modifier.mountain"){
-    return(
-      <Modifier/>
-    )
-  }
-
-  if (cell_alterator !== null){
-    return(
-      <Alterator/>
-    )
-  }
+const Content = ({ aliens, cell_modifier, cell_alterator}) =>{
+  return (
+    <>
+      {
+        cell_modifier &&
+        <Modifier/>   
+      }
+      {          
+       aliens.map((alien, index) => {
+        return(
+          <Alien key={index}></Alien>
+        )
+       })
+      }
+      { cell_alterator && <Alterator/> }
+  </>
+  )
 }
+
 
 const Alien = () => {
   //const className = `${hayAlien ? 'alien' : ''}`
   return (
-    <div className="alien"/>
+    <>
+      <div className="alien">
+        <div className="oneEye"/>
+        <div className="oneEye"/>
+      </div>
+    </>
   )
 }
 
