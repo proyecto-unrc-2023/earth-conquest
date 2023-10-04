@@ -69,8 +69,11 @@ h1 {
 
 
 .alterator{
-  width: 15px;
-  height: 15px;
+  display: grid;
+  align-items: center;
+  color: black;
+  width: 25px;
+  height: 25px;
   background-color: rgba(205, 215, 5, 0.92);
   border-radius: 10%;
 }
