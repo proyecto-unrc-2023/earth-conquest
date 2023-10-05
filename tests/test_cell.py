@@ -111,17 +111,19 @@ def test_sum_aliens_eyes(add_two_same_team_aliens_in_a_cell):
 
 def test_two_aliens_reproduction(add_two_same_team_aliens_in_a_cell):
     cell = add_two_same_team_aliens_in_a_cell
+    cell.aliens[0].eyes = 2
+    cell.aliens[1].eyes = 4
     cell.reproduce()
-    assert len(cell.aliens) is 1
-    assert cell.aliens[0].eyes is 2
+    assert len(cell.aliens) is 0
 
 
 def test_three_aliens_reproduction(add_two_same_team_aliens_in_a_cell):
     cell = add_two_same_team_aliens_in_a_cell
     cell.add_alien(Team.BLUE)
+    cell.aliens[2].add_eyes(2)
     cell.reproduce()
     assert len(cell.aliens) is 1
-    assert cell.aliens[0].eyes is 3
+    assert cell.aliens[0].eyes is 5
 
 
 def test_one_alien_reproduction():

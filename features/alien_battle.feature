@@ -7,7 +7,7 @@ Feature: Alien Battle
     And alien 2 is from team GREEN
 
   Scenario Outline: Alien battle with <alien1_eyes> eyes vs <alien2_eyes> eyes
-    Given the number of eyes of alien 1 is <alien1_eyes>
+    Given that the number of eyes of alien 1 is <alien1_eyes>
     And the number of eyes of alien 2 is <alien2_eyes>
     When they fight
     Then alien 1 "<outcome1>"

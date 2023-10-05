@@ -427,19 +427,3 @@ class Board:
 
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
-
-
-
-
-board = Board.from_string(
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   | G |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   | D | D | D |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   \n'\
-                        '   |   |   |   |   |   |   |   |   |   |   |   |   |   |   ')
-print(board)

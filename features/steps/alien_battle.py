@@ -29,7 +29,7 @@ def step_impl(context):
     assert context.board.get_cell(2, 2).aliens[1].team == Team.GREEN
 
 
-@given(u'the number of eyes of alien 1 is {alien1_eyes:d}')
+@given(u'that the number of eyes of alien 1 is {alien1_eyes:d}')
 def step_impl(context, alien1_eyes):
     cell = context.board.get_cell(2, 2)
     alien = cell.aliens[0]

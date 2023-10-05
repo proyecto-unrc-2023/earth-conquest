@@ -52,7 +52,7 @@ class Cell:
             self.aliens = []
             alien = Alien(team)
             alien.add_eyes(eyes - 1)
-            if not (eyes - 1 > 5):
+            if not (eyes > 5):
                 self.add_alien(alien)
         else:
             raise ValueError(f'reproduce is only with same teams aliens and more one alien')
@@ -78,7 +78,6 @@ class Cell:
             self.action_modifier()
         if self.alterator == Alterator.TRAP:
             self.action_alterator()
-
 
     def sum_aliens_eyes(self):
         eyes = 0
@@ -147,13 +146,11 @@ class Cell:
         else:
             raise ValueError(f'Invalid cell string: {cell_str}')
 
-
     def action_modifier(self):
         if self.modifier == Modifier.KILLER:
             self.aliens = []
         elif self.modifier == Modifier.MULTIPLIER:
             self.aliens.append(self.aliens[0])
-
 
     def action_alterator(self):
         if self.alterator == Alterator.TRAP:
