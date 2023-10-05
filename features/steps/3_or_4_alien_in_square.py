@@ -2,7 +2,6 @@ from behave import *
 
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board
-from app.backend.models.game import Game
 from app.backend.models.team import Team
 
 
@@ -13,9 +12,12 @@ def step_set_alien(context):
     context.alien3 = Alien(Team.GREEN)
    
     board = Board(10, 15, 5)
-    board.set_alien(5,5, context.alien1)
-    board.set_alien(5,5, context.alien2)
-    board.set_alien(5,5, context.alien3)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = None
+
+    board.get_cell(5, 5).add_alien(context.alien1)
+    board.get_cell(5, 5).add_alien(context.alien2)
+    board.get_cell(5, 5).add_alien(context.alien3)
     context.board = board
 
 
@@ -37,9 +39,12 @@ def step_impl(context):
     context.alien3 = Alien(Team.BLUE)
    
     board = Board(10, 15, 5)
-    board.set_alien(5,5,context.alien1) 
-    board.set_alien(5,5,context.alien2)
-    board.set_alien(5,5,context.alien3)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = None
+
+    board.get_cell(5, 5).add_alien(context.alien1)
+    board.get_cell(5, 5).add_alien(context.alien2)
+    board.get_cell(5, 5).add_alien(context.alien3)
     context.board = board
 
 
@@ -57,10 +62,13 @@ def step_impl(context):
     context.alien4 = Alien(Team.GREEN)
    
     board = Board(10, 15, 5)
-    board.set_alien(5,5,context.alien1) 
-    board.set_alien(5,5,context.alien2)
-    board.set_alien(5,5,context.alien3)
-    board.set_alien(5,5,context.alien4)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = None
+
+    board.get_cell(5, 5).add_alien(context.alien1)
+    board.get_cell(5, 5).add_alien(context.alien2)
+    board.get_cell(5, 5).add_alien(context.alien3)
+    board.get_cell(5, 5).add_alien(context.alien4)
     context.board = board
 
 
@@ -78,6 +86,9 @@ def step_impl(context):
     context.alien4 = Alien(Team.GREEN)
    
     board = Board(10, 15, 5)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = None
+
     board.set_alien(5,5,context.alien1) 
     board.set_alien(5,5,context.alien2)
     board.set_alien(5,5,context.alien3)
@@ -98,10 +109,13 @@ def step_impl(context):
     context.alien4 = Alien(Team.BLUE)
    
     board = Board(10, 15, 5)
-    board.set_alien(5,5,context.alien1) 
-    board.set_alien(5,5,context.alien2)
-    board.set_alien(5,5,context.alien3)
-    board.set_alien(5,5,context.alien4)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = None
+
+    board.get_cell(5, 5).add_alien(context.alien1)
+    board.get_cell(5, 5).add_alien(context.alien2)
+    board.get_cell(5, 5).add_alien(context.alien3)
+    board.get_cell(5, 5).add_alien(context.alien4)
     context.board = board
 
 
