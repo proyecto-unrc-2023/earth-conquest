@@ -17,7 +17,7 @@ const Cell = ({ updateBoard, row, col, children }) => {
       {<>
         {
           children.modifier &&
-          <Modifier/>   
+          <Modifier type={children.modifier}/>   
         }
         
         {          
@@ -28,7 +28,7 @@ const Cell = ({ updateBoard, row, col, children }) => {
         })
         }
 
-        { children.alterator && <Alterator/> }
+        { children.alterator && <Alterator tipo={children.alterator}/> }
       </>}
       
     </div>
@@ -38,44 +38,72 @@ const Cell = ({ updateBoard, row, col, children }) => {
 
 
 const Alien = ({color}) => {
-  console.log(color)
   if (color === "blue"){
     return (
-      <>
-        <div className="blue_alien">
-          <div className="oneEye"/>
-          <div className="oneEye"/>
-        </div>
-      </>
+      <div className="alien">
+        <img src={"../public/blue_alien.png"} className="img_blue_alien" alt="" />
+      </div>
     )
   } else {
     return (
-      <>
-        <div className="green_alien">
-          <div className="oneEye"/>
-          <div className="oneEye"/>
-        </div>
-      </>
+      <div className="alien">
+        <img src={"../public/green_alien.png"} className="img_green_alien" alt="" />
+      </div>
     )
   }
 }
 
-const Modifier = () => {
-  return (
-    //<div className="modifier"/>
-    <div className="mountain"> M </div>
-  )
+const Modifier = ({type}) => {
+  if(type === modifier.mountain){
+    return (
+      <div className="modifier"> 
+        <img src={"../public/mountain.png"} className="img_mountain" alt="" />
+      </div>
+    )
+  }
+  if(type === modifier.killer){
+    return (
+      <div className="modifier"> 
+        <img src={"../public/killer.png"} className="img_killer" alt="" />
+      </div>
+    )
+  }
+  if(type === modifier.multiplier){
+    return (
+      <div className="modifier"> 
+        <img src={"../public/multiplier.png"} className="img_multiplier" alt="" />
+      </div>
+    )
+  }
 }
 
-const Alterator = ({setAlter}) => {
+const Alterator = ({setAlter, tipo}) => {
   //agrega un alterador seleccionado por el usuario, para despues setearlo al tablero
   const agregarAlt = () => {
-    setAlter(alterator.trap)
+    setAlter(tipo)
   }
 
-  return (
-    <div className="alterator" onClick={agregarAlt}> A </div>
-  )
+  if(tipo === alterator.trap){
+    return (
+      <div className="alterator" onClick={agregarAlt}> 
+        <img src={"../public/trap.png"} className="img_trap" alt="" />
+      </div>
+    )
+  }
+  if(tipo === alterator.directioner){
+    return (
+      <div className="alterator" onClick={agregarAlt}> 
+        <img src={"../public/directioner.png"} className="img_directiorer" alt="" />
+      </div>
+    )
+  }
+  if(tipo === alterator.teleport){
+    return (
+      <div className="alterator" onClick={agregarAlt}> 
+        <img src={"../public/teleporter.gif"} className="img_teleporter" alt="" />
+      </div>
+    )
+  }
 }
 
 const Panel = ({setAlter}) => {

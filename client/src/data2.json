@@ -136,13 +136,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -200,13 +194,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -259,13 +247,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -323,13 +305,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -540,13 +516,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -893,13 +863,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },
@@ -1041,13 +1005,7 @@
             "modifier": null
           },
           {
-            "aliens": [
-              {
-                "id": 2,
-                "eyes": 1,
-                "team":   "blue"
-              }
-            ],
+            "aliens": [],
             "alterator": "trap",
             "modifier": null
           },

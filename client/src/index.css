@@ -56,48 +56,68 @@ h1 {
   cursor: pointer;  
 }
 
-.blue_alien {
-  width: 15px;
-  height: 15px;
-  background-color: rgb(7, 0, 209);
-  border-radius: 50%;
+
+.alien {
+  display: grid;
+  place-items: center;
 }
 
-.green_alien {
-  width: 15px;
-  height: 15px;
-  background-color: rgb(28, 209, 0);
-  border-radius: 50%;
-}
 
 .modifier{
-  width: 15px;
-  height: 15px;
-  background-color: rgb(42, 58, 165);
-  border-radius: 30%;
-}
-
-.mountain{
   display: grid;
   align-items: center;
-  color: black;
-  width: 25px;
-  height: 25px;
-  background-color: rgba(231, 117, 2, 0.68);
-  border-radius: 10%;
 }
 
 .alterator{
-  display: grid;
-  align-items: center;
-  color: black;
-  width: 25px;
-  height: 25px;
-  background-color: rgba(231, 2, 2, 0.89);
-  border-radius: 10%;
+  position: "absolute";
+  top: "50%";
+  left: "50%";
+  transform: "translate(-50%, -50%)";
+  z-Index: 1;
 }
 
+.img_blue_alien{
+  width: 30px;
+  height: 30px;
+}
 
+.img_green_alien{
+  width: 40px;
+  height: 40px;
+}
+
+.img_mountain{
+  width: 60px;
+  height: 50px;
+}
+
+.img_killer{
+  width: 40px;
+  height: 40px;
+}
+
+.img_multiplier{
+  width: 40px;
+  height: 40px;
+}
+
+.img_trap{
+  width: 50%;
+  height: 90%;
+  position: "absolute";
+  top: "50%";     
+  left: "50%";            
+  transform: "translate(-50%, -50%)";
+  z-Index: 1;
+}
+.img_directiorer{
+  width: 40px;
+  height: 40px;
+}
+.img_teleporter{
+  width: 40px;
+  height: 40px;
+}
 
 button {
   border-radius: 8px;
