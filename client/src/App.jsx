@@ -7,7 +7,7 @@ import {alterator, modifier} from "./constants.js"
 console.log(data2.grid)
 
 //futuro componente celda
-const Cell = ({ updateBoard, row, col, children }) => {
+const Cell = ({ updateBoard, row, col, children, blue_base, green_base }) => {
   const handleClick = () => {
     updateBoard(row, col);
   }
@@ -16,8 +16,7 @@ const Cell = ({ updateBoard, row, col, children }) => {
    <div onClick={handleClick} className="cell" row={row} col={col}>
       {<>
         {
-          children.modifier &&
-          <Modifier type={children.modifier}/>   
+          children.modifier && <Modifier type={children.modifier}/>   
         }
         
         {          
@@ -29,13 +28,24 @@ const Cell = ({ updateBoard, row, col, children }) => {
         }
 
         { children.alterator && <Alterator tipo={children.alterator}/> }
+
+        {
+          (row <= blue_base.x && col <= blue_base.y ) && <Base/>   
+        }
+        {
+          (row >= green_base.x && col >= green_base.y) && <Base/>   
+        }
       </>}
       
     </div>
   )
 }
 
-
+const Base = () => {
+  return (
+    <div className="Base"> Base</div>
+  )
+}
 
 const Alien = ({color}) => {
   if (color === "blue"){
@@ -168,7 +178,9 @@ function App() {
                     key={j}
                     col={j}
                     row={i}
-                    updateBoard={updateBoard}>
+                    updateBoard={updateBoard}
+                    green_base={data2.green_ovni_range}
+                    blue_base={data2.blue_ovni_range}>
                       {cell}
                   </Cell>
                   )

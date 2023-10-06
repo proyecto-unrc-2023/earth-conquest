@@ -1,6 +1,6 @@
 {
-    "blue_ovni_range": {"x": 1, "y": 2},
-    "green_ovni_range": {"x": 5, "y": 6},
+    "blue_ovni_range": {"x": 3, "y": 3},
+    "green_ovni_range": {"x": 6, "y": 11},
     "base_dimention": 4,
     "grid": [
       [

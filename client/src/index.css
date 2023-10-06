@@ -119,6 +119,10 @@ h1 {
   height: 40px;
 }
 
+.base{
+  background-color: rgba(0, 0, 0, 0.487);
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
