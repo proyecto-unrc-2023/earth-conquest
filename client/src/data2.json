@@ -1,0 +1,1189 @@
+{
+    "blue_ovni_range": {"x": 1, "y": 2},
+    "green_ovni_range": {"x": 5, "y": 6},
+    "base_dimention": 4,
+    "grid": [
+      [
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+        {
+          "aliens": [{
+            "id": 3,
+            "eyes": 1,
+            "team":   "blue"
+          },{
+            "id": 3,
+            "eyes": 1,
+            "team":   "blue"
+          }
+        ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "green"
+            },
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        }
+      ],
+      [
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            },
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": "killer"
+          },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":  "green"
+              }
+            ],
+            "alterator": "directioner",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "green"
+              }
+            ],
+            "alterator": "directioner",
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": "directioner",
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "mountain"
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            },
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "multiplier"
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "green"
+              }
+            ],
+            "alterator": "teleport",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            },
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": "killer"
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 3,
+              "eyes": 1,
+              "team":   "blue"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": "teleport",
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": "multiplier"
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":  "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        }
+      ],[
+        {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": "trap",
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":  "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":  "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":   "blue"
+              },
+              {
+                "id": 2,
+                "eyes": 1,
+                "team":  "green"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+          {
+            "aliens": [
+              {
+                "id": 3,
+                "eyes": 1,
+                "team":   "blue"
+              }
+            ],
+            "alterator": null,
+            "modifier": null
+          },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        },
+        {
+          "aliens": [
+            {
+              "id": 2,
+              "eyes": 1,
+              "team":  "green"
+            }
+          ],
+          "alterator": null,
+          "modifier": null
+        }
+      ]      
+      
+    ]
+  }
+  

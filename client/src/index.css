@@ -29,6 +29,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
 
 h1 {
@@ -39,24 +40,33 @@ h1 {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(15, 1fr);
   width: fit-content;
   text-align: center;
+  background-image: url('../public/cesped2.png');
+  background-repeat: repeat;
 }
 
 .cell {
+  display: grid;
   width: 60px;
   height: 60px;
-  border: 1px solid #eee;
-  display: grid;
+  border: 1px solid #097e0340;
   place-items: center;
-  cursor: pointer;
+  cursor: pointer;  
 }
 
-.alien {
+.blue_alien {
   width: 15px;
   height: 15px;
-  background-color: red;
+  background-color: rgb(7, 0, 209);
+  border-radius: 50%;
+}
+
+.green_alien {
+  width: 15px;
+  height: 15px;
+  background-color: rgb(28, 209, 0);
   border-radius: 50%;
 }
 
@@ -67,6 +77,15 @@ h1 {
   border-radius: 30%;
 }
 
+.mountain{
+  display: grid;
+  align-items: center;
+  color: black;
+  width: 25px;
+  height: 25px;
+  background-color: rgba(231, 117, 2, 0.68);
+  border-radius: 10%;
+}
 
 .alterator{
   display: grid;
@@ -74,20 +93,11 @@ h1 {
   color: black;
   width: 25px;
   height: 25px;
-  background-color: rgba(205, 215, 5, 0.92);
+  background-color: rgba(231, 2, 2, 0.89);
   border-radius: 10%;
 }
 
-.alter{
-  display: grid;
-  place-items: center;
-  color: rgb(0, 0, 0);
-  width: 30px;
-  height: 30px;
-  background-color: rgba(4, 224, 176, 0.72);
-  border-radius: 10%;
-  cursor: pointer;
-}
+
 
 button {
   border-radius: 8px;

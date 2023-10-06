@@ -1,9 +1,10 @@
 import { useState } from "react"
 import data from "./data.json"
+import data2 from "./data2.json"
 import {alterator, modifier} from "./constants.js"
 
 //leer el js 
-console.log(data.grid)
+console.log(data2.grid)
 
 //futuro componente celda
 const Cell = ({ updateBoard, row, col, children }) => {
@@ -22,10 +23,11 @@ const Cell = ({ updateBoard, row, col, children }) => {
         {          
           children.aliens.map((alien, index) => {
           return(
-            <Alien key={index}></Alien>
+            <Alien key={index} color={alien.team}></Alien>
           )
         })
         }
+
         { children.alterator && <Alterator/> }
       </>}
       
@@ -33,22 +35,35 @@ const Cell = ({ updateBoard, row, col, children }) => {
   )
 }
 
-const Alien = () => {
-  //const className = `${hayAlien ? 'alien' : ''}`
-  return (
-    <>
-      <div className="alien">
-        <div className="oneEye"/>
-        <div className="oneEye"/>
-      </div>
-    </>
-  )
+
+
+const Alien = ({color}) => {
+  console.log(color)
+  if (color === "blue"){
+    return (
+      <>
+        <div className="blue_alien">
+          <div className="oneEye"/>
+          <div className="oneEye"/>
+        </div>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <div className="green_alien">
+          <div className="oneEye"/>
+          <div className="oneEye"/>
+        </div>
+      </>
+    )
+  }
 }
 
 const Modifier = () => {
   return (
     //<div className="modifier"/>
-    <div> M </div>
+    <div className="mountain"> M </div>
   )
 }
 
@@ -90,7 +105,7 @@ function App() {
   const [alterator, setAlterator] = useState(null)
   
   //setea el board con la grilla del JSON
-  const [board, setBoard] = useState(data.grid)
+  const [board, setBoard] = useState(data2.grid)
   
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
