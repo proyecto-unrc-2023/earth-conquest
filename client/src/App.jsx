@@ -2,49 +2,36 @@ import { useState } from "react"
 import data from "./data.json"
 import {alterator, modifier} from "./constants.js"
 
-
-
 //leer el js 
 console.log(data.grid)
 
 //futuro componente celda
-const Cell = ({ updateBoard, row, col, children}) => {
+const Cell = ({ updateBoard, row, col, children }) => {
   const handleClick = () => {
     updateBoard(row, col);
   }
 
   return(
    <div onClick={handleClick} className="cell" row={row} col={col}>
-      { 
-        <Content aliens={children.aliens} cell_modifier={children.modifier} cell_alterator={children.alterator}/>
-      }
+      {<>
+        {
+          children.modifier &&
+          <Modifier/>   
+        }
+        
+        {          
+          children.aliens.map((alien, index) => {
+          return(
+            <Alien key={index}></Alien>
+          )
+        })
+        }
+        { children.alterator && <Alterator/> }
+      </>}
       
     </div>
   )
-
 }
-
-
-
-const Content = ({ aliens, cell_modifier, cell_alterator}) =>{
-  return (
-    <>
-      {
-        cell_modifier &&
-        <Modifier/>   
-      }
-      {          
-       aliens.map((alien, index) => {
-        return(
-          <Alien key={index}></Alien>
-        )
-       })
-      }
-      { cell_alterator && <Alterator/> }
-  </>
-  )
-}
-
 
 const Alien = () => {
   //const className = `${hayAlien ? 'alien' : ''}`
@@ -73,6 +60,23 @@ const Alterator = ({setAlter}) => {
 
   return (
     <div className="alterator" onClick={agregarAlt}> A </div>
+  )
+}
+
+const Panel = ({setAlter}) => {
+  
+  const handleAlterator = (id) => {
+    setAlter(id)
+  }
+  return (
+  <section className="modifiers">
+    <h1>Alteradores</h1> 
+    <button onClick={()=>handleAlterator("trap")} value={alterator.trap}>Trap</button>
+    <button onClick={()=>handleAlterator("teleport")}  value={alterator.teleport}>Teleport</button>
+    <button onClick={()=>handleAlterator("directioner")} value={alterator.directioner}>Directioner</button>
+    
+  </section>
+
   )
 }
 
@@ -131,12 +135,7 @@ function App() {
         }
       </section>      
       
-      
-      <section className="modifiers">
-        <h1>Alteradores</h1> 
-        <div className="alter"> <Alterator setAlter={setAlter} /> </div>
-        
-      </section>
+      <Panel setAlter={setAlter}/>
     </>
     //TODO: como seleccionar diferentes alteradores y pasarlo como parametros
   )
