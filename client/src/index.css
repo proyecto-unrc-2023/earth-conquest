@@ -43,23 +43,25 @@ h1 {
   grid-template-columns: repeat(15, 1fr);
   width: fit-content;
   text-align: center;
-  background-image: url('../public/cesped2.png');
-  background-repeat: repeat;
+  background-image: url('../public/cesped.png');
+  background-size: cover;
 }
 
 .cell {
   display: grid;
   width: 60px;
   height: 60px;
-  border: 1px solid #097e0340;
+  border: 1px solid #097e032b;
   place-items: center;
   cursor: pointer;  
+  position: relative;
 }
 
 
 .alien {
   display: grid;
   place-items: center;
+  
 }
 
 
@@ -69,21 +71,29 @@ h1 {
 }
 
 .alterator{
-  position: "absolute";
-  top: "50%";
-  left: "50%";
-  transform: "translate(-50%, -50%)";
-  z-Index: 1;
+  display: grid;
+  align-items: center;
 }
 
 .img_blue_alien{
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2
 }
 
 .img_green_alien{
-  width: 40px;
-  height: 40px;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2
+
 }
 
 .img_mountain{
@@ -102,21 +112,25 @@ h1 {
 }
 
 .img_trap{
-  width: 50%;
-  height: 90%;
-  position: "absolute";
-  top: "50%";     
-  left: "50%";            
-  transform: "translate(-50%, -50%)";
-  z-Index: 1;
+  width: 40px;
+  height: 60px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 }
 .img_directiorer{
   width: 40px;
   height: 40px;
 }
 .img_teleporter{
-  width: 40px;
-  height: 40px;
+  width: 120px;
+  height: 90px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .base{
