@@ -33,7 +33,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.5em;
   line-height: 1.1;
 }
 
@@ -43,56 +43,36 @@ h1 {
   grid-template-columns: repeat(15, 1fr);
   width: fit-content;
   text-align: center;
-  background-image: url('../public/cesped.png');
+  background-color: #5b5b5b;
+  /*background-image: url('../public/cesped.png');*/
   background-size: cover;
 }
 
 .cell {
   display: grid;
+  place-items: center;
   width: 60px;
   height: 60px;
-  border: 1px solid #097e032b;
-  place-items: center;
-  cursor: pointer;  
-  position: relative;
+  border: 1px solid #ffffff;
+  cursor: pointer;
 }
 
-
-.alien {
+.alien, .modifier, .alterator {
   display: grid;
   place-items: center;
-  
-}
-
-
-.modifier{
-  display: grid;
-  align-items: center;
-}
-
-.alterator{
-  display: grid;
-  align-items: center;
+  position: absolute;
 }
 
 .img_blue_alien{
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2
+  width: 55px;
+  height: 55px;
+  z-index: 10;
 }
 
 .img_green_alien{
   width: 70px;
   height: 70px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2
+  z-index: 10;
 
 }
 
@@ -104,36 +84,37 @@ h1 {
 .img_killer{
   width: 40px;
   height: 40px;
+  z-index: 5;
 }
 
 .img_multiplier{
   width: 40px;
   height: 40px;
+  position: absolute;
+  z-index: 5;
 }
 
 .img_trap{
   width: 40px;
   height: 60px;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
+  z-index: 20;
 }
+
 .img_directiorer{
   width: 40px;
   height: 40px;
-}
-.img_teleporter{
-  width: 120px;
-  height: 90px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  z-index: 5;
 }
 
-.base{
+.img_teleporter {
+  width: 120px;
+  height: 90px;
+  z-index: 5;
+}
+
+.base {
+  position: absolute;
   background-color: rgba(0, 0, 0, 0.487);
 }
 
