@@ -12,12 +12,17 @@ class Alien:
         self.eyes = 1
         self.team = team
 
+
     def __str__(self):
         if self.team == Team.BLUE:
             return 'BLUE'
         else:
             return 'GREEN'
 
+    """
+    Given an amount of eyes, this method adds it to the
+    current amount.
+    """
     def add_eyes(self, new_eyes):
         if (new_eyes > 5) or (self.eyes + new_eyes > 5):
             del self

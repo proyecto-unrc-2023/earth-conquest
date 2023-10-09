@@ -27,7 +27,7 @@ class Board:
     """
     Creates the initial board full of Cells and
     default modifiers: MountainRange, Killer, Multiplier
-    that are set outside the ovnis ranges
+    that are set outside the ovnis ranges.
     """
     def create_board(self):
         rows = self.rows
@@ -76,7 +76,7 @@ class Board:
 
     """
     Returns a free position of the board which it is not
-    a modifier, nor an alterator or is in any ovnis ranges
+    a modifier, nor an alterator or is in any ovnis ranges.
     """
     def get_random_free_pos(self):
         while True: # se ejecuta infinitamente hasta que se le isntruccione salir del bucle
@@ -95,9 +95,8 @@ class Board:
 
 
     """
-    Returns True if 
-    the position is on the board range and 
-    it's not a modifier or an alterator
+    Returns True if he position is on the board range 
+    and it's not a modifier or an alterator.
     """
     def is_free_position(self, x, y):
         if self.is_within_board_range(x,y):
@@ -118,7 +117,7 @@ class Board:
 
 
     """
-    Returns True if the position is on the blue base range
+    Returns True if the position is on the blue base range.
     """
     def is_position_in_blue_range(self, x, y):
         if self.blue_ovni_range[0] <= x < self.rows and self.blue_ovni_range[1] <= y < self.cols:
@@ -128,7 +127,7 @@ class Board:
 
 
     """
-    Returns True if the position is on the green base range
+    Returns True if the position is on the green base range.
     """
     def is_position_in_green_range(self, x, y):
         if 0 <= x <= self.green_ovni_range[0] and 0 <= y <= self.green_ovni_range[1]:
@@ -138,7 +137,7 @@ class Board:
 
 
     """
-    Returns the Cell that's at a specific position
+    Returns the Cell that's at a specific position.
     """
     def get_cell(self, x, y):
         if 0 <= x < self.rows and 0 <= y < self.cols:
@@ -149,8 +148,8 @@ class Board:
 
 
     """ 
-    Sets a Trap on a specific Cell
-    only if on that cell there's no Modifier or Alterator already placed there
+    Sets a Trap on a specific Cell only if on that cell 
+    there's no Modifier or Alterator already placed there.
     """
     def set_trap(self, x, y):
         if self.is_free_position(x,y) and not self.is_pos_on_any_range(x,y):
@@ -201,7 +200,7 @@ class Board:
 
     """ 
     Sets a Modifier on a specific Cell only if on that cell 
-    there's no Modifier or Alterator already placed there
+    there's no Modifier or Alterator already placed there.
     """
     def set_modifier(self, modifier, x, y):
         if self.is_free_position(x, y):
@@ -211,7 +210,7 @@ class Board:
 
 
     """
-    Method that sets an alien on the alives aliens dictionary
+    Method that sets an alien on the alive aliens dictionary.
     """
     def set_alien_in_dictionary(self, x, y, alien):
         position = (x, y)
@@ -223,7 +222,7 @@ class Board:
 
 
     """ 
-    Updates the board by moving each alien to a free random adjoining position
+    Updates the board by moving each alien to a free random adjoining position.
     """
     def refresh_board(self):
         aliens_copy = dict(self.aliens)     # dictionary copy
@@ -352,7 +351,7 @@ class Board:
 
 
 
-    # TODO lo use para el test de alterator use
+
     """
     Methods that removes an alien on the board at a given position.
     The dictionary of aliens is updated.
@@ -387,6 +386,7 @@ class Board:
                 res += '|'
         return res
 
+
     def __str__(self):
         res = ''
         for row_num in range(self.rows):
@@ -394,6 +394,7 @@ class Board:
             if row_num < self.rows - 1:
                 res += '\n'
         return res
+
 
     @staticmethod
     def from_string(board_str):
@@ -412,6 +413,7 @@ class Board:
 
         return Board._from_string_matrix(n_rows, n_cols, matrix)
 
+
     @staticmethod
     def _from_string_matrix(rows, cols, matrix):
         new_board = Board(rows, cols)
@@ -424,6 +426,7 @@ class Board:
                 curr_cell = matrix[row][col]
                 new_board.put_cell(row, col, Cell.from_string(curr_cell))
         return new_board
+
 
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
