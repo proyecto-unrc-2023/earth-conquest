@@ -1,5 +1,8 @@
 import random
 
+from marshmallow import Schema, fields
+from sql import SQL
+
 from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
@@ -8,7 +11,7 @@ from app.backend.models.board import Board
 INIT_CREW = 6
 
 
-class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
+class Game(SQL):
 
     def __init__(self):
         self.status = TGame.NOT_STARTED
@@ -88,3 +91,18 @@ class Game:   # que herede de (SQL) para tener los metodos get , etc, gratis
             print("Invalid cell selected. Can not place an alterator there")
 
     # TODO implementar cuando un alien pisa el rango de las naves
+
+    def json(self):
+        return {
+            'status': self.status,
+            'green_player': self.green_player,
+            'blue_player': self.blue_player,
+            'board': self.board
+        }
+
+
+class GameSchema(Schema):
+    status = fields.Str()
+    green_player = fields.Str()
+    blue_player = fields.Str()
+    board = fields.List(fields.List(fields.List(fields.List(fields.Str()))))
