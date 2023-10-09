@@ -1,4 +1,4 @@
-import data2 from "./data2.json"
+import data2 from "../data2.json"
 import {Cell} from "./Cell"
 import { useState } from "react"
 

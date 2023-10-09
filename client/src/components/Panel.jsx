@@ -1,4 +1,4 @@
-import {alterator} from "./constants.js"
+import {alterator} from "../constants.js"
 
 export const Panel = ({setAlter}) => {
 

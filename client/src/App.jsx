@@ -1,7 +1,7 @@
 import { useState } from "react"
 import data2 from "./data2.json"
-import {Board} from "./Board"
-import {Panel} from "./Panel"
+import {Board} from "./components/Board"
+import {Panel} from "./components/Panel"
 
 //leer el js 
 console.log(data2.grid)

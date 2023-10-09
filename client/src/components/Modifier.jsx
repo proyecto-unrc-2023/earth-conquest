@@ -1,4 +1,4 @@
-import {modifier} from "./constants.js"
+import {modifier} from "../constants.js"
 
 export const Modifier = ({type}) => { 
     return (
