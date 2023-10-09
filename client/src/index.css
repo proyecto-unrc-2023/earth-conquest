@@ -29,7 +29,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  text-align: center;
 }
 
 h1 {
@@ -116,6 +116,26 @@ h1 {
 .base {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.487);
+}
+
+.blue_nave{
+  display: grid;
+  place-items: center;
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  transform: translate(-5px, -50px);
+  rotate:( -10deg);
+  opacity: 90%;
+}
+
+.green_nave{
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  transform: translate(10px, -30px);
+  rotate: 10deg;
+  opacity: 90%;
 }
 
 button {

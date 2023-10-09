@@ -36,6 +36,12 @@ const Cell = ({ updateBoard, row, col, children, blue_base, green_base }) => {
           {
             (row >= green_base.x && col >= green_base.y) && <Base/>   
           }
+          {
+            ((row === 0 && col === 0) && <img src={"../public/ovni.png"} className="blue_nave" />)
+          }
+          {
+            ((row === 9 && col === 14) && <img src={"../public/ovni.png"} className="green_nave" />)
+          }
         </>
       }
     </div>
