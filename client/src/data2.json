@@ -27,7 +27,7 @@
         {
           "aliens": [{
             "id": 3,
-            "eyes": 1,
+            "eyes": 2,
             "team":   "blue"
           },{
             "id": 3,
@@ -79,7 +79,7 @@
             "aliens": [
               {
                 "id": 2,
-                "eyes": 1,
+                "eyes": 3,
                 "team":   "blue"
               }
             ],
@@ -287,7 +287,7 @@
           "aliens": [
             {
               "id": 3,
-              "eyes": 1,
+              "eyes": 5,
               "team":   "blue"
             }
           ],
@@ -367,7 +367,7 @@
             "aliens": [
               {
                 "id": 3,
-                "eyes": 1,
+                "eyes": 4,
                 "team":   "green"
               }
             ],
