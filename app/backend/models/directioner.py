@@ -4,7 +4,7 @@ class Directioner:
 
     """
     Directioners occupy three Cells, init_pos represents the position of the first
-    Cell it ocuppies. snd_pos represents the second cel it ocuppies and same with
+    Cell it ocuppies. snd_pos represents the second cell it ocuppies and same with
     the thrd_col
     """
     def __init__(self, init_pos = (0,0), direction = Direction.RIGHT):
