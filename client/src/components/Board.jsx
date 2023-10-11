@@ -7,8 +7,9 @@ export const Board = ({alterator}) => {
     
     const updateBoard = (row, col) => {
         if (alterator === null) return
-        if (board[row][col].alterator !== null) return
-        if (board[row][col].modifier !== null ) return
+        if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
+        if ( row >= data2.green_ovni_range.x && col >= data2.green_ovni_range.y ) return
+        if ( row <= data2.blue_ovni_range.x && col <= data2.blue_ovni_range.y ) return
         const newBoard = [...board]
       
         
