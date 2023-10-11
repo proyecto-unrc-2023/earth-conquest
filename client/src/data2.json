@@ -1,6 +1,6 @@
 {
-    "blue_ovni_range": {"x": 3, "y": 3},
-    "green_ovni_range": {"x": 6, "y": 11},
+    "green_ovni_range": {"x": 3, "y": 3},
+    "blue_ovni_range": {"x": 6, "y": 11},
     "base_dimention": 4,
     "grid": [
       [
@@ -12,17 +12,17 @@
           {
             "aliens": [],
             "alterator": null,
-            "modifier": "mountain"
+            "modifier": null
           },
           {
             "aliens": [],
             "alterator": null,
-            "modifier": "mountain"
+            "modifier": null
           },
           {
             "aliens": [],
             "alterator": null,
-            "modifier": "mountain"
+            "modifier": null
           },
         {
           "aliens": [{
@@ -137,7 +137,7 @@
           },
           {
             "aliens": [],
-            "alterator": "trap",
+            "alterator": null,
             "modifier": null
           },
           {
@@ -248,7 +248,7 @@
           },
           {
             "aliens": [],
-            "alterator": "trap",
+            "alterator": null,
             "modifier": null
           },
           {
@@ -360,7 +360,7 @@
                 "team":  "green"
               }
             ],
-            "alterator": "directioner",
+            "alterator": null,
             "modifier": null
           },
           {
@@ -371,12 +371,12 @@
                 "team":   "green"
               }
             ],
-            "alterator": "directioner",
+            "alterator": null,
             "modifier": null
           },
         {
           "aliens": [],
-          "alterator": "directioner",
+          "alterator": null,
           "modifier": null
         },
         {

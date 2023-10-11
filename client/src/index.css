@@ -43,8 +43,7 @@ h1 {
   grid-template-columns: repeat(15, 1fr);
   width: fit-content;
   text-align: center;
-  background-color: #5b5b5b;
-  /*background-image: url('../public/cesped.png');*/
+  background-image: url('../public/cesped3.png');
   background-size: cover;
 }
 
@@ -53,8 +52,16 @@ h1 {
   place-items: center;
   width: 60px;
   height: 60px;
-  border: 1px solid #ffffff;
+  border: 1px solid #00dc3b4b;
   cursor: pointer;
+}
+
+.green{
+  background-color: rgba(0, 255, 94, 0.222);
+}
+
+.blue{
+  background-color: rgba(0, 115, 255, 0.407);
 }
 
 .alien, .modifier, .alterator {
@@ -118,7 +125,7 @@ h1 {
   background-color: rgba(0, 0, 0, 0.487);
 }
 
-.blue_nave{
+.green_nave{
   display: grid;
   place-items: center;
   position: absolute;
@@ -129,7 +136,7 @@ h1 {
   opacity: 90%;
 }
 
-.green_nave{
+.blue_nave{
   position: absolute;
   width: 240px;
   height: 240px;
