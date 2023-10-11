@@ -5,20 +5,29 @@ from app.backend.models.board import Board
 from app.backend.models.team import Team
 
 
-@given(u'two blue aliens and one green alien in the position (5,5)')
-def step_set_alien(context):
-    context.alien1 = Alien(Team.BLUE)
-    context.alien2 = Alien(Team.BLUE)
-    context.alien3 = Alien(Team.GREEN)
-   
-    board = Board(10, 15, 5)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).alterator = None
+@given(u'{blue_cant:d} blue aliens and {green_cant:d} green aliens are in the position (5,5)')
+def step_set_alien(context, blue_cant, green_cant):
+    context.blue_aliens = []
+    context.green_aliens = []
 
-    board.get_cell(5, 5).add_alien(context.alien1)
-    board.get_cell(5, 5).add_alien(context.alien2)
-    board.get_cell(5, 5).add_alien(context.alien3)
-    context.board = board
+    for _ in range(blue_cant):
+        blue_alien = Alien(Team.BLUE)
+        context.blue_aliens.append(blue_alien)
+        
+    for _ in range(green_cant):
+        green_alien = Alien(Team.GREEN)
+        context.green_aliens.append(green_alien)
+        
+
+    context.board = Board(10, 15, 4)
+    context.board.get_cell(5, 5).modifier = None
+    context.board.get_cell(5, 5).alterator = None
+
+    for alien in context.blue_aliens:
+        context.board.set_alien(5, 5, alien)
+
+    for alien in context.green_aliens:
+        context.board.set_alien(5, 5, alien)
 
 
 @when(u'the cell acts')
@@ -26,100 +35,12 @@ def step_action(context):
     context.board.get_cell(5, 5).action()
 
 
-@then(u'there is a blue alien left, with one eye')
-def step_result(context):
-    assert (context.board.get_cell(5,5).aliens[0].eyes == 1)
-    assert (context.board.get_cell(5,5).aliens[0].team == Team.BLUE)
+@then(u'there is {blue_cant:d} blue alien left, with {eyes:d} eyes')
+def step_result(context, blue_cant, eyes):
+    if eyes == 0:
+        assert (len(context.board.get_cell(5,5).aliens) == 0)
+    else:
+        assert (context.board.get_cell(5,5).aliens[0].eyes == eyes)
+        assert (context.board.get_cell(5,5).aliens[0].team == Team.BLUE)
 
 
-@given(u'3 aliens on the blue team, in the positions (5,5)')
-def step_impl(context):
-    context.alien1 = Alien(Team.BLUE)
-    context.alien2 = Alien(Team.BLUE)
-    context.alien3 = Alien(Team.BLUE)
-   
-    board = Board(10, 15, 5)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).alterator = None
-
-    board.get_cell(5, 5).add_alien(context.alien1)
-    board.get_cell(5, 5).add_alien(context.alien2)
-    board.get_cell(5, 5).add_alien(context.alien3)
-    context.board = board
-
-
-@then(u'there is a blue alien left, with 3 eyes')
-def step_impl(context):
-    assert (context.board.get_cell(5,5).aliens[0].eyes == 3)
-    assert (context.board.get_cell(5,5).aliens[0].team == Team.BLUE)
-
-
-@given(u'3 aliens on the blue team and one green alien in the positions (5,5)')
-def step_impl(context):
-    context.alien1 = Alien(Team.BLUE)
-    context.alien2 = Alien(Team.BLUE)
-    context.alien3 = Alien(Team.BLUE)
-    context.alien4 = Alien(Team.GREEN)
-   
-    board = Board(10, 15, 5)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).alterator = None
-
-    board.get_cell(5, 5).add_alien(context.alien1)
-    board.get_cell(5, 5).add_alien(context.alien2)
-    board.get_cell(5, 5).add_alien(context.alien3)
-    board.get_cell(5, 5).add_alien(context.alien4)
-    context.board = board
-
-
-@then(u'there is a blue alien left, with 2 eyes')
-def step_impl(context):
-    assert (context.board.get_cell(5,5).aliens[0].eyes == 2)
-    assert (context.board.get_cell(5,5).aliens[0].team == Team.BLUE)
-
-
-@given(u'2 aliens are on blue team and 2 on green team in the positions (5,5) with 1 eyes')
-def step_impl(context):
-    context.alien1 = Alien(Team.BLUE)
-    context.alien2 = Alien(Team.BLUE)
-    context.alien3 = Alien(Team.GREEN)
-    context.alien4 = Alien(Team.GREEN)
-   
-    board = Board(10, 15, 5)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).alterator = None
-
-    board.set_alien(5,5,context.alien1) 
-    board.set_alien(5,5,context.alien2)
-    board.set_alien(5,5,context.alien3)
-    board.set_alien(5,5,context.alien4)
-    context.board = board
-
-
-@then(u'there are no aliens left')
-def step_impl(context):
-    assert (len(context.board.get_cell(5,5).aliens) == 0)
-
-
-@given(u'4 aliens are on blue team in the positions (5,5)')
-def step_impl(context):
-    context.alien1 = Alien(Team.BLUE)
-    context.alien2 = Alien(Team.BLUE)
-    context.alien3 = Alien(Team.BLUE)
-    context.alien4 = Alien(Team.BLUE)
-   
-    board = Board(10, 15, 5)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).alterator = None
-
-    board.get_cell(5, 5).add_alien(context.alien1)
-    board.get_cell(5, 5).add_alien(context.alien2)
-    board.get_cell(5, 5).add_alien(context.alien3)
-    board.get_cell(5, 5).add_alien(context.alien4)
-    context.board = board
-
-
-@then(u'there is a blue alien left, with 4 eyes')
-def step_impl(context):
-    assert (context.board.get_cell(5,5).aliens[0].eyes == 4)
-    assert (context.board.get_cell(5,5).aliens[0].team == Team.BLUE)
