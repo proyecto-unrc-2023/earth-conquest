@@ -144,7 +144,10 @@ class Cell:
 
     def __str__(self):
         if self.aliens:
-            return 'A'
+            res = ""
+            for i in range(len(self.aliens)):
+                res += self.aliens[i].__str__()
+            return res
         if self.modifier is modifier.Modifier.MOUNTAIN_RANGE:
             return 'M'
         if self.modifier is modifier.Modifier.KILLER:
