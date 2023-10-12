@@ -132,7 +132,7 @@ h1 {
   width: 240px;
   height: 240px;
   transform: translate(-5px, -50px);
-  rotate:( -10deg);
+  rotate: -10deg;
   opacity: 90%;
 }
 

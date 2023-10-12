@@ -6,17 +6,32 @@
       [
         {
             "aliens": [],
-            "alterator": null,
+            "alterator": {
+              "name" : "directioner",
+              "positionInit" : {"x": null, "y": null},
+              "positionEnd" : null,
+              "direction" : "right"
+            },
             "modifier": null
           },
           {
             "aliens": [],
-            "alterator": null,
+            "alterator": {
+              "name" : "teleport",
+              "positionInit" : {"x": null, "y": null},
+              "positionEnd" : {"x": null, "y": null},
+              "direction" : null
+            },
             "modifier": null
           },
           {
             "aliens": [],
-            "alterator": null,
+            "alterator": { 
+              "name" : "teleport",
+              "positionInit" : {"x": null, "y": null},
+              "positionEnd" : {"x": null, "y": null},
+              "direction" : null
+            },
             "modifier": null
           },
           {
