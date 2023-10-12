@@ -1,53 +1,48 @@
-import {Alien} from "./Alien"
-import { Modifier } from "./Modifier";
-import { Alterator } from "./Alterator";
+import { Alien } from './Alien'
+import { Modifier } from './Modifier'
+import { Alterator } from './Alterator'
 
-
-export const Cell = ({ updateBoard, row, col, children, blue_base, green_base }) => {
+export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase }) => {
   const handleClick = () => {
-    updateBoard(row, col);
+    updateBoard(row, col)
   }
 
-  let className = "cell "
+  let className = 'cell '
 
-  if(row <= green_base.x && col <= green_base.y ){
-    className += "green"
+  if (row <= greenBase.x && col <= greenBase.y) {
+    className += 'green'
   }
 
-  if (row >= blue_base.x && col >= blue_base.y) {
-    className += "blue"
+  if (row >= blueBase.x && col >= blueBase.y) {
+    className += 'blue'
   }
 
-  return(
-   <div onClick={handleClick} className={className} row={row} col={col}>
-      {
-        <>
-          {
-            children.modifier && <Modifier type={children.modifier}/>   
+  return (
+    <div onClick={handleClick} className={className} row={row} col={col}>
+      <>
+        {
+            children.modifier && <Modifier type={children.modifier} />
           }
-          
-          {          
+
+        {
             children.aliens.map((alien, index) => {
-            return(
-              <Alien key={index} team={alien.team} eyes={alien.eyes}></Alien>
-            )
-          })
+              return (
+                <Alien key={index} team={alien.team} eyes={alien.eyes} />
+              )
+            })
           }
 
-          { children.alterator && <Alterator tipo={children.alterator}/> }
+        {children.alterator && <Alterator tipo={children.alterator} />}
 
-          {
-            <div />  
-          }
+        <div />
 
-          {
-            ((row === 0 && col === 0) && <img src={"../public/green_ovni.png"} className="green_nave" />)
+        {
+            ((row === 0 && col === 0) && <img src='../public/green_ovni.png' className='green_nave' />)
           }
-          {
-            ((row === 9 && col === 14) && <img src={"../public/blue_ovni.png"} className="blue_nave" />)
+        {
+            ((row === 9 && col === 14) && <img src='../public/blue_ovni.png' className='blue_nave' />)
           }
-        </>
-      }
+      </>
     </div>
   )
 }
