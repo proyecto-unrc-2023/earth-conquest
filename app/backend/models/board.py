@@ -1,4 +1,7 @@
 import random
+
+from marshmallow import Schema, fields
+
 from app.backend.models.alien import Alien
 from app.backend.models.alterator import Alterator
 from app.backend.models.cell import Cell
@@ -427,3 +430,19 @@ class Board:
 
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
+
+    def json(self):
+        return {
+            'blue_ovni_range': self.blue_ovni_range,
+            'green_ovni_range': self.green_ovni_range,
+            'base_range_dimentions': self.base_range_dimentions,
+            'board': self.board.__str__()
+        }
+
+
+class BoardSchema(Schema):
+    blue_ovni_range = fields.Tuple
+    green_ovni_range = fields.Tuple
+    base_range_dimentions = fields.Integer
+    board = fields.List # CellSchema()
+

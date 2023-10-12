@@ -1,33 +1,34 @@
 import random
 
 from marshmallow import Schema, fields
-from sql import SQL
 
 from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
-from app.backend.models.board import Board
+from app.backend.models.board import Board, BoardSchema
+from app import db
 
 INIT_CREW = 6
 
 
-class Game(SQL):
+class Game(db.Model):
 
     def __init__(self):
+        #id = db.Column(db.Integer, primary_key=True)
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
         self.board = Board()
 
-    def join_as_green(self):
+    def join_as_green(self, name):
         if self.green_player is not None:
             raise Exception("Player green is already taken")
-        self.green_player = team.Team.GREEN
+        self.green_player = name
 
-    def join_as_blue(self):
+    def join_as_blue(self, name):
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
-        self.blue_player = team.Team.BLUE
+        self.blue_player = name
 
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
@@ -90,19 +91,9 @@ class Game(SQL):
         except Exception:
             print("Invalid cell selected. Can not place an alterator there")
 
-    # TODO implementar cuando un alien pisa el rango de las naves
-
-    def json(self):
-        return {
-            'status': self.status,
-            'green_player': self.green_player,
-            'blue_player': self.blue_player,
-            'board': self.board
-        }
-
 
 class GameSchema(Schema):
-    status = fields.Str()
-    green_player = fields.Str()
-    blue_player = fields.Str()
-    board = fields.List(fields.List(fields.List(fields.List(fields.Str()))))
+    status = fields.Enum(TGame)
+    green_player = fields.Str(required=False)
+    blue_player = fields.Str(required=False)
+    board = fields.Str()#Nested(lambda: BoardSchema, only=('board',))
