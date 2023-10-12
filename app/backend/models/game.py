@@ -6,15 +6,13 @@ from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board, BoardSchema
-from app import db
 
 INIT_CREW = 6
 
 
-class Game(db.Model):
+class Game:
 
     def __init__(self):
-        #id = db.Column(db.Integer, primary_key=True)
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
