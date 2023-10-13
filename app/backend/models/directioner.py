@@ -1,4 +1,7 @@
+from marshmallow import Schema, fields
+
 from app.backend.models.direction import Direction
+
 
 class Directioner:
 
@@ -49,3 +52,10 @@ class Directioner:
             self.last_pos = (self.init_pos[0]-3, self.init_pos[1])
         else:
             self.last_pos = (self.init_pos[0]+3, self.init_pos[1])
+
+
+class DirectionerSchema(Schema):
+    name = fields.Str(missing="directioner")
+    init_pos = fields.Tuple((fields.Integer(), fields.Integer()))
+    last_pos = fields.Tuple((fields.Integer(), fields.Integer()))
+    direction = fields.Enum(Direction)

@@ -1,5 +1,8 @@
-from flask import jsonify
+import json
 
+from flask import jsonify, Response
+
+from app.backend.models.board import BoardSchema
 from app.backend.models.game import Game, GameSchema
 
 games_dict = {}
@@ -10,22 +13,51 @@ class GameController:
     def get_game_by_id(id):
         game = games_dict.get(id)
         if game is None:
-            return "Juego no encontrado", 404
+            message = json.dumps({'errors': "game not found with id: " + str(id)})
+            return Response(message, status=404, mimetype='application/json')
         game_schema = GameSchema()
 
         return jsonify(game_schema.dump(game))
+
+    def get_board_by_game_id(id):
+        game = games_dict.get(id)
+        if game is None:
+            message = json.dumps({'errors': "game not found with id: " + str(id)})
+            return Response(message, status=404, mimetype='application/json')
+        board = game.board
+        board_schema = BoardSchema()
+
+        return jsonify(board_schema.dump(board))
 
     @staticmethod
     def create_new_game():
         game = Game()
         id = games_dict.__len__() + 1
         games_dict[id] = game
-        return id
+        message = json.dumps({'response': "game created successfully with id: " + str(id)})
+        return Response(message, status=200, mimetype='application/json')
+
+    def start_game(id):
+        game = games_dict.get(id)
+        if game is None:
+            message = json.dumps({'errors': "game not found with id: " + str(id)})
+            return Response(message, status=404, mimetype='application/json')
+
+        try:
+            game.start_game()
+            games_dict[id] = game
+        except Exception as e:
+            message = json.dumps({'errors': str(e)})
+            return Response(message, status=400, mimetype='application/json')
+
+        game_schema = GameSchema()
+        return jsonify(game_schema.dump(game))
+
     def update_game(self, data):
         game = games_dict.get(id)
         if game is None:
-            return "Juego no encontrado", 404
-
+            message = json.dumps({'errors': "game not found with id: " + str(id)})
+            return Response(message, status=404, mimetype='application/json')
 
         game_data = {}
         if 'status' in data:

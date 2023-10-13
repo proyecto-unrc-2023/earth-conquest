@@ -4,7 +4,7 @@ from marshmallow import Schema, fields
 
 from app.backend.models.alien import Alien
 from app.backend.models.alterator import Alterator
-from app.backend.models.cell import Cell
+from app.backend.models.cell import Cell, CellSchema
 from app.backend.models.direction import Direction
 from app.backend.models.modifier import Modifier
 from app.backend.models.orientation import Orientation
@@ -441,8 +441,8 @@ class Board:
 
 
 class BoardSchema(Schema):
-    blue_ovni_range = fields.Tuple
-    green_ovni_range = fields.Tuple
-    base_range_dimentions = fields.Integer
-    board = fields.List # CellSchema()
+    blue_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
+    green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
+    base_range_dimentions = fields.Integer()
+    board = fields.List(fields.List(fields.Nested(CellSchema())))
 

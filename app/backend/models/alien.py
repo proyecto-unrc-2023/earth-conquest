@@ -1,5 +1,7 @@
 from enum import Enum
 
+from marshmallow import Schema, fields
+
 from app.backend.models.team import Team
 
 
@@ -23,3 +25,10 @@ class Alien:
             del self
         else:
             self.eyes += new_eyes
+
+
+class AlienSchema(Schema):
+    id = fields.Integer()
+    eyes = fields.Integer()
+    team = fields.Enum(Team)
+

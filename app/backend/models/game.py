@@ -34,8 +34,11 @@ class Game:
         self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
-        self.set_initial_crew()
-        self.status = TGame.STARTED
+        if (self.status is TGame.NOT_STARTED):  #luego agregar comprobacion: ningun player is None
+            self.set_initial_crew()
+            self.status = TGame.STARTED
+        else:
+            raise Exception("game is already started")
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
@@ -94,4 +97,4 @@ class GameSchema(Schema):
     status = fields.Enum(TGame)
     green_player = fields.Str(required=False)
     blue_player = fields.Str(required=False)
-    board = fields.Str()#Nested(lambda: BoardSchema, only=('board',))
+    board = fields.Nested(BoardSchema(), only=('board',))
