@@ -19,9 +19,11 @@ def step_impl(context, attacked_team, life_points):
 def step_impl(context, attacking_team, alien_eyes, attacked_team):
     if attacking_team == "green":
         context.alien = Alien(Team.GREEN, alien_eyes)
+        context.cell = (7, 11)
         context.game.board.set_alien(7, 11, context.alien)
     else:
         context.alien = Alien(Team.BLUE, alien_eyes)
+        context.cell = (3, 3)
         context.game.board.set_alien(3, 3, context.alien)
 
 
@@ -38,6 +40,12 @@ def step_impl(context, results_life_points):
     else:
         base_life_points = context.game.board.blue_ovni_life
         assert base_life_points == results_life_points
+
+
+@then(u'the "{attacking_team}" alien not being in the cell')
+def step_impl(context, attacking_team):
+    x, y = context.cell
+    assert not context.alien in context.game.board.get_cell(x, y).aliens
 
 
 @then(u'it is destroyed')
@@ -57,4 +65,3 @@ def step_impl(context, attacking_team):
 
 def to_team(team):
     return Team.GREEN if team == "green" else Team.BLUE
-

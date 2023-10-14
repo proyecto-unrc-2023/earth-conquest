@@ -76,7 +76,7 @@ class Game(SQL):
         res = self.board.act_board()
         if res is not None:
             self.status = TGame.OVER
-            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.green_player, Team.BLUE)
+            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
 
     def has_game_ended(self):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0

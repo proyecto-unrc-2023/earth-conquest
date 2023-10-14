@@ -13,6 +13,7 @@ from app.backend.models.teleporter import Teleporter
 GREEN_OVNI_LIFE = 100
 BLUE_OVNI_LIFE = 100
 
+
 class Board:
 
     def __init__(self, rows=10, cols=15, base_range_dimentions=4):
@@ -252,7 +253,6 @@ class Board:
                     if self.any_ovni_destroyed():
                         return alien.team
 
-
     """
     Moves an alien to a free random and adjacent position.
     x, y represent the position where the alien is currently placed at.
@@ -387,7 +387,7 @@ class Board:
         if alien.team == Team.BLUE and self.is_position_in_green_range(x, y):
             self.green_ovni_life -= alien.eyes
             if (x, y) in self.aliens:
-                self.aliens[(x, y)].remove(alien)
+                self.aliens[(x, y)].remove(alien)  # removes from hash and cell
         elif alien.team == Team.GREEN and self.is_position_in_blue_range(x, y):
             self.blue_ovni_life -= alien.eyes
             if (x, y) in self.aliens:
