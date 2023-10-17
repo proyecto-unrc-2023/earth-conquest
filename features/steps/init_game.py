@@ -1,7 +1,5 @@
 from behave import *
 
-from app.backend.models.application import Application
-from app.backend.models.board import Board
 from app.backend.models.game import Game
 from app.backend.models.game_enum import TGame
 from app.backend.models.modifier import Modifier

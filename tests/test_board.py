@@ -3,7 +3,10 @@ import pytest
 from app.backend.models import team
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board, GREEN_OVNI_LIFE, BLUE_OVNI_LIFE
+from app.backend.models.directioner import Directioner
+from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
+from app.backend.models.teleporter import Teleporter
 
 
 @pytest.fixture
@@ -86,4 +89,65 @@ def test_green_alien_in_green_base_and_blue_alien_in_blue_base(init_a_default_bo
 
     assert (3, 3) in board.aliens and board.aliens[(3, 3)] == [alien]
     assert (6, 11) in board.aliens and board.aliens[(6, 11)] == [alien2]
+
+
+def test_get_invalid_pos(init_a_default_board):
+    board = init_a_default_board
+    with pytest.raises(Exception) as exc_info:
+        board.get_cell(11, 15)
+    assert str(exc_info.value) == "Index out of range"
+    with pytest.raises(Exception) as exc_info:
+        board.get_cell(10, 16)
+    assert str(exc_info.value) == "Index out of range"
+
+
+def test_set_invalid_trap(init_a_default_board):
+    board = init_a_default_board
+    with pytest.raises(Exception) as exc_info:
+        board.set_trap(1, 1)
+    assert str(exc_info.value) == "Position isn't free or valid"
+    with pytest.raises(Exception) as exc_info:
+        board.set_trap(10, 15)
+    assert str(exc_info.value) == "Position isn't free or valid"
+
+
+def test_set_invalid_teleporter(init_a_default_board):
+    board = init_a_default_board
+    teleporter = Teleporter((1, 1), (7, 7))
+    with pytest.raises(Exception) as exc_info:
+        board.set_teleporter(teleporter)
+    assert str(exc_info.value) == "Positions of the teleporter aren't free or valid"
+
+
+def test_set_invalid_directioner(init_a_default_board):
+    board = init_a_default_board
+    directioner = Directioner((1, 1))
+    with pytest.raises(Exception) as exc_info:
+        board.set_directioner(directioner)
+    assert str(exc_info.value) == "Positions of the directioner aren't free or valid"
+
+def test_remove_alien_from_board(init_a_default_board):
+    board = init_a_default_board
+    alien = Alien(Team.GREEN)
+    board.set_alien(1, 1, alien)
+    with pytest.raises(Exception) as exc_info:
+        board.remove_alien_from_board(8, 8, alien)
+    assert str(exc_info.value) == "alien not found"
+    board.remove_alien_from_board(1, 1, alien)
+    assert board.aliens[(1, 1)] == []
+    assert board.get_cell(1, 1).aliens == []
+
+def test_cant_move_alien(init_a_default_board):
+    board = init_a_default_board
+    alien = Alien(Team.GREEN)
+    board.set_alien(1, 1, alien)
+    with pytest.raises(Exception) as exc_info:
+        board.move_alien(8, 8, alien)
+    assert str(exc_info.value) == "alien not found in position"
+
+
+
+
+
+
 

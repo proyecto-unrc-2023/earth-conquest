@@ -260,6 +260,8 @@ class Board:
     """
 
     def move_alien(self, x, y, alien):
+        if not self.get_cell(x, y).aliens.__contains__(alien):
+            raise ValueError("alien not found in position")
         alterator = self.get_cell(x, y).alterator  # alterator on the cell
         if isinstance(alterator, Teleporter):
             new_x, new_y = self.new_alien_pos_with_teleporter(x, y, alterator)
@@ -357,11 +359,11 @@ class Board:
     """
 
     def remove_alien_from_board(self, x, y, alien):
-        if isinstance(alien, Alien):
+        if isinstance(alien, Alien) and self.aliens.__contains__((x, y)):
             self.get_cell(x, y).remove_alien(alien)
             self.aliens[(x, y)].remove(alien)
         else:
-            raise ValueError(f'you can only remove aliens')
+            raise ValueError(f'alien not found')
 
     """
     Given an alien, this method returns the position were the alien is placed
