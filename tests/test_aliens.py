@@ -18,13 +18,13 @@ def test_create_alien(reset_id):
 def test_string_for_blue_team(reset_id):
     alien = Alien(Team.BLUE)
     res = alien.__str__()
-    assert res.__eq__('BLUE')
+    assert res.__eq__('B:1')
 
 
 def test_string_for_green_team(reset_id):
     alien = Alien(Team.GREEN)
     res = alien.__str__()
-    assert res.__eq__('GREEN')
+    assert res.__eq__('G:1')
 
 
 def test_create_two_aliens(reset_id):

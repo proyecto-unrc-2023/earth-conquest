@@ -6,6 +6,9 @@ from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board, BoardSchema
+from app.backend.models.board import Board
+from app.backend.models.team import Team
+
 
 INIT_CREW = 6
 
@@ -17,6 +20,7 @@ class Game:
         self.green_player = None
         self.blue_player = None
         self.board = Board()
+        self.winner = (None, None)          # (Player name, TEAM)
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -73,10 +77,13 @@ class Game:
     def act_board(self):
         if not self.board:
             raise Exception("No board created")
-        self.board.act_board()
+        res = self.board.act_board()
+        if res is not None:
+            self.status = TGame.OVER
+            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
 
     def has_game_ended(self):
-        return self.board.green_ovni == 0 or self.board.blue_ovni == 0
+        return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
 
     """
     ends the game if some player want to leave
@@ -92,6 +99,16 @@ class Game:
         except Exception:
             print("Invalid cell selected. Can not place an alterator there")
 
+    def get_team_winner(self):
+        return self.winner[1]
+
+    def json(self):
+        return {
+            'status': self.status,
+            'green_player': self.green_player,
+            'blue_player': self.blue_player,
+            'board': self.board
+        }
 
 class GameSchema(Schema):
     status = fields.Enum(TGame)

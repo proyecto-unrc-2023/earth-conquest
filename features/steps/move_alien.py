@@ -16,7 +16,7 @@ def step_game_started(context):
 @given("an alien is on the cell {row:d} {column:d}")
 def step_an_alien_is_on_the_cell(context, row, column):
     context.alien_position = (row, column)
-    context.alien = Alien(Team.BLUE)
+    context.alien = Alien(Team.GREEN)
     context.game.board.set_alien(row, column, context.alien)
 
 
@@ -25,7 +25,7 @@ def step_game_refreshes(context):
     context.game.refresh_board()
 
 
-@then("the alien moves to one of its adjoining, free of mountains and within the board's perimeter cell")
+@then("the alien moves to one of its adjoining, free of mountains and within the board's perimeter")
 def step_alien_moves_to_adjoining_cell(context):
     new_pos = context.game.board.get_alien_position(context.alien)
     assert(is_position_adjacent(context.alien_position, new_pos))

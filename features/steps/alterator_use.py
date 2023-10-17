@@ -15,6 +15,7 @@ from features.environment import table_to_string
 def step_impl(context):
     context.game = Game()
     context.game.board = Board.from_string(table_to_string(context.table))
+    
 
 
 @given(u'the Directioner is positioned horizontally on the cells (5,1), (5,2) and (5,3)')
@@ -48,47 +49,57 @@ def step_impl(context):
     assert(new_pos == (5, 3))
 
 
-# TELEPORTER
-@given(u'the Teleporter\'s door is positioned on the cell (8,3) and it\'s tail on the cell (9,9)')
+@then(u'the alien moves to the cell (5, 4)')
 def step_impl(context):
-    context.teleporter = Teleporter((8, 3), (9, 9))
+    new_pos = context.game.board.get_alien_position(context.alien)
+    assert(new_pos == (5, 4))
+
+
+
+# TELEPORTER
+@given(u'the Teleporter\'s door and exit are positioned on the cells (4,1) and (6,10) respectively')
+def step_impl(context):
+    context.teleporter = Teleporter((4, 1), (6,10))
     context.game.board.set_teleporter(context.teleporter)
 
 
-@given(u'an alien is positioned on the cell (7,3)')
+@given(u'a green alien is positioned on the cell (3, 1)')
 def step_impl(context):
+    board = context.game.board
     context.alien = Alien(Team.GREEN)
-    context.game.board.set_alien(7, 3, context.alien)
+    board.set_alien(3, 1, context.alien)
 
 
-@given(u'the alien moves to an adjacent cell, this one being cell (8,3)')
+@given(u'the alien moves to an adjacent cell, this one being cell (4,1)')
 def step_impl(context):
-    context.game.board.set_alien(8, 3, context.alien)
-    context.game.board.remove_alien_from_board(7, 3, context.alien)
+    context.game.board.remove_alien_from_board(3, 1, context.alien)
+    context.game.board.set_alien(4, 1, context.alien)
 
 
-@then(u'the alien is teleported to the cell (9,9)')
+@then(u'the alien is teleported to the cell (6,10)')
 def step_impl(context):
     new_pos = context.game.board.get_alien_position(context.alien)
-    assert(new_pos == (9,9))
+    assert(new_pos == (6, 10))
+
 
 
 # TRAP
-@given(u'the Trap is positioned on the cell (3,11)')
+@given(u'the Trap is positioned on the cell (4,3)')
 def step_impl(context):
-    context.game.board.set_trap(3,11)
-    
-
-@given(u'the alien is positioned on the cell (2,11)')
-def step_impl(context):
-    context.alien = Alien(Team.BLUE)
-    context.game.board.set_alien(2, 11, context.alien)
+    context.game.board.set_trap(4,3)
 
 
-@given(u'the alien moves to an adjacent cell, this one being cell (3,11)')
+@given(u'a green alien is positioned on the cell (3, 3)')
 def step_impl(context):
-    context.game.board.set_alien(3, 11, context.alien)
-    context.game.board.remove_alien_from_board(2, 11, context.alien)
+    board = context.game.board
+    context.alien = Alien(Team.GREEN)
+    board.set_alien(3, 3, context.alien)
+
+
+@given(u'the alien moves to an adjacent cell, this one being cell (4,3)')
+def step_impl(context):
+    context.game.board.remove_alien_from_board(3, 3, context.alien)
+    context.game.board.set_alien(4, 3, context.alien)
 
 
 @when(u'the system acts')
@@ -99,4 +110,5 @@ def step_impl(context):
 @then(u'the alien dies')
 def step_impl(context):
     new_pos = context.game.board.get_alien_position(context.alien)
+    print(new_pos)
     assert(new_pos == None)
