@@ -1,7 +1,7 @@
 from app.backend.api import *
 from app.backend.api.game_controller import GameController
 
-from flask_restful import Resource
+from flask_restful import Resource, request
 
 
 class GamesResource(Resource):
@@ -20,7 +20,11 @@ class GameResource(Resource):
     def put(self, game_id):
         return GameController.start_game(game_id)
 
+    def patch(self, game_id):
+        data = request.get_json()
+        return GameController.update_game(self=self, game_id=game_id, data=data)
+
 
 api.add_resource(GamesResource, '/')
-api.add_resource(GameResource, '/', '/<int:game_id>', '/<int:game_id>/start_game')
-
+api.add_resource(GameResource, '/', '/<int:game_id>',
+                 '/<int:game_id>/start_game', '/<int:game_id>/update_game')
