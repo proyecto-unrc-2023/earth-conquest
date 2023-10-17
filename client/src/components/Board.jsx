@@ -11,20 +11,19 @@ export const Board = ({ newAlterator }) => {
       newBoard[row - 2][col].alterator = newAlterator
       newBoard[row - 1][col].alterator = newAlterator
       newBoard[row][col].alterator = newAlterator
-    }
-    if (newAlterator === alterator.directioner_down) {
+    } else if (newAlterator === alterator.directioner_down) {
       newBoard[row + 2][col].alterator = newAlterator
       newBoard[row + 1][col].alterator = newAlterator
       newBoard[row][col].alterator = newAlterator
-    }
-    if (newAlterator === alterator.directioner_right) {
+    } else if (newAlterator === alterator.directioner_right) {
       newBoard[row][col + 2].alterator = newAlterator
       newBoard[row][col + 1].alterator = newAlterator
       newBoard[row][col].alterator = newAlterator
-    }
-    if (newAlterator === alterator.directioner_left) {
+    } else if (newAlterator === alterator.directioner_left) {
       newBoard[row][col - 2].alterator = newAlterator
       newBoard[row][col - 1].alterator = newAlterator
+      newBoard[row][col].alterator = newAlterator
+    } else {
       newBoard[row][col].alterator = newAlterator
     }
   }

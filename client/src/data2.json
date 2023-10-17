@@ -1,6 +1,8 @@
 {
     "green_ovni_range": {"x": 3, "y": 3},
     "blue_ovni_range": {"x": 6, "y": 11},
+    "green_ovni_life": 50,
+    "blue_ovni_life": 50,
     "base_dimention": 4,
     "grid": [
       [
@@ -17,7 +19,7 @@
           {
             "aliens": [],
             "alterator": {
-              "name" : "teleport",
+              "name" : "teleport_in",
               "positionInit" : {"x": null, "y": null},
               "positionEnd" : {"x": null, "y": null},
               "direction" : null
@@ -27,7 +29,7 @@
           {
             "aliens": [],
             "alterator": { 
-              "name" : "teleport",
+              "name" : "teleport_out",
               "positionInit" : {"x": null, "y": null},
               "positionEnd" : {"x": null, "y": null},
               "direction" : null
@@ -586,7 +588,7 @@
                 "team":   "green"
               }
             ],
-            "alterator": "teleport",
+            "alterator": "teleport_in",
             "modifier": null
           },
           {
@@ -943,7 +945,7 @@
           },
         {
           "aliens": [],
-          "alterator": "teleport",
+          "alterator": "teleport_out",
           "modifier": null
         },
         {
