@@ -14,7 +14,7 @@ def step_impl(context, attacked_team, life_points):
         context.game.board.blue_ovni_life = life_points
 
 
-@given(u'a "{attacking_team}" alien with {alien_eyes:d} eyes is positioned on the cell in the "{attacked_team}" base '
+@given(u'a "{attacking_team}" alien with {alien_eyes:d} eyes is positioned on the cell in the "{attacked_team}" base'
        u'range')
 def step_impl(context, attacking_team, alien_eyes, attacked_team):
     if attacking_team == "green":
