@@ -1,26 +1,8 @@
-import { useState } from 'react'
-import data2 from './data2.json'
-import { Board } from './components/Board'
-import { Panel } from './components/Panel'
-
-// leer el js
-console.log(data2.grid)
+import { Game } from './components/Game'
 
 function App () {
-  const [alterator, setAlterator] = useState(null)
-
-  const setAlter = (newAlterator) => {
-    setAlterator(newAlterator)
-  }
-
-  console.log(alterator)
   return (
-    <>
-      <h1>Earth conquest</h1>
-      <Board newAlterator={alterator} />
-
-      <Panel setAlter={setAlter} />
-    </>
+    <Game />
   )
 }
 

@@ -79,6 +79,11 @@
                   "modifier": null
                 },
                 {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
                   "aliens": [
                     {
                       "id": 8,
@@ -86,11 +91,6 @@
                       "team": "blue"
                     }
                   ],
-                  "alterator": null,
-                  "modifier": null
-                },
-                {
-                  "aliens": [],
                   "alterator": null,
                   "modifier": null
                 },

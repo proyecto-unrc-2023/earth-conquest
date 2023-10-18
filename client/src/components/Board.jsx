@@ -1,4 +1,5 @@
 import data2 from '../data2.json'
+// import data23 from '../data23.json'
 import { Cell } from './Cell'
 import { alterator } from '../constants.js'
 import { useState } from 'react'
@@ -33,13 +34,29 @@ export const Board = ({ newAlterator }) => {
     if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
     if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
     if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
+
     const newBoard = [...board]
-
     setAlteratorInCell(row, col, newAlterator, newBoard)
-
     setBoard(newBoard)
     console.log(board)
   }
+  /*
+  const moveAliens = () => {
+    const nueva = data23.board
+    nueva.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        if (cell.aliens !== null) {
+          nueva[i][j + 1].aliens = cell.aliens
+        }
+      })
+    })
+    console.log(nueva)
+  }
+
+  setTimeout(() => {
+    moveAliens()
+  }, 1000)
+  */
 
   return (
     <section className='board'>
