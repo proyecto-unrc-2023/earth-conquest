@@ -4,10 +4,12 @@ from marshmallow import Schema, fields
 from sql import SQL
 
 from app.backend.models import team
+from app.backend.models.directioner import Directioner
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board
 from app.backend.models.team import Team
+from app.backend.models.teleporter import Teleporter
 
 INIT_CREW = 6
 
@@ -82,18 +84,48 @@ class Game(SQL):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
 
     """
-    ends the game if some player want to leave
+    ends the game if some player wants to leave
     """
     def end_game(self):
         print('Game ended')
         self.blue_player = None
         self.green_player = None
 
-    def set_alterator(self, alterator, x, y):
+    """ 
+    Sets a Trap on a specific Cell only if on that cell 
+    there's no Modifier or Alterator already placed there.
+    """
+    def set_trap(self, x, y):
         try:
-            self.board.set_alterator(alterator, x, y)
+            self.board.set_trap(x,y)
         except Exception:
-            print("Invalid cell selected. Can not place an alterator there")
+            print("Invalid cell selected. Can not place a Trap in the given position.")
+
+
+    """ 
+    Sets a Teleporter on two specific Cells (door and exit) only if on those 
+    cells there's no Modifier or Alterator already placed there.
+    This method recieves two tuples, representing the door and exit positions.
+    """
+    def set_teleporter(self, door_pos, exit_pos):
+        teleporter = Teleporter(door_pos, exit_pos)
+        try:
+            self.board.set_teleporter(teleporter)
+        except Exception:
+            print("Invalid cell selected. Can not pace a Teleporter in the given position.")
+
+
+    """ 
+    Sets a Directioner on three specific Cells only if on those 
+    cells there's no Modifier or Alterator already placed there.
+    """
+    def set_directioner(self, init_pos, direction):
+        directioner = Directioner(init_pos, direction)
+        try:
+            self.board.set_directioner(directioner)
+        except Exception:
+            print("Invalid cell selected. Can not pace a Directioner in the given position.")
+
 
     def get_team_winner(self):
         return self.winner[1]
