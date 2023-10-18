@@ -111,6 +111,7 @@ class Game:
         }
 
 class GameSchema(Schema):
+    id = fields.Integer()
     status = fields.Enum(TGame)
     green_player = fields.Str(required=False)
     blue_player = fields.Str(required=False)
