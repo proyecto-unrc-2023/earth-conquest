@@ -2,12 +2,21 @@ import data2 from '../data2.json'
 // import data23 from '../data23.json'
 import { Cell } from './Cell'
 import { alterator } from '../constants.js'
-import { useState } from 'react'
 
-export const Board = ({ newAlterator }) => {
-  const [board, setBoard] = useState(data2.grid)
+export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) => {
+  const updateBoard = (row, col) => {
+    if (newAlterator === null) return
+    if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
+    if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
+    if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
 
+    const newBoard = [...board]
+    setAlteratorInCell(row, col, newAlterator, newBoard)
+    setBoard(newBoard)
+    console.log(board)
+  }
   const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
+    // mandarle a la api para preguntarle si la posición es valida
     if (newAlterator === alterator.directioner_up) {
       newBoard[row - 2][col].alterator = newAlterator
       newBoard[row - 1][col].alterator = newAlterator
@@ -24,39 +33,20 @@ export const Board = ({ newAlterator }) => {
       newBoard[row][col - 2].alterator = newAlterator
       newBoard[row][col - 1].alterator = newAlterator
       newBoard[row][col].alterator = newAlterator
+    } else if (newAlterator === alterator.teleport_in) {
+      // aca preguntar si es posición válida
+      newBoard[row][col].alterator = newAlterator
+      // cambia estado a teleport out
+      setAlter(alterator.teleport_out)
+      setPermiso(false)
+    } else if (newAlterator === alterator.teleport_out) {
+      newBoard[row][col].alterator = newAlterator
+      setAlter(null)
+      setPermiso(true)
     } else {
       newBoard[row][col].alterator = newAlterator
     }
   }
-
-  const updateBoard = (row, col) => {
-    if (newAlterator === null) return
-    if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
-    if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
-    if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
-
-    const newBoard = [...board]
-    setAlteratorInCell(row, col, newAlterator, newBoard)
-    setBoard(newBoard)
-    console.log(board)
-  }
-  /*
-  const moveAliens = () => {
-    const nueva = data23.board
-    nueva.forEach((row, i) => {
-      row.forEach((cell, j) => {
-        if (cell.aliens !== null) {
-          nueva[i][j + 1].aliens = cell.aliens
-        }
-      })
-    })
-    console.log(nueva)
-  }
-
-  setTimeout(() => {
-    moveAliens()
-  }, 1000)
-  */
 
   return (
     <section className='board'>

@@ -8,7 +8,34 @@ import { StatsGame } from './StatsGame'
 console.log(data2.grid)
 
 export function Game () {
-  const [alterator, setAlterator] = useState(null)
+  const [alter, setAlterator] = useState(null)
+  const [permisoTeleport, setPermisoTeleport] = useState(true)
+  const [board, setBoard] = useState(data2.grid)
+
+  /*
+  pide el refresco
+  const fetchData = async () => {
+    try {
+      const response = await fetch('ruta de la api');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+
+      setBoard(data.board);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchData()
+      setGrid(nextBoard);
+    }, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [board]);
+  */
 
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
@@ -23,12 +50,12 @@ export function Game () {
   return (
     <>
       <h1>Earth conquest</h1>
-      <Board newAlterator={alterator} />
+      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setPermiso={setPermisoTeleport} />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
       </section>
-      <Panel setAlter={setAlter} />
+      <Panel setAlter={setAlter} permiso={permisoTeleport} />
     </>
   )
 }

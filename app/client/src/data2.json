@@ -2,7 +2,7 @@
     "green_ovni_range": {"x": 3, "y": 3},
     "blue_ovni_range": {"x": 6, "y": 11},
     "base_dimention": 4,
-    "green_ovni_life": 80,
+    "green_ovni_life": 180,
     "blue_ovni_life": 80,
     "live_blue_aliens": 30,
     "live_green_aliens": 50,
