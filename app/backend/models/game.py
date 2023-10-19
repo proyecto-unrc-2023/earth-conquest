@@ -99,6 +99,15 @@ class Game(SQL):
         return self.winner[1]
     
 
+    '''
+    This method returns the team of a specific alien in the board.
+    '''
+    def __get_alien_team_in_position(self, x, y, alien_pos_in_list):
+        return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
+    
+
+
+
     def json(self):
         return {
             'status': self.status,
