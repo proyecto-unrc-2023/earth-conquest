@@ -154,6 +154,12 @@ class Game:
     def get_blue_ovni_range(self):
         return self.board.blue_ovni_range
 
+    def is_pos_within_board_range(self, x, y):
+        return self.board.is_within_board_range(x, y)
+
+    def get_cell(self, x, y):
+        return self.board.get_cell(x, y)
+
     def json(self):
         return {
             'status': self.status,
