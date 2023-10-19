@@ -16,7 +16,7 @@ def step_game_started(context):
 @given("an alien is on the cell {row:d} {column:d}")
 def step_an_alien_is_on_the_cell(context, row, column):
     context.alien_position = (row, column)
-    context.alien = Alien(Team.BLUE)
+    context.alien = Alien(Team.GREEN)
     context.game.board.set_alien(row, column, context.alien)
 
 
