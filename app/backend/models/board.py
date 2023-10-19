@@ -446,3 +446,24 @@ class Board:
 
     def any_ovni_destroyed(self):
         return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
+
+    '''
+    This method adds eyes to an alien in a given position
+    '''
+    def add_eyes_to_alien(self, x, y, alien_pos_in_list, num_eyes):
+        cell = self.get_cell(x, y)
+        cell.aliens[alien_pos_in_list].add_eyes(num_eyes)
+
+    '''
+    This method returns an alien in a given position
+    '''
+    def get_alien_in_position(self, x, y, alien_pos_in_list):
+        cell = self.get_cell(x, y)
+        return cell.aliens[alien_pos_in_list]
+
+    '''
+    This method returns the number of aliens in a given position 
+    '''
+    def get_num_aliens_in_position(self, x, y):
+        cell = self.get_cell(x, y)
+        return len(cell.aliens)
