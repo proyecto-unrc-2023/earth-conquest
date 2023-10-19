@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import data2 from '../data2.json'
-import { Board } from './Board'
-import { Panel } from './Panel'
-import { StatsGame } from './StatsGame'
+import data2 from '../../data2.json'
+import { Board } from '../Board/Board'
+import { Panel } from '../Panel/Panel'
+import { StatsGame } from '../StatGame/StatsGame'
+import './Game.css'
 
 // leer el js
 console.log(data2.grid)

@@ -1,0 +1,10 @@
+.statsGame{
+  display: grid;
+  justify-items: center;
+  grid-template-columns:repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-areas: 
+    "health-bar-green health-bar-blue"
+    "live_alien_green live_alien_blue";
+  margin: 20px 10px;
+}

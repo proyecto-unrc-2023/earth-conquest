@@ -1,7 +1,8 @@
-import data2 from '../data2.json'
+import data2 from '../../data2.json'
 // import data23 from '../data23.json'
-import { Cell } from './Cell'
-import { alterator } from '../constants.js'
+import { Cell } from '../Cell/Cell'
+import { alterator } from '../../constants.js'
+import './Board.css'
 
 export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) => {
   const updateBoard = (row, col) => {

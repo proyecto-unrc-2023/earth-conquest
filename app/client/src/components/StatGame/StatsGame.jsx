@@ -1,3 +1,5 @@
+import './StatsGame.css'
+
 export const StatsGame = ({ team, lifeOvni, liveAliens }) => {
   return (
     <>

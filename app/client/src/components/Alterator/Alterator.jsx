@@ -1,4 +1,5 @@
-import { alterator } from '../constants.js'
+import { alterator } from '../../constants.js'
+import './Alterator.css'
 
 export const Alterator = ({ setAlter, tipo }) => {
   const agregarAlt = () => {

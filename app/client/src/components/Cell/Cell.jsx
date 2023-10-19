@@ -1,6 +1,7 @@
-import { Alien } from './Alien'
-import { Modifier } from './Modifier'
-import { Alterator } from './Alterator'
+import { Alien } from '../Alien/Alien'
+import { Modifier } from '../Modifier/Modifier'
+import { Alterator } from '../Alterator/Alterator'
+import './Cell.css'
 
 export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase }) => {
   const handleClick = () => {

@@ -1,5 +1,6 @@
-import { alterator } from '../constants.js'
+import { alterator } from '../../constants.js'
 import { useState } from 'react'
+import './Panel.css'
 
 export const Panel = ({ setAlter, permiso }) => {
   const [showDirections, setShowDirections] = useState(false)
@@ -9,7 +10,7 @@ export const Panel = ({ setAlter, permiso }) => {
   }
 
   return (
-    <section className='modifiers'>
+    <section className='alterators-panel'>
       <h1>Alteradores</h1>
       <button onClick={() => handleAlterator('trap')} value={alterator.trap}>Trap</button>
       <button onClick={() => handleAlterator(alterator.teleport_in)}>Teleport</button>
