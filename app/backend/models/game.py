@@ -102,14 +102,14 @@ class Game(SQL):
     '''
     This method sets a modifier on the given position if this one's free and valid.
     '''
-    def __set_modifier_in_position(self, modifier, x, y):
+    def set_modifier_in_position(self, modifier, x, y):
         self.board.set_modifier(modifier, x, y)
 
     
     '''
     This method gets the modifier that's on the given position
     '''
-    def __get_modifier_in_position(self, x, y):
+    def get_modifier_in_position(self, x, y):
         self.board.get_modifier(x,y)
 
 
