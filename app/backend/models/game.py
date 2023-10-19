@@ -19,7 +19,7 @@ class Game(SQL):
         self.green_player = None
         self.blue_player = None
         self.board = Board()
-        self.winner = (None, None)          # (Player name, TEAM)
+        self.winner = (None, None)  # (Player name, TEAM)
 
     def join_as_green(self):
         if self.green_player is not None:
@@ -34,7 +34,7 @@ class Game(SQL):
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
             raise Exception("Invalid dimensions. Minimum board is 4x6. Max is 25x45")
-        self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
+        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
         self.set_initial_crew()
@@ -84,6 +84,7 @@ class Game(SQL):
     """
     ends the game if some player want to leave
     """
+
     def end_game(self):
         print('Game ended')
         self.blue_player = None
@@ -97,16 +98,13 @@ class Game(SQL):
 
     def get_team_winner(self):
         return self.winner[1]
-    
 
     '''
     This method returns the team of a specific alien in the board.
     '''
-    def __get_alien_team_in_position(self, x, y, alien_pos_in_list):
+
+    def get_alien_team_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
-    
-
-
 
     def json(self):
         return {
@@ -115,64 +113,62 @@ class Game(SQL):
             'blue_player': self.blue_player,
             'board': self.board
         }
-       
+
     '''
     This method set an alien in a given position of respective team
-    '''   
+    '''
+
     def create_an_alien_in_pos(self, x, y, team):
         alien = Alien(team)
         self.board.set_alien(x, y, alien)
-        
+
     '''
     This method sets an alien in a given position of respective team
     '''
+
     def creates_aliens_in_pos(self, x, y, cant, team):
         for i in range(cant):
             self.board.set_alien(x, y, Alien(team))
-    
-    
+
     '''
     This method returns the number of aliens in a given position
-    '''        
+    '''
+
     def get_num_aliens_in_position(self, x, y):
         return self.board.get_num_aliens_in_position(x, y)
-    
-    
+
     '''
     This method returns the alien in a given position
     '''
+
     def get_alien_in_position(self, x, y, index):
         return self.board.get_alien_in_position(x, y, index)
-    
-    
-    '''
-    This method returns the number of aliens in the board
-    '''
-    def get_num_aliens_in_board(self):
-        return self.board.get_num_aliens_in_board()
-    
-    
+
     '''
     This method returns the number eyes on specific alien in the board
     '''
+
     def get_alien_eyes_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).eyes
-    
+
     '''
     This method adds eyes to a specific alien in the board
     '''
+
     def add_eyes_to_alien(self, x, y, alien_pos_in_list, eyes):
         self.board.get_alien_in_position(x, y, alien_pos_in_list).add_eyes(eyes)
 
     '''
     This method returns the aliens list in a given position
     '''
+
     def get_aliens_in_pos(self, x, y):
         return self.board.get_cell(x, y).aliens
-    
+
     '''
-    
+    This method returns if any ovni was destroyed
     '''
+
     def any_ovni_destroyed(self):
         return self.board.any_ovni_destroyed()
 
