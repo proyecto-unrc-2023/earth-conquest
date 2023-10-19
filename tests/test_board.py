@@ -148,6 +148,3 @@ def test_cant_move_alien(init_a_default_board):
 
 
 
-
-
-

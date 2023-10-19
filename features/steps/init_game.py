@@ -6,22 +6,17 @@ from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
 
 
-@given(u'that the application was initiated')
+@given(u'a new game has been created')
 def step_impl(context):
-    # context.app = Application()
-    # por ahora
-    pass
-
-
-@given('player "{name}" has created a game as blue player')
-def step_impl(context, name):
     context.game = Game()
-    context.game.join_as_blue()
 
 
-@given(u'player "{name}" has joined the game as green player')
-def step_impl(context, name):
-    context.game.join_as_green()
+@given(u'player "{name}" has joined the game as "{team}" player')
+def step_impl(context, name, team):
+    if team == 'green':
+        context.game.join_as_green(name)
+    elif team == 'blue':
+        context.game.join_as_blue(name)
 
 
 @step(u'the board dimension is {rows:d} by {cols:d}')
@@ -35,7 +30,7 @@ def step_impl(context):
     assert context.game.status == TGame.NOT_STARTED
 
 
-@when(u'the game is started')
+@step(u'the game is started')
 def step_impl(context):
     context.game.start_game()
 
@@ -139,7 +134,7 @@ def step_impl(context, range):
     assert context.game.board.base_range_dimentions == range
 
 
-@then(u'the range of the "{team}" ovni should be {row:d} {col:d}')
+@then(u'the corner position of the "{team}" ovni range should be {row:d} {col:d}')
 def step_impl(context, team, row, col):
     board = context.game.board
     assert board.green_ovni_range if team == "green" else board.blue_ovni_range == (row, col)

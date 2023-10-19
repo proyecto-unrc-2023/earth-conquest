@@ -22,12 +22,20 @@ def step_game_refreshes(context):
     context.game.refresh_board()
 
 
-@then("the alien moves to one of its adjoining, free of mountains and within the board's perimeter")
+@then("the alien moves to one of its adjoining positions")
 def step_alien_moves_to_adjoining_cell(context):
-    new_pos = context.game.board.get_alien_position(context.alien)
-    assert(is_position_adjacent(context.alien_position, new_pos))
-    assert(context.game.board.get_cell(new_pos[0], new_pos[1]).alterator != Modifier.MOUNTAIN_RANGE)
-    assert(context.game.board.is_within_board_range(new_pos[0], new_pos[0]))
+    context.new_pos = context.game.board.get_alien_position(context.alien)
+    assert (is_position_adjacent(context.alien_position, context.new_pos))
+
+
+@then(u'the new alien posiiton is within the board\'s perimeter')
+def step_impl(context):
+    assert (context.game.board.is_within_board_range(context.new_pos[0], context.new_pos[0]))
+
+
+@then(u'the new alien position is free of mountains')
+def step_impl(context):
+    assert (context.game.board.get_cell(context.new_pos[0], context.new_pos[1]).alterator != Modifier.MOUNTAIN_RANGE)
 
 
 def is_position_adjacent(original_pos, new_pos):

@@ -361,7 +361,8 @@ class Board:
     def remove_alien_from_board(self, x, y, alien):
         if isinstance(alien, Alien) and self.aliens.__contains__((x, y)):
             self.get_cell(x, y).remove_alien(alien)
-            self.aliens[(x, y)].remove(alien)
+            if (x, y) in self.aliens:
+                self.aliens[(x, y)].remove(alien)
         else:
             raise ValueError(f'alien not found')
 
@@ -448,3 +449,22 @@ class Board:
 
     def any_ovni_destroyed(self):
         return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
+
+    def kill_aliens(self, team, cant):
+        team_aliens = {}    # dict que llevara los aliens como clave y su pos como valor
+        for pos, aliens_on_cell in self.aliens.items():
+            for alien in aliens_on_cell:
+                if alien.team is team:
+                    x, y = pos
+                    team_aliens[alien] = (x, y)
+        # en este punto todos los aliens del equipo 'team' estaran almacenados en team_aliens
+
+        if team_aliens.__len__() < cant:
+            return False
+
+        else:
+            for i in range(cant):
+                alien_to_kill = random.choice(list(team_aliens.keys()))
+                x, y = team_aliens.pop(alien_to_kill)   # deletes the key and return its value
+                self.remove_alien_from_board(x, y, alien_to_kill)   # kills the alien
+            return True

@@ -1,40 +1,42 @@
 import random
 
 from marshmallow import Schema, fields
-from sql import SQL
 
 from app.backend.models import team
+from app.backend.models.alterator import Alterator
+from app.backend.models.directioner import Directioner
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board
 from app.backend.models.team import Team
+from app.backend.models.teleporter import Teleporter
 
 INIT_CREW = 6
 
 
-class Game(SQL):
+class Game:
 
     def __init__(self):
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
         self.board = Board()
-        self.winner = (None, None)          # (Player name, TEAM)
+        self.winner = (None, None)  # (Player name, TEAM)
 
-    def join_as_green(self):
+    def join_as_green(self, name):
         if self.green_player is not None:
             raise Exception("Player green is already taken")
-        self.green_player = team.Team.GREEN
+        self.green_player = name
 
-    def join_as_blue(self):
+    def join_as_blue(self, name):
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
-        self.blue_player = team.Team.BLUE
+        self.blue_player = name
 
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
             raise Exception("Invalid dimensions. Minimum board is 4x6. Max is 25x45")
-        self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
+        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
         self.set_initial_crew()
@@ -84,20 +86,34 @@ class Game(SQL):
     """
     ends the game if some player want to leave
     """
+
     def end_game(self):
         print('Game ended')
         self.blue_player = None
         self.green_player = None
 
-    def set_alterator(self, alterator, x, y):
-        try:
-            self.board.set_alterator(alterator, x, y)
-        except Exception:
-            print("Invalid cell selected. Can not place an alterator there")
+    def set_alterator(self, alterator, team, x=None, y=None):
+
+        if isinstance(alterator, Directioner):
+            if self.board.kill_aliens(team, 4):
+                self.board.set_directioner(alterator)
+            else:
+                raise Exception("not enough aliens to put a Directioner")
+
+        if isinstance(alterator, Teleporter):
+            if self.board.kill_aliens(team, 6):
+                self.board.set_teleporter(alterator)
+            else:
+                raise Exception("not enough aliens to put a Teleporter")
+
+        if alterator is Alterator.TRAP:
+            if self.board.kill_aliens(team, 4):
+                self.board.set_trap(x, y)
+            else:
+                raise Exception("not enough aliens to put a TRAP")
 
     def get_team_winner(self):
         return self.winner[1]
-    
 
     def json(self):
         return {
