@@ -20,11 +20,9 @@ class GameResource(Resource):
     def put(self, game_id):
         return GameController.start_game(game_id)
 
-    def patch(self, game_id):
-        data = request.get_json()
-        return GameController.update_game(self=self, game_id=game_id, data=data)
 
-
-api.add_resource(GamesResource, '/')
-api.add_resource(GameResource, '/', '/<int:game_id>',
-                 '/<int:game_id>/start_game', '/<int:game_id>/update_game')
+api.add_resource(GamesResource, '/get_all_games')
+api.add_resource(GameResource,
+                 '/get_game/<int:game_id>',
+                 '/create_game',
+                 '/start_game/<int:game_id>')

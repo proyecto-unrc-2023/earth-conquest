@@ -86,7 +86,7 @@ class GameController:
         This method updates a game.
     '''
 
-    def update_game(self, game_id, data):
+    def update_game(game_id, data):
         game = games_dict.get(game_id)
         if game is None:
             message = json.dumps(
