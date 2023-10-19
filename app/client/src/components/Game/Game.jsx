@@ -1,41 +1,36 @@
-import { useState } from 'react'
-import data2 from '../data2.json'
-import { Board } from './Board'
-import { Panel } from './Panel'
-import { StatsGame } from './StatsGame'
+import { useState, useEffect } from 'react'
+import data2 from '../../data2.json'
+import { Board } from '../Board/Board'
+import { Panel } from '../Panel/Panel'
+import { StatsGame } from '../StatGame/StatsGame'
+import './Game.css'
 
-// leer el js
-console.log(data2.grid)
-
-export function Game () {
+export function Game ({ gameId }) {
   const [alter, setAlterator] = useState(null)
   const [permisoTeleport, setPermisoTeleport] = useState(true)
   const [board, setBoard] = useState(data2.grid)
 
-  /*
-  pide el refresco
+  // pide el refresco
   const fetchData = async () => {
     try {
-      const response = await fetch('ruta de la api');
+      const response = await fetch(`/game/${gameId}`)
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok')
       }
-      const data = await response.json();
+      const data = await response.json()
 
-      setBoard(data.board);
+      setBoard(data.board)
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:', error)
     }
   }
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       fetchData()
-      setGrid(nextBoard);
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [board]);
-  */
+    }, 1000)
+    return () => clearTimeout(timeoutId)
+  }, [board])
 
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)

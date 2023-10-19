@@ -1,0 +1,8 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  width: fit-content;
+  text-align: center;
+  background-image: url('../public/cesped3.png');
+  background-size: cover;
+}

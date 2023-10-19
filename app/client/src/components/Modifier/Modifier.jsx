@@ -1,4 +1,5 @@
-import { modifier } from '../constants.js'
+import { modifier } from '../../constants.js'
+import './Modifier.css'
 
 export const Modifier = ({ type }) => {
   return (

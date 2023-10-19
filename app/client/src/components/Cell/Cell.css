@@ -1,0 +1,36 @@
+.cell {
+  display: grid;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #00dc3b4b;
+  cursor: pointer;
+}
+
+.green{
+  background-color: rgba(0, 255, 94, 0.222);
+}
+
+.blue{
+  background-color: rgba(0, 115, 255, 0.407);
+}
+
+.green_nave{
+  display: grid;
+  place-items: center;
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  transform: translate(-5px, -50px);
+  rotate: -10deg;
+  opacity: 90%;
+}
+
+.blue_nave{
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  transform: translate(10px, -30px);
+  rotate: 10deg;
+  opacity: 90%;
+}

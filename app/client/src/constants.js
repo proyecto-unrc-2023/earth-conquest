@@ -21,5 +21,6 @@ export const team = {
 
 export const gameStatus = {
   started: 'started',
-  notStarted: 'notStarted'
+  notStarted: 'notStarted',
+  over: 'over'
 }
