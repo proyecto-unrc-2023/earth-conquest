@@ -82,7 +82,7 @@ class Game(SQL):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
 
     """
-    ends the game if some player want to leave
+    ends the game if some player wants to leave
     """
     def end_game(self):
         print('Game ended')

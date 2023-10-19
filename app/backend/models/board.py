@@ -303,8 +303,25 @@ class Board:
         if x == directioner.thrd_pos[0] and y == directioner.thrd_pos[1]:
             if self.can_alien_move_to_pos(directioner.last_pos[0], directioner.last_pos[1]):
                 return directioner.last_pos
-        else:
-            return self.get_adjoining_valid_pos(x, y)
+            else:
+                if directioner.direction == Direction.LEFT or directioner.direction == Direction.RIGHT:
+                    if self.can_alien_move_to_pos(x-1,y) or self.can_alien_move_to_pos(x-1,y):
+                        # the alien will move to a random adjacent position that's not equal to the snd_pos
+                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        while (new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]):
+                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        return new_x, new_y
+                    else:
+                        return x, y
+                if directioner.direction == Direction.DOWNWARDS or directioner.direction == Direction.UPWARDS:
+                    if self.can_alien_move_to_pos(x,y-1) or self.can_alien_move_to_pos(x,y+1):
+                        # the alien will move to a random adjacent position that's not equal to the snd_pos
+                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        while (new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]):
+                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        return new_x, new_y
+                    else:
+                        return x, y
 
     """
     Returns a position that 
@@ -313,19 +330,40 @@ class Board:
     """
 
     def get_adjoining_valid_pos(self, x, y):
-        move_to = random.randint(0, 3)
-        if move_to == 0:  # move to the left
-            new_x, new_y = x - 1, y
-        elif move_to == 1:  # move to the right
-            new_x, new_y = x + 1, y
-        elif move_to == 2:  # move up
-            new_x, new_y = x, y - 1
-        else:  # move down
-            new_x, new_y = x, y + 1
-        if not self.can_alien_move_to_pos(new_x, new_y):
-            return self.get_adjoining_valid_pos(x, y)  # calls the method again
+        # the alien can only stay on it's place
+        if not self.alien_has_free_adjacent_positions(x, y):
+            return x, y
+        else: # the alien has a free adjacent position to move to
+            move_to = random.randint(0, 3)
+            if move_to == 0:  # move to the left
+                new_x, new_y = x - 1, y
+            elif move_to == 1:  # move to the right
+                new_x, new_y = x + 1, y
+            elif move_to == 2:  # move up
+                new_x, new_y = x, y - 1
+            else:  # move down
+                new_x, new_y = x, y + 1
+            if not self.can_alien_move_to_pos(new_x, new_y):
+                return self.get_adjoining_valid_pos(x, y)  # calls the method again
+            else:
+                return new_x, new_y
+
+
+    """
+    Method that returns True if there's a free adjacent position for the alien
+    to move to. False if there's none.
+    """
+    def alien_has_free_adjacent_positions(self, x, y):
+        if self.can_alien_move_to_pos(x-1,y):
+            return True
+        elif self.can_alien_move_to_pos(x+1,y):
+            return True
+        elif self.can_alien_move_to_pos(x,y-1):
+            return True
+        elif self.can_alien_move_to_pos(x,y+1):
+            return True
         else:
-            return new_x, new_y
+            return False
 
     """
     Given a position, returns True if the alien can move there.
