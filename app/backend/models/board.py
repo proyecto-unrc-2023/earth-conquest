@@ -1,7 +1,10 @@
 import random
+
+from marshmallow import Schema, fields
+
 from app.backend.models.alien import Alien
 from app.backend.models.alterator import Alterator
-from app.backend.models.cell import Cell
+from app.backend.models.cell import Cell, CellSchema
 from app.backend.models.direction import Direction
 from app.backend.models.modifier import Modifier
 from app.backend.models.orientation import Orientation
@@ -430,6 +433,9 @@ class Board:
             self.blue_ovni_life -= alien.eyes
             if (x, y) in self.aliens:
                 self.aliens[(x, y)].remove(alien)
+    
+    def any_ovni_destroyed(self):
+        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
     @staticmethod
     def _row_to_string(row):
@@ -482,5 +488,17 @@ class Board:
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
 
-    def any_ovni_destroyed(self):
-        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
+    def json(self):
+        return {
+            'blue_ovni_range': self.blue_ovni_range,
+            'green_ovni_range': self.green_ovni_range,
+            'base_range_dimentions': self.base_range_dimentions,
+            'board': self.board.__str__()
+        }
+
+
+class BoardSchema(Schema):
+    blue_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
+    green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
+    base_range_dimentions = fields.Integer()
+    board = fields.List(fields.List(fields.Nested(CellSchema())))

@@ -1,18 +1,19 @@
 import random
 
 from marshmallow import Schema, fields
-from sql import SQL
 
 from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
+from app.backend.models.board import Board, BoardSchema
 from app.backend.models.board import Board
 from app.backend.models.team import Team
+
 
 INIT_CREW = 6
 
 
-class Game(SQL):
+class Game:
 
     def __init__(self):
         self.status = TGame.NOT_STARTED
@@ -21,15 +22,15 @@ class Game(SQL):
         self.board = Board()
         self.winner = (None, None)          # (Player name, TEAM)
 
-    def join_as_green(self):
+    def join_as_green(self, name):
         if self.green_player is not None:
             raise Exception("Player green is already taken")
-        self.green_player = team.Team.GREEN
+        self.green_player = name
 
-    def join_as_blue(self):
+    def join_as_blue(self, name):
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
-        self.blue_player = team.Team.BLUE
+        self.blue_player = name
 
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
@@ -37,8 +38,11 @@ class Game(SQL):
         self.board = Board(rows, cols, round((rows*cols*0.1)**0.5))   # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
-        self.set_initial_crew()
-        self.status = TGame.STARTED
+        if (self.status is TGame.NOT_STARTED):  #luego agregar comprobacion: ningun player is None
+            self.set_initial_crew()
+            self.status = TGame.STARTED
+        else:
+            raise Exception("game is already started")
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
@@ -97,7 +101,6 @@ class Game(SQL):
 
     def get_team_winner(self):
         return self.winner[1]
-    
 
     def json(self):
         return {
@@ -107,9 +110,9 @@ class Game(SQL):
             'board': self.board
         }
 
-
 class GameSchema(Schema):
-    status = fields.Str()
-    green_player = fields.Str()
-    blue_player = fields.Str()
-    board = fields.List(fields.List(fields.List(fields.List(fields.Str()))))
+    id = fields.Integer()
+    status = fields.Enum(TGame)
+    green_player = fields.Str(required=False)
+    blue_player = fields.Str(required=False)
+    board = fields.Nested(BoardSchema(), only=('board',))

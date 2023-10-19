@@ -2,7 +2,7 @@ from flask import Flask
 from config import config
 from flask_cors import CORS
 
-from app.backend.blueprints import games_bp
+from app.backend.api import games_bp
 
 
 def create_app(config_name="development"):
@@ -14,9 +14,10 @@ def create_app(config_name="development"):
     # config stuff
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+
     return app
 
 
-# blueprints register
+# api register
 def register_modules(app):
     app.register_blueprint(games_bp, url_prefix='/games')
