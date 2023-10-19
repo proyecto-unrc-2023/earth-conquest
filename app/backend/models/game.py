@@ -7,6 +7,7 @@ from app.backend.models import team
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board
+from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
 
 INIT_CREW = 6
@@ -98,6 +99,20 @@ class Game(SQL):
     def get_team_winner(self):
         return self.winner[1]
     
+    '''
+    This method sets a modifier on the given position if this one's free and valid.
+    '''
+    def __set_modifier_in_position(self, modifier, x, y):
+        self.board.set_modifier(modifier, x, y)
+
+    
+    '''
+    This method gets the modifier that's on the given position
+    '''
+    def __get_modifier_in_position(self, x, y):
+        self.board.get_modifier(x,y)
+
+
 
     def json(self):
         return {
