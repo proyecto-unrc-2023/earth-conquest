@@ -115,6 +115,45 @@ class Game:
     def get_team_winner(self):
         return self.winner[1]
 
+    def get_alien_position(self, alien):
+        return self.board.get_alien_position(alien)
+
+    def remove_alien(self, x, y, alien):
+        return self.board.remove_alien_from_board(x, y, alien)
+
+    def set_alien(self, x, y, alien):
+        return self.board.set_alien(x, y, alien)
+
+    def aliens_dict(self):
+        return self.board.aliens
+
+    def get_board_rows(self):
+        return self.board.rows
+
+    def get_board_cols(self):
+        return self.board.cols
+
+    def is_position_in_blue_range(self, x, y):
+        return self.board.is_position_in_blue_range(x, y)
+
+    def is_position_in_green_range(self, x, y):
+        return self.board.is_position_in_green_range(x, y)
+
+    def is_pos_on_any_range(self, x, y):
+        return self.board.is_pos_on_any_range(x, y)
+
+    def is_free_position(self, x, y):
+        return self.board.is_free_position(x, y)
+
+    def get_base_range_dimentions(self):
+        return self.board.base_range_dimentions
+
+    def get_green_ovni_range(self):
+        return self.board.green_ovni_range
+
+    def get_blue_ovni_range(self):
+        return self.board.blue_ovni_range
+
     def json(self):
         return {
             'status': self.status,

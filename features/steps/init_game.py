@@ -21,8 +21,8 @@ def step_impl(context, name, team):
 
 @step(u'the board dimension is {rows:d} by {cols:d}')
 def step_impl(context, rows, cols):
-    assert context.game.board.rows == rows
-    assert context.game.board.cols == cols
+    assert context.game.get_board_rows() == rows
+    assert context.game.get_board_cols() == cols
 
 
 @given(u'the game has not started')
@@ -55,15 +55,14 @@ def step_impl(context):
             if cell.modifier is not None:   # si la celda tiene un modifier
                 modifiers.append((i, j))
     for pos in modifiers:
-        assert not board.is_pos_on_any_range(pos[0], pos[1])
+        assert not context.game.is_pos_on_any_range(pos[0], pos[1])
 
 
 @then(u'there are {cant:d} living one-eyed aliens per team')
 def step_impl(context, cant):
-    board = context.game.board
     blue_aliens = []
     green_aliens = []
-    for position, aliens_in_position in board.aliens.items():
+    for position, aliens_in_position in context.game.aliens_dict().items():
         for alien in aliens_in_position:
             assert alien.eyes == 1
             if alien.team == Team.BLUE:
@@ -77,10 +76,9 @@ def step_impl(context, cant):
 
 @then(u'the aliens are set on their respective areas')
 def step_impl(context):
-    board = context.game.board
     blue_aliens = []
     green_aliens = []
-    for position, aliens_in_position in board.aliens.items():
+    for position, aliens_in_position in context.game.aliens_dict().items():
         for alien in aliens_in_position:
             if alien.team == Team.BLUE:
                 blue_aliens.append(position)
@@ -88,10 +86,10 @@ def step_impl(context):
                 green_aliens.append(position)
 
     for pos in blue_aliens:
-        assert board.is_position_in_blue_range(pos[0], pos[1])
+        assert context.game.is_position_in_blue_range(pos[0], pos[1])
 
     for pos in green_aliens:
-        assert board.is_position_in_green_range(pos[0], pos[1])
+        assert context.game.is_position_in_green_range(pos[0], pos[1])
 
 
 @then(u'there are {cant:d} "{modifier}"')
@@ -126,16 +124,15 @@ def step_impl(context):
             if cell.modifier is not None:  # si la celda tiene un modifier
                 modifiers.append((i, j))
     for pos in modifiers:
-        assert not board.is_free_position(pos[0], pos[1])
+        assert not context.game.is_free_position(pos[0], pos[1])
 
 
 @then(u'the dimensions of the ovnis ranges should be {range:d} by {range:d}')
 def step_impl(context, range):
-    assert context.game.board.base_range_dimentions == range
+    assert context.game.get_base_range_dimentions() == range
 
 
 @then(u'the corner position of the "{team}" ovni range should be {row:d} {col:d}')
 def step_impl(context, team, row, col):
-    board = context.game.board
-    assert board.green_ovni_range if team == "green" else board.blue_ovni_range == (row, col)
+    assert context.game.get_green_ovni_range() if team == "green" else context.game.get_blue_ovni_range() == (row, col)
 

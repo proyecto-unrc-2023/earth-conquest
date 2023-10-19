@@ -19,10 +19,9 @@ def step_impl(context):
 
 @when(u'a green alien is positioned on the cell ({row:d}, {col:d})')
 def step_impl(context, row, col):
-    board = context.game.board
-    context.alien = Alien(Team.GREEN)
     context.alien_pos = (row, col)
-    board.set_alien(row, col, context.alien)
+    context.alien = Alien(Team.GREEN)
+    context.game.set_alien(row, col, context.alien)
 
 
 @when(u'green player set a horizontally Directioner on the cells (5,1), (5,2) and (5,3)')
@@ -46,26 +45,26 @@ def step_impl(context, row, col):
 def step_impl(context, row, col):
     x = context.alien_pos[0]
     y = context.alien_pos[1]
-    context.game.board.remove_alien_from_board(x, y, context.alien)
-    context.game.board.set_alien(row, col, context.alien)
+    context.game.remove_alien(x, y, context.alien)
+    context.game.set_alien(row, col, context.alien)
 
 
 @then(u'the alien moves to the cell ({row:d}, {col:d})')
 def step_impl(context, row, col):
-    new_pos = context.game.board.get_alien_position(context.alien)
+    new_pos = context.game.get_alien_position(context.alien)
     assert new_pos == (row, col)
 
 
 @then(u'the alien dies')
 def step_impl(context):
-    pos = context.game.board.get_alien_position(context.alien)
+    pos = context.game.get_alien_position(context.alien)
     assert pos is None
 
 
 @then(u'{cant:d} green aliens dies')
 def step_impl(context, cant):
     green_aliens = 0
-    for pos, aliens_on_cell in context.game.board.aliens.items():
+    for pos, aliens_on_cell in context.game.aliens_dict().items():
         for alien in aliens_on_cell:
             if alien.team is Team.GREEN:
                 green_aliens += 1
