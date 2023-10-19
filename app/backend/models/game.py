@@ -160,6 +160,13 @@ class Game:
     def get_cell(self, x, y):
         return self.board.get_cell(x, y)
 
+    '''
+    This method returns the team of a specific alien in the board.
+    '''
+
+    def get_alien_team_in_position(self, x, y, alien_pos_in_list):
+        return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
+
     def json(self):
         return {
             'status': self.status,
@@ -167,6 +174,64 @@ class Game:
             'blue_player': self.blue_player,
             'board': self.board
         }
+
+    '''
+    This method set an alien in a given position of respective team
+    '''
+
+    def create_an_alien_in_pos(self, x, y, team):
+        alien = Alien(team)
+        self.board.set_alien(x, y, alien)
+
+    '''
+    This method sets an alien in a given position of respective team
+    '''
+
+    def creates_aliens_in_pos(self, x, y, cant, team):
+        for i in range(cant):
+            self.board.set_alien(x, y, Alien(team))
+
+    '''
+    This method returns the number of aliens in a given position
+    '''
+
+    def get_num_aliens_in_position(self, x, y):
+        return self.board.get_num_aliens_in_position(x, y)
+
+    '''
+    This method returns the alien in a given position
+    '''
+
+    def get_alien_in_position(self, x, y, index):
+        return self.board.get_alien_in_position(x, y, index)
+
+    '''
+    This method returns the number eyes on specific alien in the board
+    '''
+
+    def get_alien_eyes_in_position(self, x, y, alien_pos_in_list):
+        return self.board.get_alien_in_position(x, y, alien_pos_in_list).eyes
+
+    '''
+    This method adds eyes to a specific alien in the board
+    '''
+
+    def add_eyes_to_alien(self, x, y, alien_pos_in_list, eyes):
+        self.board.get_alien_in_position(x, y, alien_pos_in_list).add_eyes(eyes)
+
+    '''
+    This method returns the aliens list in a given position
+    '''
+
+    def get_aliens_in_pos(self, x, y):
+        return self.board.get_cell(x, y).aliens
+
+    '''
+    This method returns if any ovni was destroyed
+    '''
+
+    def any_ovni_destroyed(self):
+        return self.board.any_ovni_destroyed()
 
 
 class GameSchema(Schema):

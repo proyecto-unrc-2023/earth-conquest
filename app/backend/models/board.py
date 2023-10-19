@@ -468,3 +468,24 @@ class Board:
                 x, y = team_aliens.pop(alien_to_kill)   # deletes the key and return its value
                 self.remove_alien_from_board(x, y, alien_to_kill)   # kills the alien
             return True
+
+    '''
+    This method adds eyes to an alien in a given position
+    '''
+    def add_eyes_to_alien(self, x, y, alien_pos_in_list, num_eyes):
+        cell = self.get_cell(x, y)
+        cell.aliens[alien_pos_in_list].add_eyes(num_eyes)
+
+    '''
+    This method returns an alien in a given position
+    '''
+    def get_alien_in_position(self, x, y, alien_pos_in_list):
+        cell = self.get_cell(x, y)
+        return cell.aliens[alien_pos_in_list]
+
+    '''
+    This method returns the number of aliens in a given position 
+    '''
+    def get_num_aliens_in_position(self, x, y):
+        cell = self.get_cell(x, y)
+        return len(cell.aliens)
