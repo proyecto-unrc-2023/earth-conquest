@@ -128,7 +128,8 @@ class Game:
     This method gets the modifier that's on the given position
     '''
     def get_modifier_in_position(self, x, y):
-        self.board.get_modifier(x,y)
+        return self.board.get_modifier(x,y)
+        #return self.board.get_cell(x,y).modifier
 
 
 

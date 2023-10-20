@@ -1,7 +1,7 @@
 Feature: Modifier use
 
   Background:
-    Given the game has started
+    Given a game has been created
               | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14|
               |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
               |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
@@ -16,8 +16,8 @@ Feature: Modifier use
 
 
   Scenario Outline: alien on the modifier <modifier>
-    Given there is a "<modifier>" on the cell (11, 5)
-    And the alien arrives on the cell (11, 5)
+    Given there is a "<modifier>" on the cell (2, 9)
+    And the alien arrives on the cell (2, 9)
     When "<modifier>" activates
     Then "<action_modifier>" and "<result_modifier>"
 
