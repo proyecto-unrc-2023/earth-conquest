@@ -207,6 +207,13 @@ class Board:
         else:
             raise AttributeError("There's already a Modifier on that cell")
 
+    """ 
+    Returns the Modifier that's on a specific Cell.
+    """
+
+    def get_modifier(self, x, y):
+        return self.get_cell(x, y).modifier
+
     """
     Method that sets an alien on the alive aliens dictionary.
     """
