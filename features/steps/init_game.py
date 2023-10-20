@@ -114,7 +114,7 @@ def step_impl(context, cant, modifier):
     assert modifiers.__len__() == cant
 
 
-@then(u'the cells where the modifiers has been setted are occupied')
+@then(u'the cells where the modifiers have been placed are occupied')
 def step_impl(context):
     board = context.game.board
     modifiers = []

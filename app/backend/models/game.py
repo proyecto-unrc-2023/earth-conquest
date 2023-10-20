@@ -196,7 +196,7 @@ class Game:
         }
 
     '''
-    This method set an alien in a given position of respective team
+    This method sets an alien on a given position of a respective team
     '''
 
     def create_an_alien_in_pos(self, x, y, team):
@@ -204,7 +204,7 @@ class Game:
         self.board.set_alien(x, y, alien)
 
     '''
-    This method sets an alien in a given position of respective team
+    This method sets a specific ammount of aliens in a given position of a respective team
     '''
 
     def creates_aliens_in_pos(self, x, y, cant, team):
@@ -226,7 +226,7 @@ class Game:
         return self.board.get_alien_in_position(x, y, index)
 
     '''
-    This method returns the number eyes on specific alien in the board
+    This method returns the number of eyes of a specific alien in the board
     '''
 
     def get_alien_eyes_in_position(self, x, y, alien_pos_in_list):
@@ -247,7 +247,7 @@ class Game:
         return self.board.get_cell(x, y).aliens
 
     '''
-    This method returns if any ovni was destroyed
+    This method returns True if an ovni has been destroyed
     '''
 
     def any_ovni_destroyed(self):

@@ -12,7 +12,7 @@ Feature: Game initialization
 		And there are 6 "mountains"
 		And there are 2 "killers"
 		And there are 2 "multipliers"
-		And the cells where the modifiers has been setted are occupied
+		And the cells where the modifiers have been placed are occupied
 		And the placed modifiers end up positioned outside the teams areas
 
 	Scenario: Launch of the initial crew
