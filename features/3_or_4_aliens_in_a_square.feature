@@ -1,8 +1,18 @@
 Feature: 3 or 4 aliens on a same cell
 
 Background: 
-  Given a new game has started
-
+  Given a game has been created
+      | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14|
+      |   |   |   |   |   |   |   |   |   |   |   | 2 |   |   |   |
+      |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
+      |   |   |   |   |   |   |   | M |   |   |   |   |   | K |   |
+      |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
+      |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+      |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+      |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+      |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+      | K |   |   |   | M | M | M |   |   |   |   |   |   |   |   |
+      |   |   | 2 |   |   |   |   |   |   |   |   |   |   |   |   |
 
   Scenario: 3 aliens with one eye, are on the cell (5,5), 2 of them are on the blue team and the other is on green team
     Given 2 blue aliens and 1 green aliens are in the position (5,5) 
