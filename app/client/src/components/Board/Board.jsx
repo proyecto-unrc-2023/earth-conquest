@@ -1,5 +1,4 @@
 import data2 from '../../data2.json'
-// import data23 from '../data23.json'
 import { Cell } from '../Cell/Cell'
 import { alterator } from '../../constants.js'
 import './Board.css'
@@ -50,7 +49,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) =
   }
 
   return (
-    <section className='board'>
+    <section className='board' style={{ gridTemplateColumns: `repeat(${board[0].length}, 1fr)` }}>
       {
           board.map((row, i) => {
             return (

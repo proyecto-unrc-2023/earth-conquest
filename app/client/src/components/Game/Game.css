@@ -1,4 +1,12 @@
-.statsGame{
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.statsGame {
   display: grid;
   justify-items: center;
   grid-template-columns:repeat(2, 1fr);
