@@ -2,7 +2,6 @@ from behave import *
 from app.backend.models.alien import Alien
 from app.backend.models.alterator import Alterator
 
-from app.backend.models.application import Application
 from app.backend.models.board import Board
 from app.backend.models.game import Game
 from app.backend.models.directioner import Directioner
