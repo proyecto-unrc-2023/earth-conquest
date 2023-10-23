@@ -11,12 +11,18 @@ def step_impl(context):
     context.game = Game()
 
 
+
 @given(u'player "{name}" has joined the game as "{team}" player')
 def step_impl(context, name, team):
     if team == 'green':
         context.game.join_as_green(name)
     elif team == 'blue':
         context.game.join_as_blue(name)
+
+
+@given(u'player "{name}" has joined the game as green player')
+def step_impl(context, name):
+    context.game.join_as_green(name)
 
 
 @step(u'the board dimension is {rows:d} by {cols:d}')

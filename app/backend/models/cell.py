@@ -1,9 +1,14 @@
 from enum import Enum
 
+from marshmallow import Schema, fields, pre_dump
+from marshmallow.fields import Nested
+
 from app.backend.models import modifier, directioner
-from app.backend.models.alien import Alien, Team
+from app.backend.models.alien import Alien, Team, AlienSchema
 from app.backend.models.alterator import Alterator
+from app.backend.models.directioner import DirectionerSchema
 from app.backend.models.modifier import Modifier
+from app.backend.models.teleporter import TeleporterSchema
 
 
 class Cell:
@@ -207,3 +212,20 @@ class Cell:
     def action_alterator(self):
         if self.alterator == Alterator.TRAP:
             self.aliens = []
+
+
+class CellSchema(Schema):
+    aliens = fields.List(fields.Nested(AlienSchema()))
+    modifier = fields.Enum(Modifier)
+    alterator = fields.Field()
+
+    # checks the alterator type and returns the correspondent schema
+    @pre_dump
+    def convert_alterator_field(self, obj, **kwargs):
+        if obj.alterator == Alterator.TELEPORT:
+            obj.alterator = fields.Nested(TeleporterSchema())
+        elif obj.alterator == Alterator.DIRECTIONER:
+            obj.alterator = fields.Nested(DirectionerSchema())
+        elif obj.alterator == Alterator.TRAP:
+            obj.alterator = fields.Enum(Alterator)
+        return obj

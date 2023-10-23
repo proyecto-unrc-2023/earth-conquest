@@ -7,10 +7,12 @@ from app.backend.models.alterator import Alterator
 from app.backend.models.directioner import Directioner
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
+from app.backend.models.board import Board, BoardSchema
 from app.backend.models.board import Board
 from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
+
 
 INIT_CREW = 6
 
@@ -40,8 +42,11 @@ class Game:
         self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
-        self.set_initial_crew()
-        self.status = TGame.STARTED
+        if (self.status is TGame.NOT_STARTED):  #luego agregar comprobacion: ningun player is None
+            self.set_initial_crew()
+            self.status = TGame.STARTED
+        else:
+            raise Exception("game is already started")
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
@@ -85,7 +90,7 @@ class Game:
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
 
     """
-    ends the game if some player want to leave
+    ends the game if some player wants to leave
     """
 
     def end_game(self):
@@ -115,7 +120,6 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
-
     
     '''
     This method sets a modifier on the given position if this one's free and valid.
@@ -186,7 +190,6 @@ class Game:
     def get_alien_team_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
 
-
     def json(self):
         return {
             'status': self.status,
@@ -253,9 +256,9 @@ class Game:
     def any_ovni_destroyed(self):
         return self.board.any_ovni_destroyed()
 
-
 class GameSchema(Schema):
-    status = fields.Str()
-    green_player = fields.Str()
-    blue_player = fields.Str()
-    board = fields.List(fields.List(fields.List(fields.List(fields.Str()))))
+    id = fields.Integer()
+    status = fields.Enum(TGame)
+    green_player = fields.Str(required=False)
+    blue_player = fields.Str(required=False)
+    board = fields.Nested(BoardSchema(), only=('board',))

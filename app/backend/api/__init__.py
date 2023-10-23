@@ -7,4 +7,4 @@ games_bp = Blueprint('games', __name__)
 
 api = Api(games_bp)
 
-from app.backend.blueprints import routes
+from app.backend.api import routes
