@@ -15,6 +15,10 @@
   background-color: rgba(0, 115, 255, 0.407);
 }
 
+.grey{
+  background-color: rgba(0, 0, 0, 0.407);
+}
+
 .green_nave{
   display: grid;
   place-items: center;

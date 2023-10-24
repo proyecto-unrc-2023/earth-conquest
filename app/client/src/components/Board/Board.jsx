@@ -1,20 +1,48 @@
 import data2 from '../../data2.json'
 import { Cell } from '../Cell/Cell'
-import { alterator } from '../../constants.js'
+import { alterator, team } from '../../constants.js'
 import './Board.css'
+import { useState } from 'react'
 
-export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) => {
+export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, permiso }) => {
+  const [teleportX, setTeleportX] = useState(null)
+  const [teleportY, setTeleportY] = useState(null)
+
+  const greenOvniRange = data2.green_ovni_range
+  const blueOvniRange = data2.blue_ovni_range
+
+  // Funcion para dar el rango de teleport
+  const isTeleportRange = (row, col, x, y) => {
+    return (Math.abs(row - x) >= 3 || Math.abs(col - y) >= 3)
+  }
+
+  // Funcion para dar el rango de la base segun el team
+  const isBase = (row, col, x, y, teamBase) => {
+    if (teamBase === team.green) {
+      return (row <= x && col <= y)
+    } else {
+      return (row >= x && col >= y)
+    }
+  }
+
   const updateBoard = (row, col) => {
     if (newAlterator === null) return
     if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
     if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
     if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
+    if (
+      (isTeleportRange(row, col, teleportX, teleportY) &&
+      (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
+      isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
+    ) return
+    if (isTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
   }
+
   const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
     // mandarle a la api para preguntarle si la posición es valida
     if (newAlterator === alterator.directioner_up) {
@@ -39,6 +67,8 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) =
       // cambia estado a teleport out
       setAlter(alterator.teleport_out)
       setPermiso(false)
+      setTeleportX(row)
+      setTeleportY(col)
     } else if (newAlterator === alterator.teleport_out) {
       newBoard[row][col].alterator = newAlterator
       setAlter(null)
@@ -60,8 +90,13 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) =
                     col={j}
                     row={i}
                     updateBoard={updateBoard}
-                    greenBase={data2.green_ovni_range}
-                    blueBase={data2.blue_ovni_range}
+                    greenBase={greenOvniRange}
+                    blueBase={blueOvniRange}
+                    permiso={permiso}
+                    teleportX={teleportX}
+                    teleportY={teleportY}
+                    isBase={isBase}
+                    isTeleportRange={isTeleportRange}
                   >
                     {cell}
                   </Cell>
