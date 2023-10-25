@@ -38,7 +38,7 @@ class SpawnAliens(Resource):
 
 
 class JoinAs(Resource):
-    # /join/game_id?team=GREEN&player_name=pepito
+    # /join/game_id?team=GREEN&player_name=pepitoIsOut
     def put(self, game_id):
         team = request.args.get('team')
         player_name = request.args.get('player_name')
