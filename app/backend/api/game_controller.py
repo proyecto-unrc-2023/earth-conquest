@@ -14,9 +14,8 @@ games_dict = {}
 
 class GameController:
 
-    def get_game_by_id(id):
+    def find_game(id):
         game = games_dict.get(id)
-
         if game is None:
             message = json.dumps(
                 {
@@ -24,8 +23,16 @@ class GameController:
                     "message": "Game not found with id: " + str(id)
                 }
             )
-            return Response(message, status=404, mimetype='application/json')
+            response = Response(message, status=404, mimetype='application/json') 
+            return response
 
+    def get_game_by_id(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+       
+        game = games_dict.get(id)
+        
         game_schema = GameSchema()
         response = {
             "success": True,
@@ -54,19 +61,16 @@ class GameController:
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+    
         game = games_dict.get(id)
-        if game is None:
-            message = json.dumps(
-                {
-                    "success": False,
-                    "message": "Game not found with id: " + str(id)
-                }
-            )
-            return Response(message, status=404, mimetype='application/json')
 
         try:
             game.start_game()
             games_dict[id] = game
+        
         except Exception as e:
             message = json.dumps(
                 {
@@ -86,39 +90,60 @@ class GameController:
         This method updates a game.
     '''
 
-    def update_game(game_id, data):
-        game = games_dict.get(game_id)
-        if game is None:
+    def refresh_board(id):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+       
+        game = games_dict.get(id)
+
+        try:
+            game.refresh_board()
+            games_dict[id] = game
+            
+        except Exception as e:
             message = json.dumps(
                 {
                     "success": False,
-                    "message": "Game not found with id: " + str(id)
+                    'errors': str(e)
                 }
             )
-            return Response(message, status=404, mimetype='application/json')
-
-        game_data = {}
-        if 'status' in data:
-            game_data['status'] = data['status']
-        if 'green_player' in data:
-            game_data['green_player'] = data['green_player']
-        if 'blue_player' in data:
-            game_data['blue_player'] = data['blue_player']
-        if 'board' in data:
-            game_data['board'] = data['board']
-
-        # Validate with schema
-        game_schema = GameSchema()
-        game = Game(**game_schema.load(game_data))
-
-        # updates the game
-        games_dict[game_id] = game
+            return Response(message, status=400, mimetype='application/json')
 
         response = {
             "success": True,
-            "message": "Game %d updated successfully" % id
+            "message": "Board %d refreshes successfully" % id
         }
         return jsonify(response)
+    
+    '''
+        This method acts a game.
+    '''
+    def act_board(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+       
+        game = games_dict.get(id)
+        
+        try:
+            game.act_board()
+            games_dict[id] = game
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
+        
+        response = {
+            "success": True,
+            "message": "Board %d acts successfully" % id
+        }
+        return jsonify(response)
+
 
     def get_all_games():
         games_data = []
@@ -134,30 +159,6 @@ class GameController:
             "message": "All games retrieved successfully",
             "data": {
                 "games": games_data
-            }
-        }
-        return jsonify(response)
-
-    # este metodo iria en board_controller ?
-    def get_board_by_game_id(id):
-        game = games_dict.get(id)
-
-        if game is None:
-            message = json.dumps(
-                {
-                    "success": False,
-                    "message": "Game not found with id: " + str(id)
-                }
-            )
-            return Response(message, status=404, mimetype='application/json')
-
-        board = game.board
-        board_schema = BoardSchema()
-        response = {
-            "success": True,
-            "message": "Board of game %d retrieved successfully" % id,
-            "data": {
-                "board": board_schema.dump(board)
             }
         }
         return jsonify(response)
