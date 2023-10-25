@@ -61,6 +61,7 @@ function App () {
   }
 
   return (
+
     <main>
       {
         statusGame === gameStatus.notStarted &&
