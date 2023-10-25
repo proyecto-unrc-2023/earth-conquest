@@ -11,7 +11,7 @@ export function Game ({ gameId }) {
   const [board, setBoard] = useState(data2.grid)
 
   // pide el refresco
-
+  /*
   const fetchData = async () => {
     try {
       const response = await fetch(`/game/${gameId}`)
@@ -32,7 +32,7 @@ export function Game ({ gameId }) {
     }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
-
+  */
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
   }
@@ -52,6 +52,8 @@ export function Game ({ gameId }) {
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
       </section>
       <Panel setAlter={setAlter} permiso={permisoTeleport} />
+      <img src='../public/panel_left.jpg' className='panel_left' />
+      <img src='../public/panel_right.jpg' className='panel_right' />
     </>
   )
 }

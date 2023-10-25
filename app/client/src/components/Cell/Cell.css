@@ -28,6 +28,7 @@
   transform: translate(-5px, -50px);
   rotate: -10deg;
   opacity: 90%;
+  z-index: 99;
 }
 
 .blue_nave{
@@ -37,4 +38,5 @@
   transform: translate(10px, -30px);
   rotate: 10deg;
   opacity: 90%;
+  z-index: 99;
 }

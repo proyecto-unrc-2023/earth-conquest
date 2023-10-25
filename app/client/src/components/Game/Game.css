@@ -4,6 +4,8 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin: 0%;
+  top: 0%;
 }
 
 .statsGame {
@@ -15,4 +17,28 @@ body {
     "health-bar-green health-bar-blue"
     "live_alien_green live_alien_blue";
   margin: 20px 10px;
+}
+
+.panel_left{
+  position: absolute;
+  justify-items: center;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  top: 0%;
+  left: 0%;
+  opacity: 70%;
+  z-index: 10;
+}
+
+.panel_right{
+  position: absolute;
+  justify-items: center;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  top: 0%;
+  right: 0%;
+  opacity: 70%;
+  z-index: 10;
 }
