@@ -4,11 +4,10 @@ import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 
 function App () {
-  const [statusGame, setStatusGame] = useState(gameStatus.notStarted)
+  const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
   const CREATE_GAME = 'http://127.0.0.1:5000/games/create_game'
   const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/get_all_games'
-  const START_GAME = 'http://127.0.0.1:5000/games/start_game'
 
   const createGame = async () => {
     try {
@@ -27,6 +26,7 @@ function App () {
       const data = await response.json()
       console.log(data)
       setGameId(data.gameId)
+      setStatusGame(gameStatus.notStarted)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -45,34 +45,19 @@ function App () {
     }
   }
 
-  const startGame = async () => {
-    try {
-      const response = await fetch(`${START_GAME}/1`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-    }
-  }
-
   return (
 
     <main>
       {
-        statusGame === gameStatus.notStarted &&
-          <Menu createGame={createGame} setStatusGame={setStatusGame} />
+        statusGame !== gameStatus.started &&
+          <Menu createGame={createGame} setStatusGame={setStatusGame} gameId={gameId} />
       }
       {
-        statusGame === gameStatus.started &&
-          <Game gameId={gameId} />
+        // statusGame === gameStatus.started && */
+        // <Game gameId={gameId} />
       }
       <button onClick={getAllGames}>Get all games</button>
-      <button onClick={startGame}>Start Game</button>
+
     </main>
   )
 }

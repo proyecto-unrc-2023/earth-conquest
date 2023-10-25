@@ -42,6 +42,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
+    // TODO: controlar ganador.
   }
 
   const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
