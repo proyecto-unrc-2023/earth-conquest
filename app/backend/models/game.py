@@ -29,11 +29,15 @@ class Game:
     def join_as_green(self, name):
         if self.green_player is not None:
             raise Exception("Player green is already taken")
+        if name == self.blue_player:
+            raise Exception("This name is already taken")
         self.green_player = name
 
     def join_as_blue(self, name):
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
+        if name == self.green_player:
+            raise Exception("This name is already taken")
         self.blue_player = name
 
     def set_board_dimensions(self, rows, cols):
@@ -42,11 +46,13 @@ class Game:
         self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
-        if (self.status is TGame.NOT_STARTED):  #luego agregar comprobacion: ningun player is None
+        if (self.status is TGame.NOT_STARTED and
+                self.blue_player is not None and
+                self.green_player is not None):
             self.set_initial_crew()
             self.status = TGame.STARTED
         else:
-            raise Exception("game is already started")
+            raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
@@ -120,14 +126,14 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
-    
+
     '''
     This method sets a modifier on the given position if this one's free and valid.
     '''
     def set_modifier_in_position(self, modifier, x, y):
         self.board.set_modifier(modifier, x, y)
 
-    
+
     '''
     This method gets the modifier that's on the given position
     '''
@@ -255,6 +261,7 @@ class Game:
 
     def any_ovni_destroyed(self):
         return self.board.any_ovni_destroyed()
+
 
 class GameSchema(Schema):
     id = fields.Integer()
