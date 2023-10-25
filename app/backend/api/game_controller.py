@@ -4,6 +4,7 @@ from flask import jsonify, Response
 
 from app.backend.models.board import BoardSchema
 from app.backend.models.game import Game, GameSchema
+from app.backend.models.team import Team
 
 games_dict = {}
 
@@ -20,7 +21,7 @@ class GameController:
             message = json.dumps(
                 {
                     "success": False,
-                    "message": "Game not found with id: " + str(id)
+                    "message": "Game not found with id: %d" % id
                 }
             )
             response = Response(message, status=404, mimetype='application/json') 
@@ -32,7 +33,6 @@ class GameController:
            return response
        
         game = games_dict.get(id)
-        
         game_schema = GameSchema()
         response = {
             "success": True,
@@ -49,12 +49,14 @@ class GameController:
         id = games_dict.__len__() + 1
         games_dict[id] = game
 
+        game_schema = GameSchema()
         message = json.dumps(
             {
                 "success": True,
                 "message": "Game created successfully",
                 "data": {
-                    "gameId": id
+                    "gameId": id,
+                    "game": game_schema.dump(game)
                 }
             }
         )
@@ -66,7 +68,6 @@ class GameController:
            return response
     
         game = games_dict.get(id)
-
         try:
             game.start_game()
             games_dict[id] = game
@@ -144,7 +145,6 @@ class GameController:
         }
         return jsonify(response)
 
-
     def get_all_games():
         games_data = []
         game_schema = GameSchema()
@@ -162,3 +162,71 @@ class GameController:
             }
         }
         return jsonify(response)
+
+    def spawn_aliens(id):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+
+        game = games_dict.get(id)
+
+        try:
+            game.add_alien_to_range(Team.GREEN)
+            game.add_alien_to_range(Team.BLUE)
+            games_dict[id] = game   # save the game on the dict
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
+
+        board_schema = BoardSchema()
+        response = {
+            "success": True,
+            "message": "Aliens blue and green added successfully to game: %d" % id,
+            "data": {
+                "board": board_schema.dump(game.board)
+            }
+        }
+        return jsonify(response)
+
+    def join_as(id, team, player_name):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+
+        game = games_dict.get(id)
+        try:
+            if team == 'GREEN':
+                game.join_as_green(player_name)
+            elif team == 'BLUE':
+                game.join_as_blue(player_name)
+            else:
+                message = json.dumps(
+                    {
+                        "success": False,
+                        'errors': "Invalid team as argument, possible teams are: GREEN or BLUE"
+                    }
+                )
+                return Response(message, status=400, mimetype='application/json')
+
+            games_dict[id] = game  # save the game on the dict
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
+
+        response = {
+            "success": True,
+            "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
+        }
+        return jsonify(response)
+
+
