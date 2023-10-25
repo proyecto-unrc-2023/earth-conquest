@@ -2,10 +2,10 @@ import { alterator } from '../../constants.js'
 import { useState } from 'react'
 import './Panel.css'
 
-export const Panel = ({ setAlter, permiso }) => {
+export const Panel = ({ setAlter, teleporterEnabled }) => {
   const [showDirections, setShowDirections] = useState(false)
   const handleAlterator = (newAlterator) => {
-    if (!permiso) return
+    if (!teleporterEnabled) return
     setAlter(newAlterator)
   }
 

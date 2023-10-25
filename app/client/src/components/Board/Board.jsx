@@ -1,10 +1,11 @@
 import data2 from '../../data2.json'
+
 import { Cell } from '../Cell/Cell'
 import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
 
-export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, permiso }) => {
+export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -44,9 +45,41 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
     console.log(board)
     // TODO: controlar ganador.
   }
+  const sendTrap = async (row, col, newAlterator) => {
+    try {
+      const response = await fetch('ruta setear trap', {
+        method: 'PUT'
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+    } catch (error) {
+      console.error('Error set trap', error)
+    }
+  }
+  const isValidPosition = async (row, col, newAlterator) => {
+    try {
+      const response = await fetch('ruta is valid position')
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      if (data.success) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error('Error is valid position', error)
+    }
+  }
 
-  const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
-    // mandarle a la api para preguntarle si la posición es valida
+  const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
+    if (newAlterator === alterator.trap) {
+      if (isValidPosition(row, col, newAlterator, newBoard)) {
+        sendTrap(row, col, newAlterator)
+      }
+    }
     if (newAlterator === alterator.directioner_up) {
       newBoard[row - 2][col].alterator = newAlterator
       newBoard[row - 1][col].alterator = newAlterator
@@ -68,13 +101,13 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
       newBoard[row][col].alterator = newAlterator
       // cambia estado a teleport out
       setAlter(alterator.teleport_out)
-      setPermiso(false)
+      setTeleporterEnabled(false)
       setTeleportX(row)
       setTeleportY(col)
     } else if (newAlterator === alterator.teleport_out) {
       newBoard[row][col].alterator = newAlterator
       setAlter(null)
-      setPermiso(true)
+      setTeleporterEnabled(true)
     } else {
       newBoard[row][col].alterator = newAlterator
     }
@@ -94,7 +127,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
                     updateBoard={updateBoard}
                     greenBase={greenOvniRange}
                     blueBase={blueOvniRange}
-                    permiso={permiso}
+                    teleporterEnabled={teleporterEnabled}
                     teleportX={teleportX}
                     teleportY={teleportY}
                     isBase={isBase}
