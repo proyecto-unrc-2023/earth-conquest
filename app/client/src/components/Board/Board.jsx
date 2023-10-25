@@ -7,13 +7,14 @@ import { useState } from 'react'
 export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, permiso }) => {
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
+  const TELEPORT_RANGE = 4
 
   const greenOvniRange = data2.green_ovni_range
   const blueOvniRange = data2.blue_ovni_range
 
   // Funcion para dar el rango de teleport
   const isTeleportRange = (row, col, x, y) => {
-    return (Math.abs(row - x) >= 3 || Math.abs(col - y) >= 3)
+    return (Math.abs(row - x) >= TELEPORT_RANGE || Math.abs(col - y) >= TELEPORT_RANGE)
   }
 
   // Funcion para dar el rango de la base segun el team
