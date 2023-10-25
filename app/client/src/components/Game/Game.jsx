@@ -45,7 +45,7 @@ export function Game ({ gameId }) {
   return (
     <>
       <h1>Earth conquest</h1>
-      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} />
+      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />

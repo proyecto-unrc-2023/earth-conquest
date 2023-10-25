@@ -4,9 +4,10 @@ import './Panel.css'
 
 export const Panel = ({ setAlter, teleporterEnabled }) => {
   const [showDirections, setShowDirections] = useState(false)
+  // aca definir los objetos 
   const handleAlterator = (newAlterator) => {
     if (!teleporterEnabled) return
-    setAlter(newAlterator)
+    setAlter(newAlterator)  // setea el objeto
   }
 
   return (

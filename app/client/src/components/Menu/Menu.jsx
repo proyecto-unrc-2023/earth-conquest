@@ -70,7 +70,7 @@ export function Menu ({ createGame, setStatusGame, gameId }) {
                 value={nameBlue}
                 onChange={(e) => setNameBlue(e.target.value)}
               />
-              <button onClick={() => joinAs('blue')}>Join as Green Player</button>
+              <button onClick={() => joinAs('blue')}>Join as Blue Player</button>
             </label>
             <button onClick={startGame}>Start Game</button>
           </>

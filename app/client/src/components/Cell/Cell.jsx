@@ -4,14 +4,14 @@ import { Alterator } from '../Alterator/Alterator'
 import { team } from '../../constants.js'
 import './Cell.css'
 
-export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, permiso, teleportX, teleportY, isTeleportRange, isBase }) => {
+export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, teleporterEnabled, teleportX, teleportY, outOfTeleportRange, isBase }) => {
   const handleClick = () => {
     updateBoard(row, col)
   }
 
   let className = 'cell '
 
-  if (!permiso && isTeleportRange(row, col, teleportX, teleportY)) {
+  if (!teleporterEnabled && outOfTeleportRange(row, col, teleportX, teleportY)) {
     className += 'grey'
   } else {
     if (isBase(row, col, greenBase.x, greenBase.y, team.green)) {
