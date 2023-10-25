@@ -15,6 +15,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso }) =
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
+    // TODO: controlar ganador.
   }
   const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
     // mandarle a la api para preguntarle si la posición es valida
