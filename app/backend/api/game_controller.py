@@ -161,3 +161,36 @@ class GameController:
             }
         }
         return jsonify(response)
+
+    """
+        This method checks if a given position is valid (free of modifiers/alterators and 
+        not on any Ovni's range).
+    """
+    def is_valid_position(id, row, col):
+        game = games_dict.get(id)
+
+        if game is None:
+            message = json.dumps(
+                {
+                    "success": False,
+                    "message": "Game not found with id: " + str(id)
+                }
+            )
+            return Response(message, status=404, mimetype='application/json')
+
+        board = game.board
+
+        if board.is_free_position(row, col) and not board.is_pos_on_any_range(row, col):
+            response = {
+                "success": True,
+                "message": f"Position ({row},{col}) of game with id {id} is valid"
+            }
+            return jsonify(response)
+        else:
+            message = json.dumps(
+                {
+                    "success": False,
+                    "message": f"Position ({row},{col}) of game with id {id} is not valid"
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')

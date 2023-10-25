@@ -22,6 +22,12 @@ class StartGame(Resource):
         return GameController.start_game(game_id)
 
 
+class IsValidPosition(Resource):
+    def get(self, game_id, row, col):
+        return GameController.is_valid_position(game_id, row, col)
+
 api.add_resource(GamesResource, '/')
 api.add_resource(GameDetails, '/<int:game_id>')     # get details of a game by its id
 api.add_resource(StartGame, '/start_game/<int:game_id>')
+api.add_resource(IsValidPosition,
+                 '/is_valid_position/<int:game_id>/<int:row>/<int:col>')  # get info on a position of a game with its id
