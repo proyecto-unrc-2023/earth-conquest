@@ -80,10 +80,14 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-
+        game_schema = GameSchema()
         response = {
             "success": True,
-            "message": "Game %d started successfully" % id
+            "message": "Game %d started successfully" % id,
+            "data": {
+                "gameId": id,
+                "game": game_schema.dump(game)
+            }
         }
         return jsonify(response)
 

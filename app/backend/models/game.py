@@ -25,6 +25,8 @@ class Game:
         self.blue_player = None
         self.board = Board()
         self.winner = (None, None)  # (Player name, TEAM)
+        self.green_alien_cant = 0
+        self.blue_alien_cant = 0
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -64,7 +66,6 @@ class Game:
             x0, y0 = self.board.green_ovni_range
             f = random.randint(0, x0)
             c = random.randint(0, y0)
-
         elif t == team.Team.BLUE:
             x0, y0 = self.board.blue_ovni_range
             f = random.randint(x0, self.board.rows - 1)
@@ -78,6 +79,11 @@ class Game:
         else:
             alien = Alien(t)
             self.board.set_alien(f, c, alien)
+            # Update cant of aliens
+            if t == team.Team.GREEN:
+                self.green_alien_cant += 1
+            else:
+                self.blue_alien_cant += 1
 
     def refresh_board(self):
         if not self.board:
@@ -91,6 +97,10 @@ class Game:
         if res is not None:
             self.status = TGame.OVER
             self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
+
+        # Updates cants of aliens
+        self.green_alien_cant = self.board.get_aliens_cant_of_team(Team.GREEN)
+        self.blue_alien_cant = self.board.get_aliens_cant_of_team(Team.BLUE)
 
     def has_game_ended(self):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
@@ -266,6 +276,8 @@ class Game:
 class GameSchema(Schema):
     id = fields.Integer()
     status = fields.Enum(TGame)
-    green_player = fields.Str(required=False)
-    blue_player = fields.Str(required=False)
+    green_player = fields.Str()
+    blue_player = fields.Str()
     board = fields.Nested(BoardSchema(), only=('board',))
+    green_alien_cant = fields.Integer()
+    blue_alien_cant = fields.Integer()

@@ -512,15 +512,13 @@ class Board:
     def any_ovni_destroyed(self):
         return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
+    '''
+    This method kills a given number of aliens of a given team  
+    '''
+    
     def kill_aliens(self, team, cant):
-        team_aliens = {}    # dict que llevara los aliens como clave y su pos como valor
-        for pos, aliens_on_cell in self.aliens.items():
-            for alien in aliens_on_cell:
-                if alien.team is team:
-                    x, y = pos
-                    team_aliens[alien] = (x, y)
+        team_aliens = self.list_aliens_of_team(team)
         # en este punto todos los aliens del equipo 'team' estaran almacenados en team_aliens
-
         if team_aliens.__len__() < cant:
             return False
 
@@ -530,6 +528,26 @@ class Board:
                 x, y = team_aliens.pop(alien_to_kill)   # deletes the key and return its value
                 self.remove_alien_from_board(x, y, alien_to_kill)   # kills the alien
             return True
+
+    '''
+    This method returns a dict with the aliens of a given team as keys and their positions as values
+    '''
+    
+    def list_aliens_of_team(self, team):
+        team_aliens = {}    # dict que llevara los aliens como clave y su pos como valor
+        for pos, aliens_on_cell in self.aliens.items():
+            for alien in aliens_on_cell:
+                if alien.team is team:
+                    x, y = pos
+                    team_aliens[alien] = (x, y)
+        return team_aliens
+    
+    '''
+    This method returns the number of aliens of a given team
+    '''
+    
+    def get_aliens_cant_of_team(self, team):
+        return self.list_aliens_of_team(team).__len__()
 
     '''
     This method adds eyes to an alien in a given position
