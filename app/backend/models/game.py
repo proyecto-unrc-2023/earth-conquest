@@ -25,8 +25,8 @@ class Game:
         self.blue_player = None
         self.board = Board()
         self.winner = (None, None)  # (Player name, TEAM)
-        self.green_alien_cant = 0
-        self.blue_alien_cant = 0
+        self.alive_green_aliens = 0
+        self.alive_blue_aliens = 0
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -81,9 +81,9 @@ class Game:
             self.board.set_alien(f, c, alien)
             # Update cant of aliens
             if t == team.Team.GREEN:
-                self.green_alien_cant += 1
+                self.alive_green_aliens += 1
             else:
-                self.blue_alien_cant += 1
+                self.alive_blue_aliens += 1
 
     def refresh_board(self):
         if not self.board:
@@ -99,8 +99,8 @@ class Game:
             self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
 
         # Updates cants of aliens
-        self.green_alien_cant = self.board.get_aliens_cant_of_team(Team.GREEN)
-        self.blue_alien_cant = self.board.get_aliens_cant_of_team(Team.BLUE)
+        self.alive_green_aliens = self.board.get_aliens_cant_of_team(Team.GREEN)
+        self.alive_blue_aliens = self.board.get_aliens_cant_of_team(Team.BLUE)
 
     def has_game_ended(self):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
@@ -206,14 +206,6 @@ class Game:
     def get_alien_team_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
 
-    def json(self):
-        return {
-            'status': self.status,
-            'green_player': self.green_player,
-            'blue_player': self.blue_player,
-            'board': self.board
-        }
-
     '''
     This method sets an alien on a given position of a respective team
     '''
@@ -279,5 +271,5 @@ class GameSchema(Schema):
     green_player = fields.Str()
     blue_player = fields.Str()
     board = fields.Nested(BoardSchema(), only=('board',))
-    green_alien_cant = fields.Integer()
-    blue_alien_cant = fields.Integer()
+    alive_green_aliens = fields.Integer()
+    alive_blue_aliens = fields.Integer()
