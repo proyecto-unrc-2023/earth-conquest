@@ -2,10 +2,13 @@ import { useState } from 'react'
 import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
+import { GamesTable } from './components/GamesTable/GamesTable'
 
 function App () {
   const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
+  const [message, setMessage] = useState('')
+  const [allGames, setAllGames] = useState([])
   const CREATE_GAME = 'http://127.0.0.1:5000/games/create_game'
   const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/get_all_games'
 
@@ -27,6 +30,7 @@ function App () {
       console.log(data)
       setGameId(data.gameId)
       setStatusGame(gameStatus.notStarted)
+      setMessage(data.message)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -39,7 +43,9 @@ function App () {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      console.log(data)
+      const newGames = data.data.games
+      setAllGames(newGames)
+      console.log(newGames)
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
@@ -50,13 +56,17 @@ function App () {
     <main>
       {
         statusGame !== gameStatus.started &&
-          <Menu createGame={createGame} setStatusGame={setStatusGame} gameId={gameId} />
+          <Menu createGame={createGame} setStatusGame={setStatusGame} gameId={gameId} message={message} />
       }
       {
         // statusGame === gameStatus.started && */
         // <Game gameId={gameId} />
       }
-      <button onClick={getAllGames}>Get all games</button>
+      <button onClick={getAllGames}>Join game</button>
+
+      {
+        allGames.length > 0 && <GamesTable allGames={allGames} />
+      }
 
     </main>
   )
