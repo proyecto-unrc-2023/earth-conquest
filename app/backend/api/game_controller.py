@@ -4,6 +4,7 @@ from flask import jsonify, Response
 from app.backend.models.alterator import Alterator
 
 from app.backend.models.board import BoardSchema
+from app.backend.models.cell import CellSchema
 from app.backend.models.direction import Direction
 from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
@@ -280,8 +281,12 @@ class GameController:
                     }
                 )
                 return Response(message, status=400, mimetype='application/json')
+        cell_schema = CellSchema()
+        cell = game.get_cell(x_initPos, y_initPos)
         response = {
             "success": True,
-            "message": "Alterator successfully placed in game with id %d" % id
+            "message": "Alterator successfully placed in game with id %d" % id,
+            "cell": cell_schema.dumps(cell)
         }
+
         return jsonify(response)

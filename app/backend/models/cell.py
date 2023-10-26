@@ -4,11 +4,12 @@ from marshmallow import Schema, fields, pre_dump
 from marshmallow.fields import Nested
 
 from app.backend.models import modifier, directioner
+from app.backend.models import alterator
 from app.backend.models.alien import Alien, Team, AlienSchema
 from app.backend.models.alterator import Alterator
-from app.backend.models.directioner import DirectionerSchema
+from app.backend.models.directioner import Directioner, DirectionerSchema
 from app.backend.models.modifier import Modifier
-from app.backend.models.teleporter import TeleporterSchema
+from app.backend.models.teleporter import Teleporter, TeleporterSchema
 
 
 class Cell:
@@ -158,8 +159,12 @@ class Cell:
             return 'K'
         if self.modifier is modifier.Modifier.MULTIPLIER:
             return '2'
-        if self.alterator is directioner:
+        if isinstance(self.alterator, Directioner):
             return 'D'
+        if isinstance(self.alterator, Teleporter):
+            return 'T'
+        if self.alterator is alterator.Alterator.TRAP:
+            return 'TRAP'
         return ' '
 
     @staticmethod
@@ -220,12 +225,27 @@ class CellSchema(Schema):
     alterator = fields.Field()
 
     # checks the alterator type and returns the correspondent schema
+
     @pre_dump
     def convert_alterator_field(self, obj, **kwargs):
-        if obj.alterator == Alterator.TELEPORT:
-            obj.alterator = fields.Nested(TeleporterSchema())
-        elif obj.alterator == Alterator.DIRECTIONER:
-            obj.alterator = fields.Nested(DirectionerSchema())
+        if isinstance(obj.alterator, Directioner):
+            self.alterator = fields.Nested(DirectionerSchema())
+        elif isinstance(obj.alterator, Teleporter):
+            self.alterator = fields.Nested(TeleporterSchema())
         elif obj.alterator == Alterator.TRAP:
-            obj.alterator = fields.Enum(Alterator)
+            self.alterator = fields.Enum(Alterator)
+        return
+ 
+
+    """
+    @pre_dump
+    def convert_alterator_field(self, obj, **kwargs):
+        if isinstance(obj.alterator, Directioner):
+            return DirectionerSchema().dump(obj.alterator)
+        elif isinstance(obj.alterator, Teleporter):
+            return TeleporterSchema().dump(obj.alterator)
+        elif obj.alterator == Alterator.TRAP:
+            return Alterator.TRAP
         return obj
+    """
+
