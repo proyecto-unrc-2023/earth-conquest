@@ -1,9 +1,14 @@
 import json
 
 from flask import jsonify, Response
+from app.backend.models.alterator import Alterator
 
 from app.backend.models.board import BoardSchema
+from app.backend.models.direction import Direction
+from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
+from app.backend.models.team import Team
+from app.backend.models.teleporter import Teleporter
 
 games_dict = {}
 
@@ -194,3 +199,89 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
+
+
+    """
+        This method sets an alterator on the board if the positions are valid.
+    """
+    def set_alterator(id, data):
+        game = games_dict.get(id)
+
+        if game is None:
+            message = json.dumps(
+                {
+                    "success": False,
+                    "message": "Game not found with id: " + str(id)
+                }
+            )
+            return Response(message, status=404, mimetype='application/json')
+
+        
+        if data.get("team") == "BLUE":
+            team = Team.BLUE
+        if data.get("team") == "GREEN":
+            team = Team.GREEN
+
+        alterator =  data.get("alterator").get("name")
+        x_initPos = data.get("alterator").get("positionInit").get("x")
+        y_initPos = data.get("alterator").get("positionInit").get("y")
+
+
+        if alterator == "directioner":
+            direction = data.get("alterator").get("direction")
+            if direction == "right":
+                directioner = Directioner((x_initPos, y_initPos), Direction.RIGHT)
+            if direction == "left":
+                directioner = Directioner((x_initPos, y_initPos), Direction.LEFT)
+            if direction == "downwards":
+                directioner = Directioner((x_initPos, y_initPos), Direction.DOWNWARDS)
+            if direction == "upwards":
+                directioner = Directioner((x_initPos, y_initPos), Direction.UPWARDS)
+            try:
+                game.set_alterator(directioner, team)
+                games_dict[id] = game
+            except Exception as e:
+                message = json.dumps(
+                    {
+                        "success": False,
+                        'errors': str(e)
+                    }
+                )
+                return Response(message, status=400, mimetype='application/json')
+
+        
+        if alterator == "teleporter":
+            x_endPos = data.get("alterator").get("positionEnd").get("x")
+            y_endPos = data.get("alterator").get("positionEnd").get("y")    
+            teleporter =  Teleporter((x_initPos, y_initPos), (x_endPos, y_endPos))
+            try:
+                game.set_alterator(teleporter, team)
+                games_dict[id] = game
+            except Exception as e:
+                message = json.dumps(
+                    {
+                        "success": False,
+                        'errors': str(e)
+                    }
+                )
+                return Response(message, status=400, mimetype='application/json')
+        
+
+        if alterator == "trap":
+            try:
+                trap = Alterator.TRAP
+                game.set_alterator(trap, team, x_initPos, y_initPos)
+                games_dict[id] = game
+            except Exception as e:
+                message = json.dumps(
+                    {
+                        "success": False,
+                        'errors': str(e)
+                    }
+                )
+                return Response(message, status=400, mimetype='application/json')
+        response = {
+            "success": True,
+            "message": "Alterator successfully placed in game with id %d" % id
+        }
+        return jsonify(response)
