@@ -11,8 +11,8 @@ export function Game ({ gameId }) {
   const [board, setBoard] = useState(data2.grid)
   const [changeTic, setChangeTic] = useState(true)
 
-  const REFRESH = 'http://127.0.0.1:5000/games/'
-  const ACT = 'http://127.0.0.1:5000/games/'
+  const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
+  const ACT = 'http://127.0.0.1:5000/games/act_board'
 
   // vida de las bases
   let lifeGreenOvni
