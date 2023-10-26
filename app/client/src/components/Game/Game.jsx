@@ -10,9 +10,12 @@ export function Game ({ gameId }) {
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [board, setBoard] = useState(data2.grid)
   const [changeTic, setChangeTic] = useState(true)
+  const [winner, setWinner] = useState(null)
 
+  let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
+  const SPAWN_ALIENS = 'http://127.0.0.1:5000/games//spawn_aliens/'
 
   // vida de las bases
   let lifeGreenOvni
@@ -30,7 +33,13 @@ export function Game ({ gameId }) {
       }
       const data = await response.json()
 
-      setBoard(data.board)
+      CONT_TICS = CONT_TICS + 1
+      if (CONT_TICS === 5) {
+        spawnAliens()
+        CONT_TICS = 0
+      } else {
+        setBoard(data.board)
+      }
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -49,8 +58,27 @@ export function Game ({ gameId }) {
       lifeBlueOvni = data.blue_ovni_life
       liveBlueAliens = data.live_blue_aliens
       liveGreenAliens = data.live_green_aliens
+
+      if (lifeGreenOvni === 0) {
+        setWinner('Green')
+      } else {
+        setWinner('Blue')
+      }
     } catch (error) {
       console.error('Error fetching data in act:', error)
+    }
+  }
+
+  const spawnAliens = async () => {
+    try {
+      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      setBoard(data.board)
+    } catch (error) {
+      console.error('Error spawn aliens in base:', error)
     }
   }
 
