@@ -7,11 +7,10 @@ import './Game.css'
 
 export function Game ({ gameId }) {
   const [alter, setAlterator] = useState(null)
-  const [permisoTeleport, setPermisoTeleport] = useState(true)
+  const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [board, setBoard] = useState(data2.grid)
 
   // pide el refresco
-
   const fetchData = async () => {
     try {
       const response = await fetch(`/game/${gameId}`)
@@ -46,12 +45,12 @@ export function Game ({ gameId }) {
   return (
     <>
       <h1>Earth conquest</h1>
-      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setPermiso={setPermisoTeleport} permiso={permisoTeleport} />
+      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
       </section>
-      <Panel setAlter={setAlter} permiso={permisoTeleport} />
+      <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
     </>
   )
 }

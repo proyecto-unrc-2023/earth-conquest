@@ -2,11 +2,12 @@ import { alterator } from '../../constants.js'
 import { useState } from 'react'
 import './Panel.css'
 
-export const Panel = ({ setAlter, permiso }) => {
+export const Panel = ({ setAlter, teleporterEnabled }) => {
   const [showDirections, setShowDirections] = useState(false)
+  // aca definir los objetos 
   const handleAlterator = (newAlterator) => {
-    if (!permiso) return
-    setAlter(newAlterator)
+    if (!teleporterEnabled) return
+    setAlter(newAlterator)  // setea el objeto
   }
 
   return (
