@@ -11,6 +11,9 @@ export function Game ({ gameId }) {
   const [board, setBoard] = useState(data2.grid)
   const [changeTic, setChangeTic] = useState(true)
 
+  const REFRESH = 'http://127.0.0.1:5000/games/'
+  const ACT = 'http://127.0.0.1:5000/games/'
+
   // vida de las bases
   let lifeGreenOvni
   let lifeBlueOvni
@@ -21,7 +24,7 @@ export function Game ({ gameId }) {
 
   const refresh = async () => {
     try {
-      const response = await fetch(`/game/${gameId}`)
+      const response = await fetch(`${REFRESH}/${gameId}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -35,7 +38,7 @@ export function Game ({ gameId }) {
 
   const act = async () => {
     try {
-      const response = await fetch('ruta para el act')
+      const response = await fetch(`${ACT}/${gameId}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
