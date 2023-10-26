@@ -9,9 +9,17 @@ export function Game ({ gameId }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [board, setBoard] = useState(data2.grid)
+  const [changeTic, setChangeTic] = useState(true)
 
-  // pide el refresco
-  const fetchData = async () => {
+  // vida de las bases
+  let lifeGreenOvni
+  let lifeBlueOvni
+
+  // cantidad de aliens vivos
+  let liveBlueAliens
+  let liveGreenAliens
+
+  const refresh = async () => {
     try {
       const response = await fetch(`/game/${gameId}`)
       if (!response.ok) {
@@ -21,13 +29,36 @@ export function Game ({ gameId }) {
 
       setBoard(data.board)
     } catch (error) {
-      console.error('Error fetching data:', error)
+      console.error('Error fetching data in refresh:', error)
+    }
+  }
+
+  const act = async () => {
+    try {
+      const response = await fetch('ruta para el act')
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+
+      setBoard(data.board)
+      lifeGreenOvni = data.green_ovni_life
+      lifeBlueOvni = data.blue_ovni_life
+      liveBlueAliens = data.live_blue_aliens
+      liveGreenAliens = data.live_green_aliens
+    } catch (error) {
+      console.error('Error fetching data in act:', error)
     }
   }
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchData()
+      if (changeTic) {
+        refresh()
+      } else {
+        act()
+      }
+      setChangeTic(!changeTic)
     }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
@@ -35,12 +66,6 @@ export function Game ({ gameId }) {
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
   }
-
-  const lifeGreenOvni = data2.green_ovni_life
-  const lifeBlueOvni = data2.blue_ovni_life
-
-  const liveBlueAliens = data2.live_blue_aliens
-  const liveGreenAliens = data2.live_green_aliens
 
   return (
     <>
