@@ -281,12 +281,12 @@ class GameController:
                     }
                 )
                 return Response(message, status=400, mimetype='application/json')
-        cell_schema = CellSchema()
-        cell = game.get_cell(x_initPos, y_initPos)
+        # cell_schema = CellSchema()
+        # cell = game.get_cell(x_initPos, y_initPos)
         response = {
             "success": True,
             "message": "Alterator successfully placed in game with id %d" % id,
-            "cell": cell_schema.dumps(cell)
+            # "cell": cell_schema.dumps(cell)
         }
 
         return jsonify(response)

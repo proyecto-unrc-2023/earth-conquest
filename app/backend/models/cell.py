@@ -220,32 +220,21 @@ class Cell:
 
 
 class CellSchema(Schema):
-    aliens = fields.List(fields.Nested(AlienSchema()))
+    aliens = fields.List(fields.Nested(AlienSchema))
     modifier = fields.Enum(Modifier)
     alterator = fields.Field()
 
-    # checks the alterator type and returns the correspondent schema
-
-    @pre_dump
-    def convert_alterator_field(self, obj, **kwargs):
-        if isinstance(obj.alterator, Directioner):
-            self.alterator = fields.Nested(DirectionerSchema())
-        elif isinstance(obj.alterator, Teleporter):
-            self.alterator = fields.Nested(TeleporterSchema())
-        elif obj.alterator == Alterator.TRAP:
-            self.alterator = fields.Enum(Alterator)
-        return
- 
-
-    """
-    @pre_dump
-    def convert_alterator_field(self, obj, **kwargs):
+    def serialize_alterator(self, obj, **kwargs):
         if isinstance(obj.alterator, Directioner):
             return DirectionerSchema().dump(obj.alterator)
         elif isinstance(obj.alterator, Teleporter):
             return TeleporterSchema().dump(obj.alterator)
         elif obj.alterator == Alterator.TRAP:
-            return Alterator.TRAP
-        return obj
-    """
+            return Alterator.TRAP.value
+        else:
+            return None
 
+    @pre_dump
+    def pre_dump_alterator_field(self, obj, **kwargs):
+        obj.alterator = self.serialize_alterator(obj)
+        return obj
