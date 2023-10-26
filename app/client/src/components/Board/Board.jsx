@@ -31,9 +31,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   const updateBoard = (row, col) => {
     if (newAlterator === null) return
-    if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
-    if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
-    if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
+    if (!isValidPosition(row, col)) return
     if (
       (outOfTeleportRange(row, col, teleportX, teleportY) &&
       (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
