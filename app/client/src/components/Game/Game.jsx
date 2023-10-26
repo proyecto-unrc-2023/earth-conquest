@@ -59,10 +59,8 @@ export function Game ({ gameId }) {
       liveBlueAliens = data.live_blue_aliens
       liveGreenAliens = data.live_green_aliens
 
-      if (lifeGreenOvni === 0) {
-        setWinner('Green')
-      } else {
-        setWinner('Blue')
+      if (data.winner) {
+        setWinner(data.winner.team)
       }
     } catch (error) {
       console.error('Error fetching data in act:', error)
