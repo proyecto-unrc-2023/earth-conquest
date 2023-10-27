@@ -7,28 +7,87 @@ import './Game.css'
 
 export function Game ({ gameId }) {
   const [alter, setAlterator] = useState(null)
-  const [permisoTeleport, setPermisoTeleport] = useState(true)
+  const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [board, setBoard] = useState(data2.grid)
+  const [changeTic, setChangeTic] = useState(true)
+  const [winner, setWinner] = useState(null)
 
-  // pide el refresco
+  let CONT_TICS = 0
+  const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
+  const ACT = 'http://127.0.0.1:5000/games/act_board'
+  const SPAWN_ALIENS = 'http://127.0.0.1:5000/games//spawn_aliens/'
 
-  const fetchData = async () => {
+  // vida de las bases
+  let lifeGreenOvni
+  let lifeBlueOvni
+
+  // cantidad de aliens vivos
+  let liveBlueAliens
+  let liveGreenAliens
+
+  const refresh = async () => {
     try {
-      const response = await fetch(`/game/${gameId}`)
+      const response = await fetch(`${REFRESH}/${gameId}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+
+      CONT_TICS = CONT_TICS + 1
+      if (CONT_TICS === 5) {
+        spawnAliens()
+        CONT_TICS = 0
+      } else {
+        setBoard(data.board)
+      }
+    } catch (error) {
+      console.error('Error fetching data in refresh:', error)
+    }
+  }
+
+  const act = async () => {
+    try {
+      const response = await fetch(`${ACT}/${gameId}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
 
       setBoard(data.board)
+      lifeGreenOvni = data.green_ovni_life
+      lifeBlueOvni = data.blue_ovni_life
+      liveBlueAliens = data.live_blue_aliens
+      liveGreenAliens = data.live_green_aliens
+
+      if (data.winner) {
+        setWinner(data.winner.team)
+      }
     } catch (error) {
-      console.error('Error fetching data:', error)
+      console.error('Error fetching data in act:', error)
+    }
+  }
+
+  const spawnAliens = async () => {
+    try {
+      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      setBoard(data.board)
+    } catch (error) {
+      console.error('Error spawn aliens in base:', error)
     }
   }
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      fetchData()
+      if (changeTic) {
+        refresh()
+      } else {
+        act()
+      }
+      setChangeTic(!changeTic)
     }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
@@ -37,21 +96,15 @@ export function Game ({ gameId }) {
     setAlterator(newAlterator)
   }
 
-  const lifeGreenOvni = data2.green_ovni_life
-  const lifeBlueOvni = data2.blue_ovni_life
-
-  const liveBlueAliens = data2.alive_blue_aliens
-  const liveGreenAliens = data2.alive_green_aliens
-
   return (
     <>
       <h1>Earth conquest</h1>
-      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setPermiso={setPermisoTeleport} permiso={permisoTeleport} />
+      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
       </section>
-      <Panel setAlter={setAlter} permiso={permisoTeleport} />
+      <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
     </>
   )
 }

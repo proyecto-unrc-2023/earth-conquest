@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Game } from './components/Game/Game'
+// import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 
