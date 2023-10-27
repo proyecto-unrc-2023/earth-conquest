@@ -1,12 +1,30 @@
 import { gameStatus } from '../../constants'
+import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
 export function Menu ({ createGame, setStatusGame, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
-  const [nameBlue, setNameBlue] = useState('')
+
+  const [allGames, setAllGames] = useState([])
   const JOIN_AS = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
+  const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/get_all_games'
+
+  const getAllGames = async () => {
+    try {
+      const response = await fetch(GET_ALL_GAMES)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      const newGames = data.data.games
+      setAllGames(newGames)
+      console.log(newGames)
+    } catch (error) {
+      console.error('Error fetching data: ', error)
+    }
+  }
 
   const startGame = async () => {
     try {
@@ -26,7 +44,7 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
     }
   }
 
-  const joinAs = async (team, playerName) => {
+  const joinAs = async (team, playerName, gameId) => {
     /*
     try {
       const response = await fetch(`${JOIN_AS}/${gameId}/${team}/${playerName}`, {
@@ -44,13 +62,13 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
     }
     */
     if (team === 'green') {
-      const hostPlayer = { host: true, playerName, team }
+      const hostPlayer = { host: true, playerName, team, gameId }
       // eslint-disable-next-line no-undef
       localStorage.setItem('hostPlayer', JSON.stringify(hostPlayer))
       // eslint-disable-next-line no-undef
       console.log('local storage: ', localStorage.getItem('hostPlayer'))
     } else {
-      const guestPlayer = { host: false, playerName, team }
+      const guestPlayer = { host: false, playerName, team, gameId }
       // eslint-disable-next-line no-undef
       localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
       // eslint-disable-next-line no-undef
@@ -62,10 +80,14 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
   return (
     <>
       <h2>Main menu</h2>
-      <button onClick={createGame}>New Game!</button>
+      <button onClick={createGame}>New Game</button>
+      <button onClick={getAllGames}>Join game</button>
       {
         message.length !== 0 &&
-          <p className='message'>{message}</p>
+          <>
+            <p className='message'>{message}</p>
+            <p className='message'>Game id: {gameId}</p>
+          </>
       }
       {
         gameId !== null && // revisar esto
@@ -79,22 +101,16 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
                   setNameGreen(e.target.value) // TODO: falta controlar nombres vacíos
                 }}
               />
-              <button onClick={() => joinAs('green', nameGreen)}>Join as Green Player</button>
-            </label>
-            <label>
-              <input
-                type='text'
-                placeholder='Insert name'
-                value={nameBlue}
-                onChange={(e) => setNameBlue(e.target.value)}
-              />
-              <button onClick={() => joinAs('blue', nameBlue)}>Join as Blue Player</button>
+              <button
+                onClick={() => joinAs('green', nameGreen, gameId)}
+                disabled={!nameGreen}
+              >Join
+              </button>
             </label>
           </>
       }
       {
-        nameGreen !== '' && nameBlue !== '' &&
-          <button onClick={startGame}>Start Game</button>
+        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} />
       }
     </>
   )

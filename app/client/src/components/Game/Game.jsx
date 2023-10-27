@@ -40,8 +40,8 @@ export function Game ({ gameId }) {
   const lifeGreenOvni = data2.green_ovni_life
   const lifeBlueOvni = data2.blue_ovni_life
 
-  const liveBlueAliens = data2.live_blue_aliens
-  const liveGreenAliens = data2.live_green_aliens
+  const liveBlueAliens = data2.alive_blue_aliens
+  const liveGreenAliens = data2.alive_green_aliens
 
   return (
     <>
