@@ -1,14 +1,14 @@
-import { gameStatus } from '../../constants'
 import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
-export function Menu ({ createGame, setStatusGame, gameId, message }) {
+export function Menu ({ createGame, startGame, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
-
   const [allGames, setAllGames] = useState([])
-  const JOIN_AS = 'http://127.0.0.1:5000/games/'
-  const START_GAME = 'http://127.0.0.1:5000/games/start_game'
+  const [newGameClicked, setNewGameClicked] = useState(false)
+  const [joinGameClicked, setJoinGameClicked] = useState(false)
+
+  const JOIN_AS = 'http://127.0.0.1:5000/games/join' // /games/join/1?team=GREEN&player_name=Edgar
   const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/get_all_games'
 
   const getAllGames = async () => {
@@ -26,28 +26,10 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
     }
   }
 
-  const startGame = async () => {
-    try {
-      const response = await fetch(`${START_GAME}/1`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-      if (data.success) {
-        setStatusGame(gameStatus.started)
-      }
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-    }
-  }
-
   const joinAs = async (team, playerName, gameId) => {
     /*
     try {
-      const response = await fetch(`${JOIN_AS}/${gameId}/${team}/${playerName}`, {
+      const response = await fetch(`${JOIN_AS}/${gameId}?team=${team}&player_name=${playerName}`, {
         method: 'PUT',
         // También se puede enviar el nombre del jugador en el cuerpo
         body: JSON.stringify({ playerName }),
@@ -61,7 +43,7 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
       console.error('Error fetching data: ', error)
     }
     */
-    if (team === 'green') {
+    if (team === 'GREEN') {
       const hostPlayer = { host: true, playerName, team, gameId }
       // eslint-disable-next-line no-undef
       localStorage.setItem('hostPlayer', JSON.stringify(hostPlayer))
@@ -74,14 +56,24 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
       // eslint-disable-next-line no-undef
       console.log('local storage: ', localStorage.getItem('guestPlayer'))
     }
-    console.log(`seteo jugador ${playerName} al equipo ${team}`)
+  }
+
+  const handleNewGameClick = () => {
+    createGame()
+    setJoinGameClicked(true)
+  }
+
+  const handleJoinGameClick = () => {
+    getAllGames()
+    setNewGameClicked(true)
+    document.getElementById('join').innerText = 'Refresh games'
   }
 
   return (
     <>
       <h2>Main menu</h2>
-      <button onClick={createGame}>New Game</button>
-      <button onClick={getAllGames}>Join game</button>
+      <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
+      <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
       {
         message.length !== 0 &&
           <>
@@ -98,11 +90,11 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
                 placeholder='Insert name'
                 value={nameGreen}
                 onChange={(e) => {
-                  setNameGreen(e.target.value) // TODO: falta controlar nombres vacíos
+                  setNameGreen(e.target.value)
                 }}
               />
               <button
-                onClick={() => joinAs('green', nameGreen, gameId)}
+                onClick={() => joinAs('GREEN', nameGreen, gameId)}
                 disabled={!nameGreen}
               >Join
               </button>
@@ -110,7 +102,7 @@ export function Menu ({ createGame, setStatusGame, gameId, message }) {
           </>
       }
       {
-        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} />
+        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} startGame={startGame} />
       }
     </>
   )

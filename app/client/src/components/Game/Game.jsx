@@ -15,7 +15,7 @@ export function Game ({ gameId }) {
   let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
-  const SPAWN_ALIENS = 'http://127.0.0.1:5000/games//spawn_aliens/'
+  const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
 
   // vida de las bases
   let lifeGreenOvni
@@ -61,6 +61,7 @@ export function Game ({ gameId }) {
 
       if (data.winner) {
         setWinner(data.winner.team)
+        // aca habría que hacer el game over
       }
     } catch (error) {
       console.error('Error fetching data in act:', error)
