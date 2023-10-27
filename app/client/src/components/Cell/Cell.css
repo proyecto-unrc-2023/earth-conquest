@@ -24,8 +24,7 @@
   display: grid;
   place-items: center;
   position: absolute;
-  width: 240px;
-  height: 240px;
+  width: 11vw;
   transform: translate(-5px, -50px);
   rotate: -1deg;
   opacity: 90%;
@@ -35,8 +34,7 @@
 
 .blue_nave{
   position: absolute;
-  width: 240px;
-  height: 240px;
+  width: 11vw;
   transform: translate(10px, -40px);
   rotate: 1deg;
   opacity: 90%;

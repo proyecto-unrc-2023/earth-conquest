@@ -6,16 +6,19 @@ body {
   text-align: center;
   margin: 0%;
   top: 0%;
+  background-image: url('../public/fondo_estrella.jpg');
+  background-size:contain ;
+
 }
 
 .statsGame {
   display: grid;
   justify-items: center;
-  grid-template-columns:repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  grid-template-columns:repeat(2, 1fr);
   grid-template-areas: 
     "health-bar-green health-bar-blue"
-    "live_alien_green live_alien_blue";
+    "green_user_info blue_user_info";
   margin: 20px 10px;
 }
 

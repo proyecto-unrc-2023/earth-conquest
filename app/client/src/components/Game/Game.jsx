@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState /*, useEffect */ } from 'react'
 import data2 from '../../data2.json'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
@@ -10,6 +10,8 @@ export function Game ({ gameId }) {
   const [permisoTeleport, setPermisoTeleport] = useState(true)
   const [board, setBoard] = useState(data2.grid)
 
+  const NOMBRE_G = 'Nombre_player_green'
+  const NOMBRE_B = 'Nombre_player_blue'
   // pide el refresco
   /*
   const fetchData = async () => {
@@ -45,11 +47,10 @@ export function Game ({ gameId }) {
 
   return (
     <>
-      <h1>Earth conquest</h1>
       <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setPermiso={setPermisoTeleport} permiso={permisoTeleport} />
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
-        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
+        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} greenName={NOMBRE_G} />
+        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} blueName={NOMBRE_B} />
       </section>
       <Panel setAlter={setAlter} permiso={permisoTeleport} />
       <img src='../public/panel_left.jpg' className='panel_left' />
