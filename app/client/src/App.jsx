@@ -61,7 +61,6 @@ function App () {
   }
 
   return (
-    /*
     <main>
       {
         statusGame === gameStatus.notStarted &&
@@ -74,8 +73,6 @@ function App () {
       <button onClick={getAllGames}>Get all games</button>
       <button onClick={startGame}>Start Game</button>
     </main>
-    */
-    <Game />
   )
 }
 

@@ -1,4 +1,4 @@
-import { useState /*, useEffect */ } from 'react'
+import { useState, useEffect } from 'react'
 import data2 from '../../data2.json'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
@@ -13,7 +13,7 @@ export function Game ({ gameId }) {
   const NOMBRE_G = 'Nombre_player_green'
   const NOMBRE_B = 'Nombre_player_blue'
   // pide el refresco
-  /*
+
   const fetchData = async () => {
     try {
       const response = await fetch(`/game/${gameId}`)
@@ -34,7 +34,7 @@ export function Game ({ gameId }) {
     }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
-  */
+
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
   }

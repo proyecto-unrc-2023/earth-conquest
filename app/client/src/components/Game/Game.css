@@ -6,9 +6,6 @@ body {
   text-align: center;
   margin: 0%;
   top: 0%;
-  background-image: url('../public/fondo_estrella.jpg');
-  background-size:contain ;
-
 }
 
 .statsGame {
