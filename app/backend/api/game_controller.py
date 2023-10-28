@@ -255,15 +255,13 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
         
-        #board_schema = BoardSchema()
-        #board = game.board
-        game_schema = GameSchema()
+        board_schema = BoardSchema()
+        board = game.board
         response = {
             "success": True,
             "message": "Alterator successfully placed in game with id %d" % id,
-            #"cell": board_schema.dumps(board),
             "data": {
-                "game": game_schema.dump(game)
+                "board": board_schema.dump(board)
             }
         }
 
