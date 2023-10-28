@@ -30,7 +30,7 @@ class IsValidPosition(Resource):
 class SetAlterator(Resource):
     def put(self, game_id):
         data = request.json  # data is sent as JSON in the body of the petition
-        return GameController.set_alterator(game_id, data)
+        return GameController().set_alterator(game_id, data)
 
 
 api.add_resource(GamesResource, '/')

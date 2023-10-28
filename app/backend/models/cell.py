@@ -230,7 +230,7 @@ class CellSchema(Schema):
         elif isinstance(obj.alterator, Teleporter):
             return TeleporterSchema().dump(obj.alterator)
         elif obj.alterator == Alterator.TRAP:
-            return Alterator.TRAP.value
+            return "TRAP"
         else:
             return None
 

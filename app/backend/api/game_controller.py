@@ -172,6 +172,7 @@ class GameController:
         This method checks if a given position is valid (free of modifiers/alterators and 
         not on any Ovni's range).
     """
+
     def is_valid_position(id, row, col):
         game = games_dict.get(id)
 
@@ -205,7 +206,7 @@ class GameController:
     """
         This method sets an alterator on the board if the positions are valid.
     """
-    def set_alterator(id, data):
+    def set_alterator(self, id, data):
         game = games_dict.get(id)
 
         if game is None:
@@ -217,76 +218,69 @@ class GameController:
             )
             return Response(message, status=404, mimetype='application/json')
 
-        
-        if data.get("team") == "BLUE":
+        information = {
+            "alterator": data.get("alterator").get("name"),
+            "initPos": (data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
+            "endPos": (data.get("alterator").get("positionEnd").get("x"), data.get("alterator").get("positionEnd").get("y")),
+            "direction": data.get("alterator").get("direction"),
+            "team": data.get("team")
+        }
+
+        if information["team"] == "BLUE":
             team = Team.BLUE
-        if data.get("team") == "GREEN":
+        if information["team"] == "GREEN":
             team = Team.GREEN
 
-        alterator =  data.get("alterator").get("name")
-        x_initPos = data.get("alterator").get("positionInit").get("x")
-        y_initPos = data.get("alterator").get("positionInit").get("y")
+        if information["alterator"] == "directioner":
+            alterator = self.create_directioner(information["direction"], information["initPos"])
 
+        if information["alterator"] == "teleporter":
+            alterator = Teleporter(information["initPos"], information["endPos"])
 
-        if alterator == "directioner":
-            direction = data.get("alterator").get("direction")
-            if direction == "right":
-                directioner = Directioner((x_initPos, y_initPos), Direction.RIGHT)
-            if direction == "left":
-                directioner = Directioner((x_initPos, y_initPos), Direction.LEFT)
-            if direction == "downwards":
-                directioner = Directioner((x_initPos, y_initPos), Direction.DOWNWARDS)
-            if direction == "upwards":
-                directioner = Directioner((x_initPos, y_initPos), Direction.UPWARDS)
-            try:
-                game.set_alterator(directioner, team)
-                games_dict[id] = game
-            except Exception as e:
-                message = json.dumps(
-                    {
-                        "success": False,
-                        'errors': str(e)
-                    }
-                )
-                return Response(message, status=400, mimetype='application/json')
+        if information["alterator"] == "trap":
+            alterator = Alterator.TRAP
 
+        try:
+            if alterator == Alterator.TRAP:
+                game.set_alterator(alterator, team, information["initPos"][0], information["initPos"][1])
+            else:
+                game.set_alterator(alterator, team)
+            games_dict[id] = game
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
         
-        if alterator == "teleporter":
-            x_endPos = data.get("alterator").get("positionEnd").get("x")
-            y_endPos = data.get("alterator").get("positionEnd").get("y")    
-            teleporter =  Teleporter((x_initPos, y_initPos), (x_endPos, y_endPos))
-            try:
-                game.set_alterator(teleporter, team)
-                games_dict[id] = game
-            except Exception as e:
-                message = json.dumps(
-                    {
-                        "success": False,
-                        'errors': str(e)
-                    }
-                )
-                return Response(message, status=400, mimetype='application/json')
-        
-
-        if alterator == "trap":
-            try:
-                trap = Alterator.TRAP
-                game.set_alterator(trap, team, x_initPos, y_initPos)
-                games_dict[id] = game
-            except Exception as e:
-                message = json.dumps(
-                    {
-                        "success": False,
-                        'errors': str(e)
-                    }
-                )
-                return Response(message, status=400, mimetype='application/json')
-        # cell_schema = CellSchema()
-        # cell = game.get_cell(x_initPos, y_initPos)
+        #board_schema = BoardSchema()
+        #board = game.board
+        game_schema = GameSchema()
         response = {
             "success": True,
             "message": "Alterator successfully placed in game with id %d" % id,
-            # "cell": cell_schema.dumps(cell)
+            #"cell": board_schema.dumps(board),
+            "data": {
+                "game": game_schema.dump(game)
+            }
         }
 
         return jsonify(response)
+
+
+
+    """
+        Creates and returns a directioner given its direction and initial position
+    """
+    def create_directioner(self, direction, initPos):
+        if direction == "right":
+            return Directioner(initPos, Direction.RIGHT)
+        if direction == "left":
+            return Directioner(initPos, Direction.LEFT)
+        if direction == "downwards":
+            return Directioner(initPos, Direction.DOWNWARDS)
+        if direction == "upwards":
+            return Directioner(initPos, Direction.UPWARDS)
+
