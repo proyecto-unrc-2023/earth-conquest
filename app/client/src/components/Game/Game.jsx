@@ -12,10 +12,16 @@ export function Game ({ gameId }) {
   const [changeTic, setChangeTic] = useState(true)
   const [winner, setWinner] = useState(null)
 
+
+  const NOMBRE_G = 'Nombre_player_green'
+  const NOMBRE_B = 'Nombre_player_blue'
+  
+
   let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games//spawn_aliens/'
+
 
   // vida de las bases
   let lifeGreenOvni
@@ -98,13 +104,19 @@ export function Game ({ gameId }) {
 
   return (
     <>
-      <h1>Earth conquest</h1>
+
       <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
+
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} />
-        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} />
+        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} greenName={NOMBRE_G} />
+        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} blueName={NOMBRE_B} />
       </section>
       <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
+      <img src='../public/panel_left.jpg' className='panel_left' />
+      <img src='../public/panel_right.jpg' className='panel_right' />
+
+      
+
     </>
   )
 }

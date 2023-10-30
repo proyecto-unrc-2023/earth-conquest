@@ -30,7 +30,6 @@ function App () {
   }
 
   return (
-
     <main>
       {
         statusGame !== gameStatus.started &&
