@@ -26,7 +26,7 @@ class Board:
         self.base_range_dimentions = base_range_dimentions
         self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
         self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
-        self.board = []
+        self.board = [] 
         self.create_board()
         self.green_ovni_life = GREEN_OVNI_LIFE
         self.blue_ovni_life = BLUE_OVNI_LIFE
@@ -210,6 +210,13 @@ class Board:
         else:
             raise AttributeError("There's already a Modifier on that cell")
 
+    """ 
+    Returns the Modifier that's on a specific Cell.
+    """
+
+    def get_modifier(self, x, y):
+        return self.get_cell(x, y).modifier
+
     """
     Method that sets an alien on the alive aliens dictionary.
     """
@@ -263,24 +270,37 @@ class Board:
     """
 
     def move_alien(self, x, y, alien):
+        if not self.get_cell(x, y).aliens.__contains__(alien):
+            raise ValueError("alien not found in position")
+        
         alterator = self.get_cell(x, y).alterator  # alterator on the cell
+        
         if isinstance(alterator, Teleporter):
             new_x, new_y = self.new_alien_pos_with_teleporter(x, y, alterator)
         elif isinstance(alterator, Directioner):
             new_x, new_y = self.new_alien_pos_with_directioner(x, y, alterator)
         else:
             new_x, new_y = self.get_adjoining_valid_pos(x, y)
-
-        # updates the cell
-        self.get_cell(x, y).remove_alien(alien)
+    
+        # Remove the alien from the old position if it's there
+        if self.get_cell(x, y).aliens.__contains__(alien):
+            self.get_cell(x, y).remove_alien(alien)
+    
+        # Add the alien to the new position
         self.get_cell(new_x, new_y).add_alien(alien)
-
-        # update the dictionary
+    
+        # Update the dictionary
         if (x, y) in self.aliens:
-            self.aliens[(x, y)].remove(alien)
+            # Remove the alien from the old position in the dictionary if it's there
+            if alien in self.aliens[(x, y)]:
+                self.aliens[(x, y)].remove(alien)
+            
+            # Add the alien to the new position in the dictionary
             self.set_alien_in_dictionary(new_x, new_y, alien)
         else:
             raise ValueError("The key provided does not have the alien on its list of aliens")
+
+
 
     """
     An alien is placed at a (x,y) position where a teleporter is placed.
@@ -398,11 +418,12 @@ class Board:
     """
 
     def remove_alien_from_board(self, x, y, alien):
-        if isinstance(alien, Alien):
+        if isinstance(alien, Alien) and self.aliens.__contains__((x, y)):
             self.get_cell(x, y).remove_alien(alien)
-            self.aliens[(x, y)].remove(alien)
+            if (x, y) in self.aliens:
+                self.aliens[(x, y)].remove(alien)
         else:
-            raise ValueError(f'you can only remove aliens')
+            raise ValueError(f'alien not found')
 
     """
     Given an alien, this method returns the position were the alien is placed
@@ -487,6 +508,67 @@ class Board:
 
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
+
+    def any_ovni_destroyed(self):
+        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
+
+    '''
+    This method kills a given number of aliens of a given team  
+    '''
+    
+    def kill_aliens(self, team, cant):
+        team_aliens = self.list_aliens_of_team(team)
+        # en este punto todos los aliens del equipo 'team' estaran almacenados en team_aliens
+        if team_aliens.__len__() < cant:
+            return False
+
+        else:
+            for i in range(cant):
+                alien_to_kill = random.choice(list(team_aliens.keys()))
+                x, y = team_aliens.pop(alien_to_kill)   # deletes the key and return its value
+                self.remove_alien_from_board(x, y, alien_to_kill)   # kills the alien
+            return True
+
+    '''
+    This method returns a dict with the aliens of a given team as keys and their positions as values
+    '''
+    
+    def list_aliens_of_team(self, team):
+        team_aliens = {}    # dict que llevara los aliens como clave y su pos como valor
+        for pos, aliens_on_cell in self.aliens.items():
+            for alien in aliens_on_cell:
+                if alien.team is team:
+                    x, y = pos
+                    team_aliens[alien] = (x, y)
+        return team_aliens
+    
+    '''
+    This method returns the number of aliens of a given team
+    '''
+    
+    def get_aliens_cant_of_team(self, team):
+        return self.list_aliens_of_team(team).__len__()
+
+    '''
+    This method adds eyes to an alien in a given position
+    '''
+    def add_eyes_to_alien(self, x, y, alien_pos_in_list, num_eyes):
+        cell = self.get_cell(x, y)
+        cell.aliens[alien_pos_in_list].add_eyes(num_eyes)
+
+    '''
+    This method returns an alien in a given position
+    '''
+    def get_alien_in_position(self, x, y, alien_pos_in_list):
+        cell = self.get_cell(x, y)
+        return cell.aliens[alien_pos_in_list]
+
+    '''
+    This method returns the number of aliens in a given position 
+    '''
+    def get_num_aliens_in_position(self, x, y):
+        cell = self.get_cell(x, y)
+        return len(cell.aliens)
 
     def json(self):
         return {

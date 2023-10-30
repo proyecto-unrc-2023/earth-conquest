@@ -1,17 +1,29 @@
 Feature: Modifier use
 
-  Background: Game creation and starting a game
-    Given the aliens has been generate in the board
+  Background:
+    Given a game has been created
+              | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10| 11| 12| 13| 14|
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   | M |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+              |   |   |   |   | M | M | M |   |   |   |   |   |   |   |   |
+              |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+
 
   Scenario Outline: alien on the modifier <modifier>
-    Given there is an "<modifier>" in the square (2, 2)
-    And alien arrive at the square (2, 2)
+    Given there is a "<modifier>" on the cell (2, 9)
+    And the alien arrives on the cell (2, 9)
     When "<modifier>" activates
     Then "<action_modifier>" and "<result_modifier>"
 
     Examples:
-      | modifier      | action_modifier                     | result_modifier                     	    |
-      | multiplier    | generate a clone in the same square | there are two identical aliens     	    |
-      | killer        | kill the alien                      | there are no aliens in the square 	    |
+      | modifier      | action_modifier                       | result_modifier                     	      |
+      | multiplier    | generates a clone on the same cell    | there are two identical aliens     	        |
+      | killer        | kills the alien                       | there are no aliens left on the cell 	      |
 
 
