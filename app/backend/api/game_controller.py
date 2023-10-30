@@ -27,6 +27,7 @@ class GameController:
             response = Response(message, status=404, mimetype='application/json') 
             return response
 
+
     def get_game_by_id(id):
         response = GameController.find_game(id)
         if response is not None:
@@ -115,9 +116,13 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        board_schema = BoardSchema()
         response = {
             "success": True,
-            "message": "Board %d refreshes successfully" % id
+            "message": "Board %d refreshes successfully" % id,
+            "data": {
+                "board": board_schema.dump(game.get_board())
+            }
         }
         return jsonify(response)
     
@@ -143,9 +148,14 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
         
+        game_schema = GameSchema()
         response = {
             "success": True,
-            "message": "Board %d acts successfully" % id
+            "message": "Game %d acts successfully" % id,
+            "data": {
+                "gameId": id,
+                "game": game_schema.dump(game)
+            }
         }
         return jsonify(response)
 
@@ -192,10 +202,11 @@ class GameController:
             "success": True,
             "message": "Aliens blue and green added successfully to game: %d" % id,
             "data": {
-                "board": board_schema.dump(game.board)
+                "board": board_schema.dump(game.get_board())
             }
         }
         return jsonify(response)
+
 
     def join_as(id, team, player_name):
         response = GameController.find_game(id)
@@ -232,5 +243,3 @@ class GameController:
             "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
         }
         return jsonify(response)
-
-
