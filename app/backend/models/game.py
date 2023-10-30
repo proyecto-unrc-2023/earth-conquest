@@ -151,8 +151,12 @@ class Game:
         return self.board.get_modifier(x,y)
         #return self.board.get_cell(x,y).modifier
 
+    '''
+    This method return a board from a game
+    '''
 
-
+    def get_board(self):
+        return self.board
 
     def get_alien_position(self, alien):
         return self.board.get_alien_position(alien)
@@ -281,3 +285,4 @@ class GameSchema(Schema):
     board = fields.Nested(BoardSchema(), only=('board',))
     green_alien_cant = fields.Integer()
     blue_alien_cant = fields.Integer()
+    winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
