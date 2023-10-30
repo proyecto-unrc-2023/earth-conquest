@@ -1,10 +1,13 @@
 import data2 from '../../data2.json'
+
 import { Cell } from '../Cell/Cell'
 import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
 
-export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, permiso }) => {
+export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId }) => {
+  const VALID_POSITION = 'http://127.0.0.1:5000/games/isValidPosition' // verificar
+  const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/setAlterator' // verificar
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -13,7 +16,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
   const blueOvniRange = data2.blue_ovni_range
 
   // Funcion para dar el rango de teleport
-  const isTeleportRange = (row, col, x, y) => {
+  const outOfTeleportRange = (row, col, x, y) => {
     return (Math.abs(row - x) >= TELEPORT_RANGE || Math.abs(col - y) >= TELEPORT_RANGE)
   }
 
@@ -28,54 +31,96 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
 
   const updateBoard = (row, col) => {
     if (newAlterator === null) return
-    if (board[row][col].alterator !== null || board[row][col].modifier !== null) return
-    if (row <= data2.green_ovni_range.x && col <= data2.green_ovni_range.y) return
-    if (row >= data2.blue_ovni_range.x && col >= data2.blue_ovni_range.y) return
+    if (!isValidPosition(row, col)) return
     if (
-      (isTeleportRange(row, col, teleportX, teleportY) &&
+      (outOfTeleportRange(row, col, teleportX, teleportY) &&
       (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
       isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
     ) return
-    if (isTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
+    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
+    // TODO: controlar ganador.
+  }
+  const sendAlterator = async (row, col, newAlterator) => {
+    try {
+      const response = await fetch(`${SEND_ALTERATOR}/${row}/${col}`, {
+        method: 'PUT',
+        body: JSON.stringify({ alterator: newAlterator })
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+    } catch (error) {
+      console.error('Error set trap', error)
+    }
+  }
+  const isValidPosition = async (row, col) => {
+    try {
+      const response = await fetch(`${VALID_POSITION}/${gameId}/${row}/${col}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      if (data.success) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error('Error is valid position', error)
+    }
   }
 
-  const setAlteratorInCell = (row, col, newAlterator, newBoard) => {
-    // mandarle a la api para preguntarle si la posición es valida
-    if (newAlterator === alterator.directioner_up) {
-      newBoard[row - 2][col].alterator = newAlterator
-      newBoard[row - 1][col].alterator = newAlterator
-      newBoard[row][col].alterator = newAlterator
-    } else if (newAlterator === alterator.directioner_down) {
-      newBoard[row + 2][col].alterator = newAlterator
-      newBoard[row + 1][col].alterator = newAlterator
-      newBoard[row][col].alterator = newAlterator
-    } else if (newAlterator === alterator.directioner_right) {
-      newBoard[row][col + 2].alterator = newAlterator
-      newBoard[row][col + 1].alterator = newAlterator
-      newBoard[row][col].alterator = newAlterator
-    } else if (newAlterator === alterator.directioner_left) {
-      newBoard[row][col - 2].alterator = newAlterator
-      newBoard[row][col - 1].alterator = newAlterator
-      newBoard[row][col].alterator = newAlterator
-    } else if (newAlterator === alterator.teleport_in) {
-      // aca preguntar si es posición válida
-      newBoard[row][col].alterator = newAlterator
-      // cambia estado a teleport out
-      setAlter(alterator.teleport_out)
-      setPermiso(false)
-      setTeleportX(row)
-      setTeleportY(col)
-    } else if (newAlterator === alterator.teleport_out) {
-      newBoard[row][col].alterator = newAlterator
-      setAlter(null)
-      setPermiso(true)
-    } else {
-      newBoard[row][col].alterator = newAlterator
+  const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
+    if (await isValidPosition(row, col)) {
+      if (newAlterator === alterator.trap) {
+        const newTrap = {
+          name: newAlterator,
+          positionInit: { x: row, y: col },
+          positionEnd: null,
+          direction: null
+        }
+        await sendAlterator(row, col, newTrap)
+      } else {
+        const alteratorSplit = newAlterator.split('_')
+        const alteratorName = alteratorSplit[0]
+        const alteratorDirection = alteratorSplit[1]
+
+        if (alteratorName === 'directioner') {
+          const newDirectioner = {
+            name: alteratorName,
+            positionInit: { x: row, y: col },
+            positionEnd: null,
+            direction: alteratorDirection
+          }
+          await sendAlterator(row, col, newDirectioner)
+        } else if (alteratorName === 'teleport') {
+          const newTeleport = {
+            name: alteratorName,
+            positionInit: { x: row, y: col },
+            positionEnd: null,
+            direction: alteratorDirection
+          }
+          if (alteratorDirection === 'in') {
+            newBoard[row][col].alterator = newAlterator
+            // cambia estado a teleport out
+            setAlter(alterator.teleport_out)
+            setTeleporterEnabled(false)
+            setTeleportX(row)
+            setTeleportY(col)
+          } else {
+            newTeleport.positionEnd.x = row
+            newTeleport.positionEnd.y = col
+            await sendAlterator(row, col, newTeleport)
+            setAlter(null)
+            setTeleporterEnabled(true)
+          }
+        }
+      }
     }
   }
 
@@ -93,11 +138,11 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setPermiso, per
                     updateBoard={updateBoard}
                     greenBase={greenOvniRange}
                     blueBase={blueOvniRange}
-                    permiso={permiso}
+                    teleporterEnabled={teleporterEnabled}
                     teleportX={teleportX}
                     teleportY={teleportY}
                     isBase={isBase}
-                    isTeleportRange={isTeleportRange}
+                    outOfTeleportRange={outOfTeleportRange}
                   >
                     {cell}
                   </Cell>

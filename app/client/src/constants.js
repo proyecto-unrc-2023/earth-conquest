@@ -1,7 +1,7 @@
 // enums
 export const alterator = {
-  teleport_in: 'teleport_in',
-  teleport_out: 'teleport_out',
+  teleporter_in: 'teleporter_in',
+  teleporter_out: 'teleporter_out',
   trap: 'trap',
   directioner_up: 'directioner_up',
   directioner_down: 'directioner_down',

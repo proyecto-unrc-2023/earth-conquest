@@ -4,8 +4,8 @@
     "base_dimention": 4,
     "green_ovni_life": 180,
     "blue_ovni_life": 80,
-    "live_blue_aliens": 30,
-    "live_green_aliens": 50,
+    "alive_blue_aliens": 30,
+    "alive_green_aliens": 50,
     "grid": [
       [
         {
@@ -31,7 +31,7 @@
           {
             "aliens": [],
             "alterator": { 
-              "name" : "teleport_out",
+              "name" : "teleport",
               "positionInit" : {"x": null, "y": null},
               "positionEnd" : {"x": null, "y": null},
               "direction" : null
