@@ -20,6 +20,20 @@ games_dict = {}
 
 class GameController:
 
+    def find_game(id):
+        game = games_dict.get(id)
+        if game is None:
+            message = json.dumps(
+                {
+                    "success": False,
+                    "message": "Game not found with id: %d" % id
+                }
+            )
+            response = Response(message, status=404, mimetype='application/json') 
+            return response
+
+
+
     def get_game_by_id(id):
         game = games_dict.get(id)
 
@@ -211,9 +225,9 @@ class GameController:
         if response is not None:
            return response
        
-        game = games_dict.get(id)
+        game = games_dict[id]
         
-        
+
         information = {
             "alterator": data.get("alterator").get("name"),
             "initPos": (data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
