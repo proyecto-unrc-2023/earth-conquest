@@ -206,18 +206,14 @@ class GameController:
     """
         This method sets an alterator on the board if the positions are valid.
     """
-    def set_alterator(self, id, data):
+    def set_alterator(id, data):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+       
         game = games_dict.get(id)
-
-        if game is None:
-            message = json.dumps(
-                {
-                    "success": False,
-                    "message": "Game not found with id: " + str(id)
-                }
-            )
-            return Response(message, status=404, mimetype='application/json')
-
+        
+        
         information = {
             "alterator": data.get("alterator").get("name"),
             "initPos": (data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
@@ -232,7 +228,7 @@ class GameController:
             team = Team.GREEN
 
         if information["alterator"] == "directioner":
-            alterator = self.create_directioner(information["direction"], information["initPos"])
+            alterator = GameController.create_directioner(information["direction"], information["initPos"])
 
         if information["alterator"] == "teleporter":
             alterator = Teleporter(information["initPos"], information["endPos"])
@@ -245,7 +241,6 @@ class GameController:
                 game.set_alterator(alterator, team, information["initPos"][0], information["initPos"][1])
             else:
                 game.set_alterator(alterator, team)
-            games_dict[id] = game
         except Exception as e:
             message = json.dumps(
                 {
@@ -255,6 +250,8 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
         
+        games_dict[id] = game
+        print(games_dict[id].board.__str__())
         board_schema = BoardSchema()
         board = game.board
         response = {
@@ -272,7 +269,7 @@ class GameController:
     """
         Creates and returns a directioner given its direction and initial position
     """
-    def create_directioner(self, direction, initPos):
+    def create_directioner(direction, initPos):
         if direction == "right":
             return Directioner(initPos, Direction.RIGHT)
         if direction == "left":

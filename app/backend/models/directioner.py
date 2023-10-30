@@ -55,7 +55,7 @@ class Directioner:
 
 
 class DirectionerSchema(Schema):
-    name = fields.Str(missing="directioner")
+    name = fields.Str(default="directioner")
     init_pos = fields.Tuple((fields.Integer(), fields.Integer()))
     last_pos = fields.Tuple((fields.Integer(), fields.Integer()))
     direction = fields.Enum(Direction)
