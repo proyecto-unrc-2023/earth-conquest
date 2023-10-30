@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import './Lobby.css'
 
-export const Lobby = ({ allGames, joinAs }) => {
+export const Lobby = ({ allGames, joinAs, startGame }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
   const handleNameBlueChange = (name, index) => {
     const updatedNameBlue = [...nameBlue]
     updatedNameBlue[index] = name
     setNameBlue(updatedNameBlue)
+    console.log(updatedNameBlue[index])
+  }
+  const handleJoinPlayer = (index, gameId) => {
+    joinAs('BLUE', nameBlue[index], gameId)
+    startGame(gameId)
   }
   return (
     <table>
@@ -37,7 +42,7 @@ export const Lobby = ({ allGames, joinAs }) => {
                       onChange={(e) => handleNameBlueChange(e.target.value, index)}
                     />
                     <button
-                      onClick={() => joinAs('blue', nameBlue[index], game.game_id)}
+                      onClick={() => handleJoinPlayer(index, game.game_id)}
                       disabled={!nameBlue[index]}
                     >Join
                     </button>
