@@ -4,6 +4,8 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
+  background-image: url('../public/fondo_estrella.jpg');
+  background-size: cover;
   margin: 0%;
   top: 0%;
 }

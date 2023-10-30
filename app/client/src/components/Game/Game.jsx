@@ -12,16 +12,13 @@ export function Game ({ gameId }) {
   const [changeTic, setChangeTic] = useState(true)
   const [winner, setWinner] = useState(null)
 
-
   const NOMBRE_G = 'Nombre_player_green'
   const NOMBRE_B = 'Nombre_player_blue'
-  
 
   let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games//spawn_aliens/'
-
 
   // vida de las bases
   let lifeGreenOvni
@@ -114,8 +111,6 @@ export function Game ({ gameId }) {
       <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
       <img src='../public/panel_left.jpg' className='panel_left' />
       <img src='../public/panel_right.jpg' className='panel_right' />
-
-      
 
     </>
   )
