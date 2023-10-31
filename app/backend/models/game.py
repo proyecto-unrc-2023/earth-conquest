@@ -8,11 +8,8 @@ from app.backend.models.directioner import Directioner
 from app.backend.models.game_enum import TGame
 from app.backend.models.alien import Alien
 from app.backend.models.board import Board, BoardSchema
-from app.backend.models.board import Board
-from app.backend.models.modifier import Modifier
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
-
 
 INIT_CREW = 6
 
@@ -119,7 +116,8 @@ class Game:
 
         if isinstance(alterator, Directioner):
             if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 4:
-                self.board.set_directioner(alterator)   # hara el chequeo de si la pos es valida antes de matar a los aliens
+                self.board.set_directioner(alterator)  # hara el chequeo de si la pos es valida antes de matar a los
+                # aliens
                 self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a Directioner")
@@ -148,16 +146,17 @@ class Game:
     '''
     This method sets a modifier on the given position if this one's free and valid.
     '''
+
     def set_modifier_in_position(self, modifier, x, y):
         self.board.set_modifier(modifier, x, y)
-
 
     '''
     This method gets the modifier that's on the given position
     '''
+
     def get_modifier_in_position(self, x, y):
-        return self.board.get_modifier(x,y)
-        #return self.board.get_cell(x,y).modifier
+        return self.board.get_modifier(x, y)
+        # return self.board.get_cell(x,y).modifier
 
     def get_alien_position(self, alien):
         return self.board.get_alien_position(alien)
