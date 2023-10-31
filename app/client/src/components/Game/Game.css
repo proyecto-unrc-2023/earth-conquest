@@ -1,10 +1,46 @@
-.statsGame{
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image: url('../public/fondo_estrella.jpg');
+  background-size: cover;
+  margin: 0%;
+  top: 0%;
+}
+
+.statsGame {
   display: grid;
   justify-items: center;
-  grid-template-columns:repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  grid-template-columns:repeat(2, 1fr);
   grid-template-areas: 
     "health-bar-green health-bar-blue"
-    "live_alien_green live_alien_blue";
+    "green_user_info blue_user_info";
   margin: 20px 10px;
+}
+
+.panel_left{
+  position: absolute;
+  justify-items: center;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  top: 0%;
+  left: 0%;
+  opacity: 70%;
+  z-index: 10;
+}
+
+.panel_right{
+  position: absolute;
+  justify-items: center;
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  top: 0%;
+  right: 0%;
+  opacity: 70%;
+  z-index: 10;
 }

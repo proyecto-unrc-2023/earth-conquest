@@ -10,3 +10,11 @@
 #### **Configurar linter**
 1. Estar en /earth-conquest/client
 2. Escribir el siguiente comando: *npm install standard -D* 
+
+
+### **Test Frontend**
+1. Estar en /earth-conquest/client
+2. Escribir el siguiente comando: 
+*npm install --save-dev @testing-library/react -D*  
+*npm install --save-dev @testing-library/jest-dom -D*
+*npm install react-scripts --save-dev  -D*

@@ -4,19 +4,16 @@ import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 
 function App () {
-  const [statusGame, setStatusGame] = useState(gameStatus.notStarted)
+  const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
+  const [message, setMessage] = useState('')
   const CREATE_GAME = 'http://127.0.0.1:5000/games/create_game'
-  const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/get_all_games'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
 
   const createGame = async () => {
     try {
       const response = await fetch(CREATE_GAME, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
-        // cache: no-cache, *default, reload, force-cache, only-if-cached
-        // credentials: omit, *same-origin, include
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         }
@@ -25,29 +22,18 @@ function App () {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      console.log(data)
-      setGameId(data.gameId)
+      setGameId(data.data.gameId)
+      setStatusGame(gameStatus.notStarted)
+      setMessage(data.message)
+      // hay que setear el board que viene aca y pasarselo a game
     } catch (error) {
       console.error('Error fetching data:', error)
     }
   }
 
-  const getAllGames = async () => {
+  const startGame = async (gameId) => {
     try {
-      const response = await fetch(GET_ALL_GAMES)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-    }
-  }
-
-  const startGame = async () => {
-    try {
-      const response = await fetch(`${START_GAME}/1`, {
+      const response = await fetch(`${START_GAME}/${gameId}`, {
         method: 'PUT'
       })
       if (!response.ok) {
@@ -55,6 +41,9 @@ function App () {
       }
       const data = await response.json()
       console.log(data)
+      if (data.success) {
+        setStatusGame(gameStatus.started)
+      }
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
@@ -63,15 +52,14 @@ function App () {
   return (
     <main>
       {
-        statusGame === gameStatus.notStarted &&
-          <Menu createGame={createGame} setStatusGame={setStatusGame} />
+        statusGame !== gameStatus.started &&
+          <Menu createGame={createGame} startGame={startGame} gameId={gameId} message={message} />
       }
       {
         statusGame === gameStatus.started &&
-          <Game gameId={gameId} />
+          <Game gameId={gameId} setStatusGame={setStatusGame} />
       }
-      <button onClick={getAllGames}>Get all games</button>
-      <button onClick={startGame}>Start Game</button>
+
     </main>
   )
 }
