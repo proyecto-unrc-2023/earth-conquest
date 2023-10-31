@@ -1,8 +1,4 @@
-import typing
-from enum import Enum
-
-from marshmallow import Schema, fields, pre_dump
-from marshmallow.fields import Nested
+from marshmallow import Schema, fields
 
 from app.backend.models import modifier, directioner
 from app.backend.models import alterator
@@ -221,7 +217,7 @@ class Cell:
 
 
 class AlteratorField(fields.Field):
-    def _serialize(self, value: typing.Any, attr: str | None, obj: typing.Any, **kwargs):
+    def _serialize(self, value, attr, obj, **kwargs):
         if isinstance(obj.alterator, Directioner):
             return DirectionerSchema().dump(obj.alterator)
         elif isinstance(obj.alterator, Teleporter):
