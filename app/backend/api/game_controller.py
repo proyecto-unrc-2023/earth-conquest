@@ -266,16 +266,15 @@ class GameController:
         
         games_dict[id] = game
         print(games_dict[id].board.__str__())
-        board_schema = BoardSchema()
-        board = game.board
+        game_schema = GameSchema()
         response = {
             "success": True,
-            "message": "Alterator successfully placed in game with id %d" % id,
+            "message": "Game %d started successfully" % id,
             "data": {
-                "board": board_schema.dump(board)
+                "gameId": id,
+                "game": game_schema.dump(game)
             }
         }
-
         return jsonify(response)
 
 
@@ -292,4 +291,3 @@ class GameController:
             return Directioner(initPos, Direction.DOWNWARDS)
         if direction == "upwards":
             return Directioner(initPos, Direction.UPWARDS)
-
