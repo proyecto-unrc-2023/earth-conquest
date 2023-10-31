@@ -113,26 +113,34 @@ class Game:
         print('Game ended')
         self.blue_player = None
         self.green_player = None
+        self.status = TGame.OVER
 
     def set_alterator(self, alterator, team, x=None, y=None):
 
         if isinstance(alterator, Directioner):
-            if self.board.kill_aliens(team, 4):
-                self.board.set_directioner(alterator)
+            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 4:
+                self.board.set_directioner(alterator)   # hara el chequeo de si la pos es valida antes de matar a los aliens
+                self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a Directioner")
 
-        if isinstance(alterator, Teleporter):
-            if self.board.kill_aliens(team, 6):
+        elif isinstance(alterator, Teleporter):
+            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 6:
                 self.board.set_teleporter(alterator)
+                self.board.kill_aliens(team, 6)
             else:
                 raise Exception("not enough aliens to put a Teleporter")
 
-        if alterator is Alterator.TRAP:
-            if self.board.kill_aliens(team, 4):
+        elif alterator is Alterator.TRAP:
+            if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
+                raise Exception("position is not free or valid")
+            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 4:
                 self.board.set_trap(x, y)
+                self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a TRAP")
+        else:
+            raise Exception("invalid alterator")
 
     def get_team_winner(self):
         return self.winner[1]
@@ -150,13 +158,6 @@ class Game:
     def get_modifier_in_position(self, x, y):
         return self.board.get_modifier(x,y)
         #return self.board.get_cell(x,y).modifier
-
-    '''
-    This method return a board from a game
-    '''
-
-    def get_board(self):
-        return self.board
 
     def get_alien_position(self, alien):
         return self.board.get_alien_position(alien)
