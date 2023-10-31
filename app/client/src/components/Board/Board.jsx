@@ -43,8 +43,8 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
-    // TODO: controlar ganador.
   }
+
   const sendAlterator = async (row, col, newAlterator) => {
     try {
       const response = await fetch(`${SEND_ALTERATOR}/${row}/${col}`, {
@@ -58,6 +58,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
       console.error('Error set trap', error)
     }
   }
+
   const isValidPosition = async (row, col) => {
     try {
       const response = await fetch(`${VALID_POSITION}/${gameId}/${row}/${col}`)
@@ -123,34 +124,34 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
       }
     }
   }
-
+  console.log(board)
   return (
-    <section className='board' style={{ gridTemplateColumns: `repeat(${board[0].length}, 1fr)` }}>
+    <section className='board'>
       {
-          board.map((row, i) => {
-            return (
-              row.map((cell, j) => {
-                return (
-                  <Cell
-                    key={j}
-                    col={j}
-                    row={i}
-                    updateBoard={updateBoard}
-                    greenBase={greenOvniRange}
-                    blueBase={blueOvniRange}
-                    teleporterEnabled={teleporterEnabled}
-                    teleportX={teleportX}
-                    teleportY={teleportY}
-                    isBase={isBase}
-                    outOfTeleportRange={outOfTeleportRange}
-                  >
-                    {cell}
-                  </Cell>
-                )
-              })
-            )
-          })
-        }
+        board.board.map((row, i) => {
+          return (
+            row.map((cell, j) => {
+              return (
+                <Cell
+                  key={j}
+                  col={j}
+                  row={i}
+                  updateBoard={updateBoard}
+                  greenBase={greenOvniRange}
+                  blueBase={blueOvniRange}
+                  teleporterEnabled={teleporterEnabled}
+                  teleportX={teleportX}
+                  teleportY={teleportY}
+                  isBase={isBase}
+                  outOfTeleportRange={outOfTeleportRange}
+                >
+                  {cell}
+                </Cell>
+              )
+            })
+          )
+        })
+      }
     </section>
   )
 }

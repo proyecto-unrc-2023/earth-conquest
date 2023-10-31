@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react'
-import data2 from '../../data2.json'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import './Game.css'
 
-export function Game ({ gameId }) {
+export function Game ({ gameId, board, setBoard }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
-  const [board, setBoard] = useState(data2.grid)
   const [changeTic, setChangeTic] = useState(true)
   const [winner, setWinner] = useState(null)
 
@@ -28,7 +26,7 @@ export function Game ({ gameId }) {
   let liveBlueAliens
   let liveGreenAliens
 
-  const refresh = async () => {
+  const refresh = async (gameId) => {
     try {
       const response = await fetch(`${REFRESH}/${gameId}`)
       if (!response.ok) {
@@ -41,6 +39,7 @@ export function Game ({ gameId }) {
         spawnAliens()
         CONT_TICS = 0
       } else {
+        console.log(data)
         setBoard(data.board)
       }
     } catch (error) {
@@ -48,7 +47,7 @@ export function Game ({ gameId }) {
     }
   }
 
-  const act = async () => {
+  const act = async (gameId) => {
     try {
       const response = await fetch(`${ACT}/${gameId}`)
       if (!response.ok) {
@@ -71,7 +70,7 @@ export function Game ({ gameId }) {
     }
   }
 
-  const spawnAliens = async () => {
+  const spawnAliens = async (gameId) => {
     try {
       const response = await fetch(`${SPAWN_ALIENS}/${gameId}`)
       if (!response.ok) {
@@ -87,12 +86,12 @@ export function Game ({ gameId }) {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if (changeTic) {
-        refresh()
+        refresh(gameId)
       } else {
-        act()
+        act(gameId)
       }
       setChangeTic(!changeTic)
-    }, 1000)
+    }, 10000)
     return () => clearTimeout(timeoutId)
   }, [board])
 
