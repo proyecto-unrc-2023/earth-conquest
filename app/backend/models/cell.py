@@ -1,3 +1,4 @@
+import typing
 from enum import Enum
 
 from marshmallow import Schema, fields, pre_dump
@@ -219,22 +220,19 @@ class Cell:
             self.aliens = []
 
 
-class CellSchema(Schema):
-    aliens = fields.List(fields.Nested(AlienSchema))
-    modifier = fields.Enum(Modifier)
-    alterator = fields.Field()
-
-    def serialize_alterator(self, obj, **kwargs):
+class AlteratorField(fields.Field):
+    def _serialize(self, value: typing.Any, attr: str | None, obj: typing.Any, **kwargs):
         if isinstance(obj.alterator, Directioner):
             return DirectionerSchema().dump(obj.alterator)
         elif isinstance(obj.alterator, Teleporter):
             return TeleporterSchema().dump(obj.alterator)
         elif obj.alterator == Alterator.TRAP:
-            return "trap"
+            return Alterator.TRAP.name
         else:
             return None
 
-    @pre_dump
-    def pre_dump_alterator_field(self, obj, **kwargs):
-        obj.alterator = self.serialize_alterator(obj)
-        return obj
+
+class CellSchema(Schema):
+    aliens = fields.List(fields.Nested(AlienSchema()))
+    modifier = fields.Enum(Modifier)
+    alterator = AlteratorField()
