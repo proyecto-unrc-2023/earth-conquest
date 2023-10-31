@@ -11,6 +11,7 @@ from app.backend.models.game import Game, GameSchema
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 
+
 games_dict = {}
 
 '''
@@ -33,19 +34,12 @@ class GameController:
             return response
 
 
-
     def get_game_by_id(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+       
         game = games_dict.get(id)
-
-        if game is None:
-            message = json.dumps(
-                {
-                    "success": False,
-                    "message": "Game not found with id: " + str(id)
-                }
-            )
-            return Response(message, status=404, mimetype='application/json')
-
         game_schema = GameSchema()
         response = {
             "success": True,
@@ -62,31 +56,63 @@ class GameController:
         id = games_dict.__len__() + 1
         games_dict[id] = game
 
+        game_schema = GameSchema()
         message = json.dumps(
             {
                 "success": True,
                 "message": "Game created successfully",
                 "data": {
-                    "gameId": id
+                    "gameId": id,
+                    "game": game_schema.dump(game)
                 }
             }
         )
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+    
         game = games_dict.get(id)
-        if game is None:
-            message = json.dumps(
-                {
-                    "success": False,
-                    "message": "Game not found with id: " + str(id)
-                }
-            )
-            return Response(message, status=404, mimetype='application/json')
-
         try:
             game.start_game()
             games_dict[id] = game
+        
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
+        game_schema = GameSchema()
+        response = {
+            "success": True,
+            "message": "Game %d started successfully" % id,
+            "data": {
+                "gameId": id,
+                "game": game_schema.dump(game)
+            }
+        }
+        return jsonify(response)
+
+    '''
+        This method updates a game.
+    '''
+
+    def refresh_board(id):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+       
+        game = games_dict.get(id)
+
+        try:
+            game.refresh_board()
+            games_dict[id] = game
+            
         except Exception as e:
             message = json.dumps(
                 {
@@ -96,47 +122,46 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        board_schema = BoardSchema()
         response = {
             "success": True,
-            "message": "Game %d started successfully" % id
+            "message": "Board %d refreshes successfully" % id,
+            "data": {
+                "board": board_schema.dump(game.get_board())
+            }
         }
         return jsonify(response)
-
+    
     '''
-        This method updates a game.
+        This method acts a game.
     '''
-
-    def update_game(game_id, data):
-        game = games_dict.get(game_id)
-        if game is None:
+    def act_board(id):
+        response = GameController.find_game(id)
+        if response is not None:
+           return response
+       
+        game = games_dict.get(id)
+        
+        try:
+            game.act_board()
+            games_dict[id] = game
+        except Exception as e:
             message = json.dumps(
                 {
                     "success": False,
-                    "message": "Game not found with id: " + str(id)
+                    'errors': str(e)
                 }
             )
-            return Response(message, status=404, mimetype='application/json')
-
-        game_data = {}
-        if 'status' in data:
-            game_data['status'] = data['status']
-        if 'green_player' in data:
-            game_data['green_player'] = data['green_player']
-        if 'blue_player' in data:
-            game_data['blue_player'] = data['blue_player']
-        if 'board' in data:
-            game_data['board'] = data['board']
-
-        # Validate with schema
+            return Response(message, status=400, mimetype='application/json')
+        
         game_schema = GameSchema()
-        game = Game(**game_schema.load(game_data))
-
-        # updates the game
-        games_dict[game_id] = game
-
         response = {
             "success": True,
-            "message": "Game %d updated successfully" % id
+            "message": "Game %d acts successfully" % id,
+            "data": {
+                "gameId": id,
+                "game": game_schema.dump(game)
+            }
         }
         return jsonify(response)
 
@@ -158,26 +183,32 @@ class GameController:
         }
         return jsonify(response)
 
-    # este metodo iria en board_controller ?
-    def get_board_by_game_id(id):
+    def spawn_aliens(id):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+
         game = games_dict.get(id)
 
-        if game is None:
+        try:
+            game.add_alien_to_range(Team.GREEN)
+            game.add_alien_to_range(Team.BLUE)
+            games_dict[id] = game   # save the game on the dict
+        except Exception as e:
             message = json.dumps(
                 {
                     "success": False,
-                    "message": "Game not found with id: " + str(id)
+                    'errors': str(e)
                 }
             )
-            return Response(message, status=404, mimetype='application/json')
+            return Response(message, status=400, mimetype='application/json')
 
-        board = game.board
         board_schema = BoardSchema()
         response = {
             "success": True,
-            "message": "Board of game %d retrieved successfully" % id,
+            "message": "Aliens blue and green added successfully to game: %d" % id,
             "data": {
-                "board": board_schema.dump(board)
+                "board": board_schema.dump(game.get_board())
             }
         }
         return jsonify(response)
@@ -260,7 +291,7 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-        
+          
         games_dict[id] = game
         board_schema = BoardSchema()
         response = {
@@ -272,6 +303,42 @@ class GameController:
         }
         return jsonify(response)
 
+
+    def join_as(id, team, player_name):
+        response = GameController.find_game(id)
+        if response is not None:
+            return response
+
+        game = games_dict.get(id)
+        try:
+            if team == 'GREEN':
+                game.join_as_green(player_name)
+            elif team == 'BLUE':
+                game.join_as_blue(player_name)
+            else:
+                message = json.dumps(
+                    {
+                        "success": False,
+                        'errors': "Invalid team as argument, possible teams are: GREEN or BLUE"
+                    }
+                )
+                return Response(message, status=400, mimetype='application/json')
+
+            games_dict[id] = game  # save the game on the dict
+        except Exception as e:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': str(e)
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
+
+        response = {
+            "success": True,
+            "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
+        }
+        return jsonify(response)     
 
 
     """

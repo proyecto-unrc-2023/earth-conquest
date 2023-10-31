@@ -91,7 +91,7 @@ class Cell:
     """
 
     def action(self):
-        if not self.all_aliens_same_team():
+        if self.aliens != [] and (not self.all_aliens_same_team()):
             aliens = self.divide_aliens_for_different_teams()
             aliens1 = aliens[0]
             aliens2 = aliens[1]
@@ -107,9 +107,9 @@ class Cell:
             self.fight()
         elif len(self.aliens) > 1:
             self.reproduce()
-        if self.modifier == Modifier.MULTIPLIER or self.modifier == Modifier.KILLER:
+        if self.aliens != [] and self.modifier == Modifier.MULTIPLIER or self.modifier == Modifier.KILLER:
             self.action_modifier()
-        if self.alterator == Alterator.TRAP:
+        if self.aliens != [] and self.alterator == Alterator.TRAP:
             self.action_alterator()
 
     """

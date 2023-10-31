@@ -25,15 +25,21 @@ class Game:
         self.blue_player = None
         self.board = Board()
         self.winner = (None, None)  # (Player name, TEAM)
+        self.alive_green_aliens = 0
+        self.alive_blue_aliens = 0
 
     def join_as_green(self, name):
         if self.green_player is not None:
             raise Exception("Player green is already taken")
+        if name == self.blue_player:
+            raise Exception("This name is already taken")
         self.green_player = name
 
     def join_as_blue(self, name):
         if self.blue_player is not None:
             raise Exception("Player blue is already taken")
+        if name == self.green_player:
+            raise Exception("This name is already taken")
         self.blue_player = name
 
     def set_board_dimensions(self, rows, cols):
@@ -42,11 +48,13 @@ class Game:
         self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
 
     def start_game(self):
-        if (self.status is TGame.NOT_STARTED):  #luego agregar comprobacion: ningun player is None
+        if (self.status is TGame.NOT_STARTED and
+                self.blue_player is not None and
+                self.green_player is not None):
             self.set_initial_crew()
             self.status = TGame.STARTED
         else:
-            raise Exception("game is already started")
+            raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
 
     def set_initial_crew(self):
         for i in range(INIT_CREW):
@@ -58,7 +66,6 @@ class Game:
             x0, y0 = self.board.green_ovni_range
             f = random.randint(0, x0)
             c = random.randint(0, y0)
-
         elif t == team.Team.BLUE:
             x0, y0 = self.board.blue_ovni_range
             f = random.randint(x0, self.board.rows - 1)
@@ -72,6 +79,11 @@ class Game:
         else:
             alien = Alien(t)
             self.board.set_alien(f, c, alien)
+            # Update cant of aliens
+            if t == team.Team.GREEN:
+                self.alive_green_aliens += 1
+            else:
+                self.alive_blue_aliens += 1
 
     def refresh_board(self):
         if not self.board:
@@ -85,6 +97,10 @@ class Game:
         if res is not None:
             self.status = TGame.OVER
             self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
+
+        # Updates cants of aliens
+        self.alive_green_aliens = self.board.get_aliens_cant_of_team(Team.GREEN)
+        self.alive_blue_aliens = self.board.get_aliens_cant_of_team(Team.BLUE)
 
     def has_game_ended(self):
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
@@ -128,14 +144,14 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
-    
+
     '''
     This method sets a modifier on the given position if this one's free and valid.
     '''
     def set_modifier_in_position(self, modifier, x, y):
         self.board.set_modifier(modifier, x, y)
 
-    
+
     '''
     This method gets the modifier that's on the given position
     '''
@@ -195,14 +211,6 @@ class Game:
     def get_alien_team_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
 
-    def json(self):
-        return {
-            'status': self.status,
-            'green_player': self.green_player,
-            'blue_player': self.blue_player,
-            'board': self.board
-        }
-
     '''
     This method sets an alien on a given position of a respective team
     '''
@@ -261,9 +269,13 @@ class Game:
     def any_ovni_destroyed(self):
         return self.board.any_ovni_destroyed()
 
+
 class GameSchema(Schema):
     id = fields.Integer()
     status = fields.Enum(TGame)
-    green_player = fields.Str(required=False)
-    blue_player = fields.Str(required=False)
+    green_player = fields.Str()
+    blue_player = fields.Str()
     board = fields.Nested(BoardSchema(), only=('board',))
+    winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
+    alive_green_aliens = fields.Integer()
+    alive_blue_aliens = fields.Integer()
