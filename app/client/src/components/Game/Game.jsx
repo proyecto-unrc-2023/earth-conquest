@@ -10,8 +10,11 @@ export function Game ({ gameId, board, setBoard }) {
   const [changeTic, setChangeTic] = useState(true)
   const [winner, setWinner] = useState(null)
 
-  const NOMBRE_G = 'Nombre_player_green'
-  const NOMBRE_B = 'Nombre_player_blue'
+  // eslint-disable-next-line no-undef
+  const NOMBRE_G = JSON.parse(localStorage.getItem('hostPlayer'))
+
+  // eslint-disable-next-line no-undef
+  const NOMBRE_B = JSON.parse(localStorage.getItem('guestPlayer'))
 
   let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
@@ -107,8 +110,8 @@ export function Game ({ gameId, board, setBoard }) {
       <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
 
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} playerName={NOMBRE_G} />
-        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} playerName={NOMBRE_B} />
+        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} playerName={NOMBRE_G.playerName} />
+        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} playerName={NOMBRE_B.playerName} />
       </section>
       <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
       <img src='../public/panel_left.jpg' className='panel_left' />
