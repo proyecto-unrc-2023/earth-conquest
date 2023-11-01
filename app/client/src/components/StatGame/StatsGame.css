@@ -110,9 +110,8 @@ font-face {
   border: #03da07 solid 2px;
   border-radius: 5%;
   background-color: #131313;  
-  color: #00ff88e1; 
-  text-transform: uppercase;  
-  letter-spacing: 2px; 
+  color: #00ff88e1;  
+  text-overflow: ellipsis;
 }
 
 .blue_name{
@@ -121,13 +120,12 @@ font-face {
   align-items: center;
   width: 9vw;
   height: 6vh;
-  font-size: 1em;
+  font-size: 1.2em;
   border: #2936f5ac solid 2px;
   border-radius: 5%;
   background-color: #131313;  
   color: #4d9af8f2; 
-  text-transform: uppercase;  
-  letter-spacing: 2px; 
+  text-overflow: ellipsis; 
 }
 
 .blue_alien{

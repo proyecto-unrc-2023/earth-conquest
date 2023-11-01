@@ -6,7 +6,7 @@ import './Board.css'
 import { useState } from 'react'
 
 export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId }) => {
-  const VALID_POSITION = 'http://127.0.0.1:5000/games/isValidPosition' // verificar
+  const FREE_POSITION = 'http://127.0.0.1:5000/games/isFreePosition' // verificar
   const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/setAlterator' // verificar
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
@@ -31,15 +31,14 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   const updateBoard = (row, col) => {
     if (newAlterator === null) return
-    if (!isValidPosition(row, col)) return
+    if (!isFreePosition(row, col)) return
     if (
       (outOfTeleportRange(row, col, teleportX, teleportY) &&
       (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
       isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
     ) return
     if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
-
-    const newBoard = [...board]
+    const newBoard = [...board.board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
     console.log(board)
@@ -59,9 +58,9 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     }
   }
 
-  const isValidPosition = async (row, col) => {
+  const isFreePosition = async (row, col) => {
     try {
-      const response = await fetch(`${VALID_POSITION}/${gameId}/${row}/${col}`)
+      const response = await fetch(`${FREE_POSITION}/${gameId}/${row}/${col}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -72,12 +71,12 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         return false
       }
     } catch (error) {
-      console.error('Error is valid position', error)
+      console.error('Error is free position', error)
     }
   }
 
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
-    if (await isValidPosition(row, col)) {
+    if (await isFreePosition(row, col)) {
       if (newAlterator === alterator.trap) {
         const newTrap = {
           name: newAlterator,

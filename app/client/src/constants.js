@@ -11,7 +11,7 @@ export const alterator = {
 export const modifier = {
   killer: 'killer',
   multiplier: 'multiplier',
-  mountain: 'mountain'
+  mountain_range: 'mountain_range'
 }
 
 export const team = {

@@ -28,7 +28,8 @@ export function Game ({ gameId, board, setBoard }) {
 
   const refresh = async (gameId) => {
     try {
-      const response = await fetch(`${REFRESH}/${gameId}`)
+      const response = await fetch(`${REFRESH}/${gameId}`,
+        { method: 'PUT' })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -49,7 +50,8 @@ export function Game ({ gameId, board, setBoard }) {
 
   const act = async (gameId) => {
     try {
-      const response = await fetch(`${ACT}/${gameId}`)
+      const response = await fetch(`${ACT}/${gameId}`,
+        { method: 'PUT' })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -91,7 +93,7 @@ export function Game ({ gameId, board, setBoard }) {
         act(gameId)
       }
       setChangeTic(!changeTic)
-    }, 10000)
+    }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
 
@@ -105,8 +107,8 @@ export function Game ({ gameId, board, setBoard }) {
       <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
 
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} greenName={NOMBRE_G} />
-        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} blueName={NOMBRE_B} />
+        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} playerName={NOMBRE_G} />
+        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} playerName={NOMBRE_B} />
       </section>
       <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
       <img src='../public/panel_left.jpg' className='panel_left' />

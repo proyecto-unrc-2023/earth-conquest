@@ -24,10 +24,10 @@ export const Alterator = ({ setAlter, tipo }) => {
         (tipo === alterator.directioner_right) && <img src='../public/directioner_right.png' className='img_directioner' alt='' />
       }
       {
-        (tipo === alterator.teleport_in) && <img src='../public/teleport_in.gif' className='img_teleporter' alt='' />
+        (tipo === alterator.teleporter_in) && <img src='../public/teleport_in.gif' className='img_teleporter' alt='' />
       }
       {
-        (tipo === alterator.teleport_out) && <img src='../public/teleport_out.gif' className='img_teleporter' alt='' />
+        (tipo === alterator.teleporter_out) && <img src='../public/teleport_out.gif' className='img_teleporter' alt='' />
       }
     </div>
   )
