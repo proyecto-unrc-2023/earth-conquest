@@ -2,7 +2,7 @@ import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
-export function Menu ({ createGame, startGame, gameId, message }) {
+export function Menu ({ createGame, startGame, setGameId, getGame, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
@@ -99,7 +99,7 @@ export function Menu ({ createGame, startGame, gameId, message }) {
           </>
       }
       {
-        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} startGame={startGame} />
+        allGames.length > 0 && <Lobby allGames={allGames} setGameId={setGameId} getGame={getGame} joinAs={joinAs} startGame={startGame} />
       }
     </>
   )

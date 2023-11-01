@@ -4,7 +4,7 @@ import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import './Game.css'
 
-export function Game ({ gameId, board, setBoard }) {
+export function Game ({ gameId, board, setBoard, getGame }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
@@ -28,20 +28,25 @@ export function Game ({ gameId, board, setBoard }) {
 
   const refresh = async (gameId) => {
     try {
-      const response = await fetch(`${REFRESH}/${gameId}`)
+      const response = await fetch(`${REFRESH}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-
+      console.log(data)
       CONT_TICS = CONT_TICS + 1
       if (CONT_TICS === 5) {
         spawnAliens()
         CONT_TICS = 0
-      } else {
+      }
+      /*
+      else {
         console.log(data)
         setBoard(data.board)
       }
+      */
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -49,18 +54,21 @@ export function Game ({ gameId, board, setBoard }) {
 
   const act = async (gameId) => {
     try {
-      const response = await fetch(`${ACT}/${gameId}`)
+      const response = await fetch(`${ACT}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-
+      console.log('ACT: ', data)
+      /*
       setBoard(data.board)
       lifeGreenOvni = data.green_ovni_life
       lifeBlueOvni = data.blue_ovni_life
       liveBlueAliens = data.live_blue_aliens
       liveGreenAliens = data.live_green_aliens
-
+      */
       if (data.winner) {
         setWinner(data.winner.team)
         // aca habría que hacer el game over
@@ -77,7 +85,8 @@ export function Game ({ gameId, board, setBoard }) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      setBoard(data.board)
+      console.log('SPAWN ALIENS:', data)
+      // setBoard(data.board)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
@@ -87,11 +96,13 @@ export function Game ({ gameId, board, setBoard }) {
     const timeoutId = setTimeout(() => {
       if (changeTic) {
         refresh(gameId)
+        getGame(gameId)
       } else {
         act(gameId)
+        getGame(gameId)
       }
       setChangeTic(!changeTic)
-    }, 10000)
+    }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
 
