@@ -1,8 +1,9 @@
 import './Alien.css'
 
 export const Alien = ({ team, eyes }) => {
-  const imagen = `../${team}_alien_${eyes}.png`
-  const className = `img_${team}_alien`
+  const teamToLower = team.toLowerCase()
+  const imagen = `../${teamToLower}_alien_${eyes}.png`
+  const className = `img_${teamToLower}_alien`
 
   return (
     <div className='alien'>

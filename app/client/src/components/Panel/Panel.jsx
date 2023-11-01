@@ -32,7 +32,7 @@ export const Panel = ({ setAlter, teleporterEnabled }) => {
             <button onClick={() => handleAlterator('trap')} value={alterator.trap}>
               <img className='button_img_trap' src='/../public/trap.png' alt='Trap' />
             </button>
-            <button onClick={() => handleAlterator(alterator.teleport_in)}>
+            <button onClick={() => handleAlterator(alterator.teleporter_in)}>
               <img className='button_img_teleport1' src='/../public/teleport_in.gif' alt='Teleporter' />
               <img className='button_img_teleport1' src='/../public/teleport_out.gif' alt='Teleporter' />
             </button>

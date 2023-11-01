@@ -1,7 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-import { render } from '@testing-library/react'
-import { prettyDOM } from '@testing-library/react'
+import { render, prettyDOM } from '@testing-library/react'
 import { Alien } from './Alien'
 import { team } from '../../constants'
 

@@ -33,7 +33,7 @@ export function Game ({ gameId, board, setBoard }) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-
+      console.log('REFRESH DATA:', data)
       CONT_TICS = CONT_TICS + 1
       if (CONT_TICS === 5) {
         spawnAliens()
@@ -54,7 +54,7 @@ export function Game ({ gameId, board, setBoard }) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-
+      console.log('ACT DATA:', data)
       setBoard(data.board)
       lifeGreenOvni = data.green_ovni_life
       lifeBlueOvni = data.blue_ovni_life
@@ -98,7 +98,11 @@ export function Game ({ gameId, board, setBoard }) {
   const setAlter = (newAlterator) => {
     setAlterator(newAlterator)
   }
+  /*
 
+      <img src='../public/panel_left.jpg' className='panel_left' />
+      <img src='../public/panel_right.jpg' className='panel_right' />
+*/
   return (
     <>
 
@@ -109,8 +113,6 @@ export function Game ({ gameId, board, setBoard }) {
         <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} blueName={NOMBRE_B} />
       </section>
       <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
-      <img src='../public/panel_left.jpg' className='panel_left' />
-      <img src='../public/panel_right.jpg' className='panel_right' />
 
     </>
   )

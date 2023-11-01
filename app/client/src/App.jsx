@@ -1,10 +1,13 @@
+import io from 'socket.io-client'
 import { useState } from 'react'
 import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 
+const socket = io('http://localhost:5000')
+
 function App () {
-  const [board, setBoard] = useState(null)
+  const [board, setBoard] = useState([[]])
   const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
@@ -28,6 +31,7 @@ function App () {
       setStatusGame(gameStatus.notStarted)
       setMessage(data.message)
       setBoard(data.data.game.board)
+      localStorage.setItem('gameStateLocalStorage', gameStatus.notStarted)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -46,11 +50,22 @@ function App () {
       if (data.success) {
         setStatusGame(gameStatus.started)
         setBoard(data.data.game.board)
+        localStorage.setItem('gameStateLocalStorage', gameStatus.started)
       }
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
   }
+
+  window.addEventListener('storage', function (event) {
+    if (event.key === 'gameStateLocalStorage') {
+      setStatusGame(gameStatus.started)
+      setBoard(board)
+      const nuevoValor = event.newValue
+      console.log('Nuevo valor:', nuevoValor)
+    }
+  })
+
   return (
     <main>
       {
