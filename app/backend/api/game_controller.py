@@ -1,4 +1,5 @@
 import json
+import time
 
 from flask import jsonify, Response
 from app.backend.models.alterator import Alterator
@@ -8,6 +9,7 @@ from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
+from app import redis
 
 games_dict = {}
 
@@ -352,3 +354,29 @@ class GameController:
             return Directioner(initPos, Direction.DOWNWARDS)
         if direction == "upwards":
             return Directioner(initPos, Direction.UPWARDS)
+
+
+    def sse(id):
+        #r = redis.Redis(host='localhost', port=6379, db=0)
+
+        def sse_events():
+            # Use a variable to keep track of the value change
+            # So that we can send updates only when the value is changed
+            old_value = None
+
+            while True:
+                # Fetch value from redis for key 'current_price'
+                price = redis.get(f'/games/{id}')
+
+                # Check if the value is not None (redis returns None if the key doesn't exist)
+                if price is not None:
+                    price = int(price)
+
+                    # Send an update only when the price is changed
+                    if old_value != price:
+                        yield "data: Current Price - {}\n\n".format(price)
+                        old_value = price
+
+                time.sleep(1)
+
+        return Response(sse_events(), mimetype="text/event-stream")

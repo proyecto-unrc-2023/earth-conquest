@@ -58,6 +58,9 @@ class JoinAs(Resource):
         player_name = request.args.get('player_name')
         return GameController.join_as(game_id, team, player_name)
 
+class Sse(Resource):
+    def get(self, game_id):
+        return GameController.sse(game_id)
 
 api.add_resource(GamesResource, '/')
 api.add_resource(GameDetails, '/<int:game_id>')                 # get details of a game by its id
@@ -68,3 +71,4 @@ api.add_resource(SpawnAliens, '/spawn_aliens/<int:game_id>')    # spawn of two a
 api.add_resource(JoinAs, '/join/<int:game_id>')                 # player joins to a game as blue or green player with his name
 api.add_resource(IsFreePosition, '/is_free_position/<int:game_id>')  # get position info of a game with its id
 api.add_resource(SetAlterator, '/set_alterator/<int:game_id>')  # set alterator on board of game with id
+api.add_resource(Sse, '/sse/<int:game_id>')                     # server sent events for game with id
