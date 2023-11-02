@@ -11,6 +11,7 @@ from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 from app.backend.api.redis_config import r
 
+
 games_dict = {}
 
 '''
