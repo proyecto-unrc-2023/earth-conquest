@@ -34,19 +34,25 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
-      console.log(data)
-      CONT_TICS = CONT_TICS + 1
-      if (CONT_TICS === 5) {
-        spawnAliens()
-        CONT_TICS = 0
-      }
-      /*
-      else {
-        console.log(data)
-        setBoard(data.board)
-      }
-      */
+
+      // eslint-disable-next-line no-undef
+      const source = new EventSource("{{ url_for('http://localhost:5000/games/sse/id') }}")
+      source.addEventListener('publish', function (event) {
+        const data = JSON.parse(event.data)
+        CONT_TICS = CONT_TICS + 1
+        if (CONT_TICS === 5) {
+          spawnAliens(gameId)
+          CONT_TICS = 0
+        } else {
+          console.log(data)
+          setBoard(data.board)
+        }
+      }, false)
+      source.addEventListener('error', function (event) {
+        console.log('Error' + event)
+        // eslint-disable-next-line no-undef
+        alert('Failed to connect to event stream. Is Redis running?')
+      }, false)
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -60,8 +66,20 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
-      console.log('ACT: ', data)
+      // eslint-disable-next-line no-undef
+      const source = new EventSource("{{ url_for('http://localhost:5000/games/sse/id') }}")
+      source.addEventListener('publish', function (event) {
+        const data = JSON.parse(event.data)
+
+        console.log(data)
+        setBoard(data.board)
+      }, false)
+      source.addEventListener('error', function (event) {
+        console.log('Error' + event)
+        // eslint-disable-next-line no-undef
+        alert('Failed to connect to event stream. Is Redis running?')
+      }, false)
+
       /*
       setBoard(data.board)
       lifeGreenOvni = data.green_ovni_life
@@ -69,10 +87,10 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       liveBlueAliens = data.live_blue_aliens
       liveGreenAliens = data.live_green_aliens
       */
-      if (data.winner) {
-        setWinner(data.winner.team)
-        // aca habría que hacer el game over
-      }
+      // if (data.winner) {
+      // setWinner(data.winner.team)
+      // aca habría que hacer el game over
+      // }
     } catch (error) {
       console.error('Error fetching data in act:', error)
     }
@@ -86,7 +104,7 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       }
       const data = await response.json()
       console.log('SPAWN ALIENS:', data)
-      // setBoard(data.board)
+      setBoard(data.board)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
