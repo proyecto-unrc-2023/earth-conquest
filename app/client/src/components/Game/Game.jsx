@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
+import EventSource from 'eventsource'
 import './Game.css'
 
 export function Game ({ gameId, board, setBoard, getGame }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
-  const [winner, setWinner] = useState(null)
+  // const [winner, setWinner] = useState(null)
 
   const NOMBRE_G = 'Nombre_player_green'
   const NOMBRE_B = 'Nombre_player_blue'
@@ -26,6 +27,10 @@ export function Game ({ gameId, board, setBoard, getGame }) {
   let liveBlueAliens
   let liveGreenAliens
 
+  // eslint-disable-next-line no-undef
+  const source = new EventSource(`{{ url_for('http://localhost:5000/games/sse/${gameId}') }}`)
+  console.log(source.CONNECTING) // 0 si conecto
+
   const refresh = async (gameId) => {
     try {
       const response = await fetch(`${REFRESH}/${gameId}`, {
@@ -35,24 +40,21 @@ export function Game ({ gameId, board, setBoard, getGame }) {
         throw new Error('Network response was not ok')
       }
 
-      // eslint-disable-next-line no-undef
-      const source = new EventSource("{{ url_for('http://localhost:5000/games/sse/id') }}")
-      source.addEventListener('publish', function (event) {
+      source.onmessage = function (event) {
         const data = JSON.parse(event.data)
         CONT_TICS = CONT_TICS + 1
-        if (CONT_TICS === 5) {
+        if (CONT_TICS === 2) {
           spawnAliens(gameId)
           CONT_TICS = 0
         } else {
           console.log(data)
           setBoard(data.board)
         }
-      }, false)
-      source.addEventListener('error', function (event) {
-        console.log('Error' + event)
-        // eslint-disable-next-line no-undef
-        alert('Failed to connect to event stream. Is Redis running?')
-      }, false)
+      }
+      source.onerror = function (event) {
+        // Manejar errores en la conexión SSE
+        console.error('Error en la conexión SSE:', event)
+      }
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -66,19 +68,16 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      // eslint-disable-next-line no-undef
-      const source = new EventSource("{{ url_for('http://localhost:5000/games/sse/id') }}")
-      source.addEventListener('publish', function (event) {
+      source.onmessage = function (event) {
         const data = JSON.parse(event.data)
-
         console.log(data)
         setBoard(data.board)
-      }, false)
-      source.addEventListener('error', function (event) {
-        console.log('Error' + event)
-        // eslint-disable-next-line no-undef
-        alert('Failed to connect to event stream. Is Redis running?')
-      }, false)
+      }
+
+      source.onerror = function (event) {
+        // Manejar errores en la conexión SSE
+        console.error('Error en la conexión SSE:', event)
+      }
 
       /*
       setBoard(data.board)
