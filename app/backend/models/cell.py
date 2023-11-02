@@ -221,7 +221,7 @@ class Cell:
 
 
 class AlteratorField(fields.Field):
-    def _serialize(self, value: typing.Any, attr: str | None, obj: typing.Any, **kwargs):
+    def _serialize(self, value, attr, obj, **kwargs):
         if isinstance(obj.alterator, Directioner):
             return DirectionerSchema().dump(obj.alterator)
         elif isinstance(obj.alterator, Teleporter):
