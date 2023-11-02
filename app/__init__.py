@@ -1,11 +1,7 @@
-import time
-from flask import Flask, Response
-from flask_redis import Redis
+from flask import Flask
 from config import config
 from flask_cors import CORS
 from app.backend.api import games_bp
-
-redis = Redis()
 
 def create_app(config_name="development"):
     # app stuff

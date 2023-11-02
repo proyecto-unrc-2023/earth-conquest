@@ -9,7 +9,7 @@ from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
-from app import redis
+from app.backend.api.redis_config import r
 
 games_dict = {}
 
@@ -356,27 +356,24 @@ class GameController:
             return Directioner(initPos, Direction.UPWARDS)
 
 
-    def sse(id):
-        #r = redis.Redis(host='localhost', port=6379, db=0)
-
+    def sse():
         def sse_events():
-            # Use a variable to keep track of the value change
-            # So that we can send updates only when the value is changed
+        
+            # Use a vairable to keep track of the value change
+            # So that we can send update only when value is changed
             old_value = None
-
+    
             while True:
+            
                 # Fetch value from redis for key 'current_price'
-                price = redis.get(f'/games/{id}')
+                price = r.get('current_price')
+                
+                # send update only when price is changed 
+                if old_value != price:
+                    yield "data: Current Price - {}\n\n".format(int(price))
 
-                # Check if the value is not None (redis returns None if the key doesn't exist)
-                if price is not None:
-                    price = int(price)
-
-                    # Send an update only when the price is changed
-                    if old_value != price:
-                        yield "data: Current Price - {}\n\n".format(price)
-                        old_value = price
-
-                time.sleep(1)
-
+                    old_value = price
+    
+                time.sleep(0.5)
+    
         return Response(sse_events(), mimetype="text/event-stream")
