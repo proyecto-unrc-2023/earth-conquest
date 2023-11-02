@@ -1,4 +1,5 @@
 import json
+import time
 
 from flask import jsonify, Response
 from app.backend.models.alterator import Alterator
@@ -8,6 +9,8 @@ from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
+from app.backend.api.redis_config import r
+
 
 games_dict = {}
 
@@ -63,6 +66,7 @@ class GameController:
                 }
             }
         )
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
@@ -92,6 +96,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     '''
@@ -118,6 +123,7 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -126,6 +132,7 @@ class GameController:
                 "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     '''
@@ -160,6 +167,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     def get_all_games():
@@ -200,6 +208,7 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -208,6 +217,7 @@ class GameController:
                 "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
@@ -293,6 +303,7 @@ class GameController:
             return Response(message, status=400, mimetype='application/json')
 
         games_dict[id] = game
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -301,6 +312,7 @@ class GameController:
                 "board": board_schema.dump(game.board),
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     def join_as(id, team, player_name):
@@ -333,10 +345,12 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         response = {
             "success": True,
             "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
@@ -352,3 +366,21 @@ class GameController:
             return Directioner(initPos, Direction.DOWNWARDS)
         if direction == "upwards":
             return Directioner(initPos, Direction.UPWARDS)
+
+
+    def sse(id):
+        def sse_events():
+
+            old_status = r.get('game_status')
+                
+            while True:
+
+                new_status = r.get('game_status')
+                
+                if old_status != new_status:
+                    yield "data: game - {}\n\n".format(new_status)
+
+                    old_status = new_status
+    
+        return Response(sse_events(), mimetype="text/event-stream")
+    
