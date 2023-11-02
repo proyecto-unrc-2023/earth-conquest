@@ -11,6 +11,6 @@ def check_redis_connection():
         r.ping()
         print('=== Connected to Redis')
     except redis.ConnectionError:
-        print('=== Cannot connect to Redis')
+        print('===Cannot connect to Redis')
 
 check_redis_connection()

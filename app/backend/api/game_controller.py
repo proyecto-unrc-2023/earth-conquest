@@ -65,6 +65,7 @@ class GameController:
                 }
             }
         )
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
@@ -94,6 +95,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     '''
@@ -120,6 +122,7 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -128,6 +131,7 @@ class GameController:
                 "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     '''
@@ -162,6 +166,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     def get_all_games():
@@ -202,6 +207,7 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -210,6 +216,7 @@ class GameController:
                 "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
@@ -295,6 +302,7 @@ class GameController:
             return Response(message, status=400, mimetype='application/json')
 
         games_dict[id] = game
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -303,6 +311,7 @@ class GameController:
                 "board": board_schema.dump(game.board),
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     def join_as(id, team, player_name):
@@ -335,10 +344,12 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         response = {
             "success": True,
             "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
@@ -356,24 +367,18 @@ class GameController:
             return Directioner(initPos, Direction.UPWARDS)
 
 
-    def sse():
+    def sse(id):
         def sse_events():
-        
-            # Use a vairable to keep track of the value change
-            # So that we can send update only when value is changed
-            old_value = None
-    
-            while True:
-            
-                # Fetch value from redis for key 'current_price'
-                price = r.get('current_price')
-                
-                # send update only when price is changed 
-                if old_value != price:
-                    yield "data: Current Price - {}\n\n".format(int(price))
 
-                    old_value = price
-    
-                time.sleep(0.5)
+            old_status = r.get('game_status')
+                
+            while True:
+
+                new_status = r.get('game_status')
+                
+                if old_status != new_status:
+                    yield "data: game - {}\n\n".format(new_status)
+
+                    old_status = new_status
     
         return Response(sse_events(), mimetype="text/event-stream")
