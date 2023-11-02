@@ -1,16 +1,15 @@
 import json
+import time
 
 from flask import jsonify, Response
 from app.backend.models.alterator import Alterator
-
 from app.backend.models.board import BoardSchema
-from app.backend.models.cell import CellSchema
 from app.backend.models.direction import Direction
 from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
-
+from app.backend.api.redis_config import r
 
 games_dict = {}
 
@@ -30,15 +29,14 @@ class GameController:
                     "message": "Game not found with id: %d" % id
                 }
             )
-            response = Response(message, status=404, mimetype='application/json') 
+            response = Response(message, status=404, mimetype='application/json')
             return response
-
 
     def get_game_by_id(id):
         response = GameController.find_game(id)
         if response is not None:
-           return response
-       
+            return response
+
         game = games_dict.get(id)
         game_schema = GameSchema()
         response = {
@@ -67,18 +65,19 @@ class GameController:
                 }
             }
         )
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
         response = GameController.find_game(id)
         if response is not None:
-           return response
-    
+            return response
+
         game = games_dict.get(id)
         try:
             game.start_game()
             games_dict[id] = game
-        
+
         except Exception as e:
             message = json.dumps(
                 {
@@ -96,6 +95,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     '''
@@ -106,13 +106,13 @@ class GameController:
         response = GameController.find_game(id)
         if response is not None:
             return response
-       
+
         game = games_dict.get(id)
 
         try:
             game.refresh_board()
             games_dict[id] = game
-            
+
         except Exception as e:
             message = json.dumps(
                 {
@@ -122,26 +122,29 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
             "message": "Board %d refreshes successfully" % id,
             "data": {
-                "board": board_schema.dump(game.get_board())
+                "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
-    
+
     '''
         This method acts a game.
     '''
+
     def act_board(id):
         response = GameController.find_game(id)
         if response is not None:
-           return response
-       
+            return response
+
         game = games_dict.get(id)
-        
+
         try:
             game.act_board()
             games_dict[id] = game
@@ -153,7 +156,7 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-        
+
         game_schema = GameSchema()
         response = {
             "success": True,
@@ -163,6 +166,7 @@ class GameController:
                 "game": game_schema.dump(game)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     def get_all_games():
@@ -193,7 +197,7 @@ class GameController:
         try:
             game.add_alien_to_range(Team.GREEN)
             game.add_alien_to_range(Team.BLUE)
-            games_dict[id] = game   # save the game on the dict
+            games_dict[id] = game  # save the game on the dict
         except Exception as e:
             message = json.dumps(
                 {
@@ -203,14 +207,16 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
             "message": "Aliens blue and green added successfully to game: %d" % id,
             "data": {
-                "board": board_schema.dump(game.get_board())
+                "board": board_schema.dump(game.board)
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
@@ -241,6 +247,7 @@ class GameController:
     """
         This method sets an alterator on the board if the positions are valid.
     """
+
     def set_alterator(id, data):
         response = GameController.find_game(id)
         if response is not None:
@@ -250,8 +257,10 @@ class GameController:
 
         info = {
             "alterator": data.get("alterator").get("name"),
-            "initPos": (data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
-            "endPos": (data.get("alterator").get("positionEnd").get("x"), data.get("alterator").get("positionEnd").get("y")),
+            "initPos": (
+            data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
+            "endPos": (
+            data.get("alterator").get("positionEnd").get("x"), data.get("alterator").get("positionEnd").get("y")),
             "direction": data.get("alterator").get("direction"),
             "team": data.get("team")
         }
@@ -291,8 +300,9 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-          
+
         games_dict[id] = game
+        game_schema = GameSchema()
         board_schema = BoardSchema()
         response = {
             "success": True,
@@ -301,8 +311,8 @@ class GameController:
                 "board": board_schema.dump(game.board),
             }
         }
+        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
-
 
     def join_as(id, team, player_name):
         response = GameController.find_game(id)
@@ -334,16 +344,18 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
+        game_schema = GameSchema()
         response = {
             "success": True,
             "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
         }
-        return jsonify(response)     
-
+        r.set('game_status', json.dumps(game_schema.dump(game)))
+        return jsonify(response)
 
     """
         Creates and returns a directioner given its direction and initial position
     """
+
     def create_directioner(direction, initPos):
         if direction == "right":
             return Directioner(initPos, Direction.RIGHT)
@@ -353,3 +365,20 @@ class GameController:
             return Directioner(initPos, Direction.DOWNWARDS)
         if direction == "upwards":
             return Directioner(initPos, Direction.UPWARDS)
+
+
+    def sse(id):
+        def sse_events():
+
+            old_status = r.get('game_status')
+                
+            while True:
+
+                new_status = r.get('game_status')
+                
+                if old_status != new_status:
+                    yield "data: game - {}\n\n".format(new_status)
+
+                    old_status = new_status
+    
+        return Response(sse_events(), mimetype="text/event-stream")
