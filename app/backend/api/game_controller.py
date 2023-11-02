@@ -11,6 +11,7 @@ from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 from app.backend.api.redis_config import r
 
+
 games_dict = {}
 
 '''
@@ -382,3 +383,4 @@ class GameController:
                     old_status = new_status
     
         return Response(sse_events(), mimetype="text/event-stream")
+    
