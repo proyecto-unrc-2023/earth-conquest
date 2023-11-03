@@ -127,7 +127,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
   return (
     <section className='board'>
       {
-        board.board.map((row, i) => {
+        board.map((row, i) => {
           return (
             row.map((cell, j) => {
               return (

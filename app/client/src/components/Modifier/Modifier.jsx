@@ -2,6 +2,7 @@ import { modifier } from '../../constants.js'
 import './Modifier.css'
 
 export const Modifier = ({ type }) => {
+
   const typeLower = type.toLowerCase()
   return (
     <div className='modifier'>
@@ -13,6 +14,7 @@ export const Modifier = ({ type }) => {
         }
       {
           (typeLower === modifier.multiplier) && <img src='../public/multiplier.png' className='img_multiplier' alt='' />
+
         }
     </div>
   )
