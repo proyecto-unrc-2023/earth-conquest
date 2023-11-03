@@ -418,7 +418,7 @@ class Board:
     def remove_alien_from_board(self, x, y, alien):
         if isinstance(alien, Alien) and self.aliens.__contains__((x, y)):
             self.get_cell(x, y).remove_alien(alien)
-            if (x, y) in self.aliens:
+            if (x, y) in self.aliens and alien in self.aliens[(x,y)]:
                 self.aliens[(x, y)].remove(alien)
         else:
             raise ValueError(f'alien not found')
