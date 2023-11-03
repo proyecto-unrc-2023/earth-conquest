@@ -8,7 +8,7 @@ function App () {
   const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
-  // const [local, setLocal] = useState('')
+  const [host, setHost] = useState(null)
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
   const GET_GAME = 'http://127.0.0.1:5000/games/'
@@ -79,11 +79,11 @@ function App () {
     <main>
       {
         statusGame !== gameStatus.started &&
-          <Menu createGame={createGame} getGame={getGame} startGame={startGame} setGameId={setGameId} gameId={gameId} message={message} />
+          <Menu createGame={createGame} getGame={getGame} startGame={startGame} setGameId={setGameId} setHost={setHost} gameId={gameId} message={message} />
       }
       {
         statusGame === gameStatus.started &&
-          <Game gameId={gameId} getGame={getGame} board={board} setBoard={setBoard} />
+          <Game gameId={gameId} getGame={getGame} board={board} host={host} setBoard={setBoard} />
       }
 
     </main>

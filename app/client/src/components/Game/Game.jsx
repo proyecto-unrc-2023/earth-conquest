@@ -4,16 +4,16 @@ import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import './Game.css'
 
-export function Game ({ gameId, board, setBoard, getGame }) {
+export function Game ({ gameId, board, host, setBoard, getGame }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
+  const [tic, setTic] = useState(0)
   // const [winner, setWinner] = useState(null)
 
   const NOMBRE_G = 'Nombre_player_green'
   const NOMBRE_B = 'Nombre_player_blue'
 
-  let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
@@ -28,9 +28,9 @@ export function Game ({ gameId, board, setBoard, getGame }) {
 
   // eslint-disable-next-line no-undef
   const source = new EventSource(`{{ url_for('http://localhost:5000/games/sse/${gameId}')}}`)
-  console.log(source.CONNECTING) // 0 si conecto
 
   const refresh = async (gameId) => {
+    setTic(tic + 1)
     try {
       const response = await fetch(`${REFRESH}/${gameId}`, {
         method: 'PUT'
@@ -38,22 +38,7 @@ export function Game ({ gameId, board, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-
-      source.onmessage = function (event) {
-        const data = JSON.parse(event.data)
-        CONT_TICS = CONT_TICS + 1
-        if (CONT_TICS === 2) {
-          spawnAliens(gameId)
-          CONT_TICS = 0
-        } else {
-          console.log(data)
-          setBoard(data.board)
-        }
-      }
-      source.onerror = function (event) {
-        // Manejar errores en la conexión SSE
-        console.error('Error en la conexión SSE:', event)
-      }
+      // esto se deberia mover a useEffect
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -96,13 +81,14 @@ export function Game ({ gameId, board, setBoard, getGame }) {
 
   const spawnAliens = async (gameId) => {
     try {
-      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`)
+      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
+      const data = await response.json() // esto no haria falta
       console.log('SPAWN ALIENS:', data)
-      setBoard(data.board)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
@@ -110,13 +96,25 @@ export function Game ({ gameId, board, setBoard, getGame }) {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (changeTic) {
-        refresh(gameId)
-        // getGame(gameId)
-      } else {
-        act(gameId)
-        // getGame(gameId)
+      if (host) {
+        if (changeTic) {
+          refresh(gameId)
+        } else {
+          act(gameId)
+          if (tic === 2) {
+            spawnAliens(gameId)
+            setTic(0)
+          }
+        }
+        source.onmessage = function (event) {
+          const data = JSON.parse(event.data)
+          setBoard(data)
+        }
+        source.onerror = function (event) {
+          console.error('Error en la conexión SSE:', event)
+        }
       }
+      getGame(gameId)
       setChangeTic(!changeTic)
     }, 1000)
     return () => clearTimeout(timeoutId)
