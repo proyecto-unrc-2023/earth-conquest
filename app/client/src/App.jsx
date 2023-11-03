@@ -8,7 +8,7 @@ function App () {
   const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
-  const [local, setLocal] = useState('')
+  // const [local, setLocal] = useState('')
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
   const GET_GAME = 'http://127.0.0.1:5000/games/'

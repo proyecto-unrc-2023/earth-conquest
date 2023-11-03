@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
-import EventSource from 'eventsource'
 import './Game.css'
 
 export function Game ({ gameId, board, setBoard, getGame }) {
@@ -28,7 +27,7 @@ export function Game ({ gameId, board, setBoard, getGame }) {
   let liveGreenAliens
 
   // eslint-disable-next-line no-undef
-  const source = new EventSource(`{{ url_for('http://localhost:5000/games/sse/${gameId}') }}`)
+  const source = new EventSource(`{{ url_for('http://localhost:5000/games/sse/${gameId}')}}`)
   console.log(source.CONNECTING) // 0 si conecto
 
   const refresh = async (gameId) => {
@@ -113,10 +112,10 @@ export function Game ({ gameId, board, setBoard, getGame }) {
     const timeoutId = setTimeout(() => {
       if (changeTic) {
         refresh(gameId)
-        getGame(gameId)
+        // getGame(gameId)
       } else {
         act(gameId)
-        getGame(gameId)
+        // getGame(gameId)
       }
       setChangeTic(!changeTic)
     }, 1000)
