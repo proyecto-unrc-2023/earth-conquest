@@ -370,17 +370,15 @@ class GameController:
 
     def sse(id):
         def sse_events():
-
-            old_status = r.get('game_status')
+            old_status = None
                 
             while True:
-
                 new_status = r.get('game_status')
                 
                 if old_status != new_status:
-                    yield "data: game - {}\n\n".format(new_status)
+                    status_data = json.loads(new_status) if new_status else {}
+                    yield f'data: {json.dumps(status_data)}\n\n'
 
                     old_status = new_status
-    
-        return Response(sse_events(), mimetype="text/event-stream")
-    
+
+        return Response(sse_events(), mimetype='text/event-stream')
