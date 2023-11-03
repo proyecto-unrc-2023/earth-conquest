@@ -1,18 +1,17 @@
-import io from 'socket.io-client'
 import { useState } from 'react'
 import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 
-const socket = io('http://localhost:5000')
-
 function App () {
-  const [board, setBoard] = useState([[]])
+  const [board, setBoard] = useState(null)
   const [statusGame, setStatusGame] = useState(null)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
+  const [host, setHost] = useState(null)
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
+  const GET_GAME = 'http://127.0.0.1:5000/games/'
 
   const createGame = async () => {
     try {
@@ -26,12 +25,9 @@ function App () {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      console.log(data)
+      console.log('CREATE GAME:', data)
       setGameId(data.data.gameId)
-      setStatusGame(gameStatus.notStarted)
       setMessage(data.message)
-      setBoard(data.data.game.board)
-      localStorage.setItem('gameStateLocalStorage', gameStatus.notStarted)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -46,23 +42,31 @@ function App () {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      console.log(data)
-      if (data.success) {
-        setStatusGame(gameStatus.started)
-        setBoard(data.data.game.board)
-        localStorage.setItem('gameStateLocalStorage', gameStatus.started)
-      }
+      console.log('START GAME:', data)
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
   }
 
-  window.addEventListener('storage', function (event) {
-    if (event.key === 'gameStateLocalStorage') {
+  const getGame = async (gameId) => {
+    try {
+      const response = await fetch(`${GET_GAME}/${gameId}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const data = await response.json()
+      console.log('GET GAME: ', data)
+      setBoard(data.data.game.board.board)
       setStatusGame(gameStatus.started)
-      setBoard(board)
-      const nuevoValor = event.newValue
-      console.log('Nuevo valor:', nuevoValor)
+    } catch (error) {
+      console.error('Error spawn aliens in base:', error)
+    }
+  }
+
+  // este puede que se cambie por sse, es para escuchar que el segundo se mete a la partida
+  window.addEventListener('storage', function (event) {
+    if (event.key === 'guestPlayer') {
+      getGame(gameId)
     }
   })
 
@@ -70,11 +74,11 @@ function App () {
     <main>
       {
         statusGame !== gameStatus.started &&
-          <Menu createGame={createGame} setBoard={setBoard} startGame={startGame} gameId={gameId} message={message} />
+          <Menu createGame={createGame} getGame={getGame} startGame={startGame} setGameId={setGameId} setHost={setHost} gameId={gameId} message={message} />
       }
       {
         statusGame === gameStatus.started &&
-          <Game gameId={gameId} board={board} setBoard={setBoard} />
+          <Game gameId={gameId} getGame={getGame} board={board} host={host} setBoard={setBoard} />
       }
 
     </main>

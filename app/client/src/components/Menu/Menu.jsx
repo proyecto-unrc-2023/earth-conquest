@@ -2,7 +2,7 @@ import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
-export function Menu ({ createGame, startGame, gameId, message }) {
+export function Menu ({ createGame, startGame, setGameId, setHost, getGame, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
@@ -37,12 +37,14 @@ export function Menu ({ createGame, startGame, gameId, message }) {
       const data = await response.json()
       console.log(data)
       if (team === 'GREEN') {
+        setHost(true)
         const hostPlayer = { host: true, playerName, team, gameId }
         // eslint-disable-next-line no-undef
         localStorage.setItem('hostPlayer', JSON.stringify(hostPlayer))
         // eslint-disable-next-line no-undef
         console.log('local storage: ', localStorage.getItem('hostPlayer'))
       } else {
+        setHost(false)
         const guestPlayer = { host: false, playerName, team, gameId }
         // eslint-disable-next-line no-undef
         localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
@@ -99,7 +101,7 @@ export function Menu ({ createGame, startGame, gameId, message }) {
           </>
       }
       {
-        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} startGame={startGame} />
+        allGames.length > 0 && <Lobby allGames={allGames} setGameId={setGameId} getGame={getGame} joinAs={joinAs} startGame={startGame} />
       }
     </>
   )

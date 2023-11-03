@@ -12,7 +12,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
 
-  const greenOvniRange = data2.green_ovni_range
+  const greenOvniRange = data2.green_ovni_range // hay que sacar estos dos, traerlos del game
   const blueOvniRange = data2.blue_ovni_range
 
   // Funcion para dar el rango de teleport
@@ -29,15 +29,15 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     }
   }
 
-  const updateBoard = (row, col) => {
+  const updateBoard = async (row, col) => {
     if (newAlterator === null) return
-    if (!isValidPosition(row, col)) return
+    if (!(await isValidPosition(row, col))) return
     if (
-      (outOfTeleportRange(row, col, teleportX, teleportY) &&
+      (outOfTeleportRange(row, col, teleportX, teleportY) && // CONSULTAR: esto no seria solo para el teleport?
       (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
       isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
     ) return
-    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
+    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleporter_out)) return
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
@@ -55,7 +55,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         throw new Error('Network response was not ok')
       }
     } catch (error) {
-      console.error('Error set trap', error)
+      console.error('Error set alterator', error)
     }
   }
 
@@ -66,11 +66,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      if (data.success) {
-        return true
-      } else {
-        return false
-      }
+      return data.success
     } catch (error) {
       console.error('Error is valid position', error)
     }
@@ -109,7 +105,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
           if (alteratorDirection === 'in') {
             newBoard[row][col].alterator = newAlterator
             // cambia estado a teleport out
-            setAlter(alterator.teleport_out)
+            setAlter(alterator.teleporter_out)
             setTeleporterEnabled(false)
             setTeleportX(row)
             setTeleportY(col)
@@ -124,11 +120,11 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
       }
     }
   }
-  console.log(board)
+
   return (
     <section className='board'>
       {
-        board.board.map((row, i) => {
+        board.map((row, i) => {
           return (
             row.map((cell, j) => {
               return (
