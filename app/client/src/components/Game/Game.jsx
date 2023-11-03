@@ -27,7 +27,7 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
   let liveGreenAliens
 
   // eslint-disable-next-line no-undef
-  const source = new EventSource(`{{ url_for('http://localhost:5000/games/sse/${gameId}')}}`)
+  const source = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
 
   const refresh = async (gameId) => {
     setTic(tic + 1)
