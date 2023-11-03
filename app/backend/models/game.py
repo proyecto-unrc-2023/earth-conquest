@@ -114,8 +114,11 @@ class Game:
 
     def set_alterator(self, alterator, team, x=None, y=None):
 
+        # chose the team
+        alive_team_aliens = self.alive_green_aliens if team == Team.BLUE else self.alive_green_aliens
+
         if isinstance(alterator, Directioner):
-            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 4:
+            if alive_team_aliens >= 4:
                 self.board.set_directioner(alterator)  # hara el chequeo de si la pos es valida antes de matar a los
                 # aliens
                 self.board.kill_aliens(team, 4)
@@ -123,7 +126,7 @@ class Game:
                 raise Exception("not enough aliens to put a Directioner")
 
         elif isinstance(alterator, Teleporter):
-            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 6:
+            if alive_team_aliens >= 6:
                 self.board.set_teleporter(alterator)
                 self.board.kill_aliens(team, 6)
             else:
@@ -132,13 +135,21 @@ class Game:
         elif alterator is Alterator.TRAP:
             if not self.is_free_position(x, y) or self.is_pos_on_any_range(x, y):
                 raise Exception("position is not free or valid")
-            if (self.alive_blue_aliens if team == Team.BLUE else self.alive_green_aliens) >= 4:
+            if alive_team_aliens >= 4:
                 self.board.set_trap(x, y)
                 self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a TRAP")
         else:
             raise Exception("invalid alterator")
+        self.update_aliens_cant(team)   # updates de attribute with the new aliens cant
+
+    def update_aliens_cant(self, team):
+        new_aliens_cant = self.board.list_aliens_of_team(team).__len__()
+        if team == Team.GREEN:
+            self.alive_green_aliens = new_aliens_cant
+        else:
+            self.alive_blue_aliens = new_aliens_cant
 
     def get_team_winner(self):
         return self.winner[1]
