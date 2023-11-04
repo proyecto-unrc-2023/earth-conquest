@@ -42,7 +42,6 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
-    console.log(board)
   }
 
   const sendAlterator = async (row, col, newAlterator) => {
@@ -61,7 +60,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   const isFreePosition = async (row, col) => {
     try {
-      const response = await fetch(`${FREE_POSITION}/${gameId}/${row}/${col}`)
+      const response = await fetch(`${FREE_POSITION}/${gameId}?x=${row}&y=${col}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
@@ -120,7 +119,6 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
       }
     }
   }
-  console.log(board)
   return (
     <section className='board'>
       {

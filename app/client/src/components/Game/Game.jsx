@@ -52,24 +52,6 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      source.onmessage = function (event) {
-        const data = JSON.parse(event.data)
-        console.log(data)
-        setBoard(data.board)
-      }
-
-      source.onerror = function (event) {
-        // Manejar errores en la conexión SSE
-        console.error('Error en la conexión SSE:', event)
-      }
-
-      /*
-      setBoard(data.board)
-      lifeGreenOvni = data.green_ovni_life
-      lifeBlueOvni = data.blue_ovni_life
-      liveBlueAliens = data.live_blue_aliens
-      liveGreenAliens = data.live_green_aliens
-      */
       // if (data.winner) {
       // setWinner(data.winner.team)
       // aca habría que hacer el game over
@@ -87,8 +69,6 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json() // esto no haria falta
-      console.log('SPAWN ALIENS:', data)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
@@ -98,25 +78,33 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
     const timeoutId = setTimeout(() => {
       if (host) {
         if (changeTic) {
-          refresh(gameId)
-        } else {
-          act(gameId)
           if (tic === 2) {
             spawnAliens(gameId)
             setTic(0)
+          } else {
+            refresh(gameId)
           }
+        } else {
+          act(gameId)
         }
         source.onmessage = function (event) {
           const data = JSON.parse(event.data)
           setBoard(data)
+          /*
+          lifeGreenOvni = data.green_ovni_life
+          lifeBlueOvni = data.blue_ovni_life
+          liveBlueAliens = data.live_blue_aliens
+          liveGreenAliens = data.live_green_aliens
+          */
         }
         source.onerror = function (event) {
           console.error('Error en la conexión SSE:', event)
         }
       }
       getGame(gameId)
+      console.log('Aca esta el board de host:', host, '\n', board)
       setChangeTic(!changeTic)
-    }, 1000)
+    }, 10000)
     return () => clearTimeout(timeoutId)
   }, [board])
 

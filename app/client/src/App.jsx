@@ -5,10 +5,11 @@ import { gameStatus } from './constants'
 
 function App () {
   const [board, setBoard] = useState(null)
-  const [statusGame, setStatusGame] = useState(null)
+  const [statusGame, setStatusGame] = useState(gameStatus.notStarted)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
   const [host, setHost] = useState(null)
+
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
   const GET_GAME = 'http://127.0.0.1:5000/games/'
@@ -27,7 +28,6 @@ function App () {
       const data = await response.json()
       console.log('CREATE GAME:', data)
       setGameId(data.data.gameId)
-      // setStatusGame(gameStatus.notStarted)
       setMessage(data.message)
       // setBoard(data.data.game.board)
     } catch (error) {
@@ -47,7 +47,6 @@ function App () {
       console.log('START GAME:', data)
       // if (data.success) {
       //   setStatusGame(gameStatus.started)
-      //   // setBoard(data.data.game.board)
       // }
     } catch (error) {
       console.error('Error fetching data: ', error)
