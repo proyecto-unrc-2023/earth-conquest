@@ -6,7 +6,7 @@ import './Board.css'
 import { useState } from 'react'
 
 export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId }) => {
-  const VALID_POSITION = 'http://127.0.0.1:5000/games/isValidPosition' // verificar
+  const FREE_POSITION = 'http://127.0.0.1:5000/games/isFreePosition' // verificar
   const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/setAlterator' // verificar
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
@@ -29,25 +29,24 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     }
   }
 
-  const updateBoard = (row, col) => {
+  const updateBoard = async (row, col) => {
     if (newAlterator === null) return
-    if (!isValidPosition(row, col)) return
+    if (!await isFreePosition(row, col)) return
     if (
       (outOfTeleportRange(row, col, teleportX, teleportY) &&
       (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
       isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
     ) return
-    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleport_out)) return
+    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleporter_out)) return
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
     setBoard(newBoard)
-    console.log(board)
-    // TODO: controlar ganador.
   }
+
   const sendAlterator = async (row, col, newAlterator) => {
     try {
-      const response = await fetch(`${SEND_ALTERATOR}/${row}/${col}`, {
+      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
         method: 'PUT',
         body: JSON.stringify({ alterator: newAlterator })
       })
@@ -55,28 +54,25 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         throw new Error('Network response was not ok')
       }
     } catch (error) {
-      console.error('Error set trap', error)
+      console.error('Error set alterator', error)
     }
   }
-  const isValidPosition = async (row, col) => {
+
+  const isFreePosition = async (row, col) => {
     try {
-      const response = await fetch(`${VALID_POSITION}/${gameId}/${row}/${col}`)
+      const response = await fetch(`${FREE_POSITION}/${gameId}?x=${row}&y=${col}`)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      if (data.success) {
-        return true
-      } else {
-        return false
-      }
+      return (data.success)
     } catch (error) {
       console.error('Error is valid position', error)
     }
   }
 
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
-    if (await isValidPosition(row, col)) {
+    if (await isFreePosition(row, col)) {
       if (newAlterator === alterator.trap) {
         const newTrap = {
           name: newAlterator,
@@ -108,7 +104,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
           if (alteratorDirection === 'in') {
             newBoard[row][col].alterator = newAlterator
             // cambia estado a teleport out
-            setAlter(alterator.teleport_out)
+            setAlter(alterator.teleporter_out)
             setTeleporterEnabled(false)
             setTeleportX(row)
             setTeleportY(col)
@@ -123,34 +119,33 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
       }
     }
   }
-
   return (
-    <section className='board' style={{ gridTemplateColumns: `repeat(${board[0].length}, 1fr)` }}>
+    <section className='board'>
       {
-          board.map((row, i) => {
-            return (
-              row.map((cell, j) => {
-                return (
-                  <Cell
-                    key={j}
-                    col={j}
-                    row={i}
-                    updateBoard={updateBoard}
-                    greenBase={greenOvniRange}
-                    blueBase={blueOvniRange}
-                    teleporterEnabled={teleporterEnabled}
-                    teleportX={teleportX}
-                    teleportY={teleportY}
-                    isBase={isBase}
-                    outOfTeleportRange={outOfTeleportRange}
-                  >
-                    {cell}
-                  </Cell>
-                )
-              })
-            )
-          })
-        }
+        board.map((row, i) => {
+          return (
+            row.map((cell, j) => {
+              return (
+                <Cell
+                  key={j}
+                  col={j}
+                  row={i}
+                  updateBoard={updateBoard}
+                  greenBase={greenOvniRange}
+                  blueBase={blueOvniRange}
+                  teleporterEnabled={teleporterEnabled}
+                  teleportX={teleportX}
+                  teleportY={teleportY}
+                  isBase={isBase}
+                  outOfTeleportRange={outOfTeleportRange}
+                >
+                  {cell}
+                </Cell>
+              )
+            })
+          )
+        })
+      }
     </section>
   )
 }

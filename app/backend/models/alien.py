@@ -1,5 +1,3 @@
-from enum import Enum
-
 from marshmallow import Schema, fields
 
 from app.backend.models.team import Team

@@ -1,9 +1,9 @@
 Feature: Game initialization
 
 	Background:
-		Given that the application was initiated
-		And player "Juan" has created a game as blue player
-		And player "Jose" has joined the game as green player
+		Given a new game has been created
+		And player "Juan" has joined the game as "blue" player
+		And player "Jose" has joined the game as "green" player
 		And the game has not started
 
 	Scenario: Initial board creation
@@ -16,8 +16,8 @@ Feature: Game initialization
 		And the placed modifiers end up positioned outside the teams areas
 
 	Scenario: Launch of the initial crew
-		Given the board dimension is 10 by 15
-		When the game is started
+		When the board dimension is set in 25 by 45
+		And the game is started
 		Then the game status is set on start mode
 		And there are 6 living one-eyed aliens per team
 		And the aliens are set on their respective areas
@@ -25,8 +25,8 @@ Feature: Game initialization
 	Scenario Outline: Dimensions of the areas
 		When the board dimension is set in <rows> by <cols>
 		Then the dimensions of the ovnis ranges should be <range> by <range>
-		And the range of the "green" ovni should be <green_row> <green_col>
-		And the range of the "blue" ovni should be <blue_row> <blue_col>
+		And the corner position of the "green" ovni range should be <green_row> <green_col>
+		And the corner position of the "blue" ovni range should be <blue_row> <blue_col>
 
 		Examples:
 		  | rows | cols | range | green_row | green_col | blue_row | blue_col |

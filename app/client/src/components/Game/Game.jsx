@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react'
-import data2 from '../../data2.json'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import './Game.css'
 
-export function Game ({ gameId }) {
+export function Game ({ gameId, board, host, setBoard, getGame }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
-  const [board, setBoard] = useState(data2.grid)
   const [changeTic, setChangeTic] = useState(true)
-  const [winner, setWinner] = useState(null)
+  const [tic, setTic] = useState(0)
+  // const [winner, setWinner] = useState(null)
 
   const NOMBRE_G = 'Nombre_player_green'
   const NOMBRE_B = 'Nombre_player_blue'
 
-  let CONT_TICS = 0
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
@@ -28,57 +26,49 @@ export function Game ({ gameId }) {
   let liveBlueAliens
   let liveGreenAliens
 
-  const refresh = async () => {
+  // eslint-disable-next-line no-undef
+  const source = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
+
+  const refresh = async (gameId) => {
+    setTic(tic + 1)
     try {
-      const response = await fetch(`${REFRESH}/${gameId}`)
+      const response = await fetch(`${REFRESH}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
-
-      CONT_TICS = CONT_TICS + 1
-      if (CONT_TICS === 5) {
-        spawnAliens()
-        CONT_TICS = 0
-      } else {
-        setBoard(data.board)
-      }
+      // esto se deberia mover a useEffect
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
   }
 
-  const act = async () => {
+  const act = async (gameId) => {
     try {
-      const response = await fetch(`${ACT}/${gameId}`)
+      const response = await fetch(`${ACT}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
-
-      setBoard(data.board)
-      lifeGreenOvni = data.green_ovni_life
-      lifeBlueOvni = data.blue_ovni_life
-      liveBlueAliens = data.live_blue_aliens
-      liveGreenAliens = data.live_green_aliens
-
-      if (data.winner) {
-        setWinner(data.winner.team)
-        // aca habría que hacer el game over
-      }
+      // if (data.winner) {
+      // setWinner(data.winner.team)
+      // aca habría que hacer el game over
+      // }
     } catch (error) {
       console.error('Error fetching data in act:', error)
     }
   }
 
-  const spawnAliens = async () => {
+  const spawnAliens = async (gameId) => {
     try {
-      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`)
+      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`, {
+        method: 'PUT'
+      })
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      const data = await response.json()
-      setBoard(data.board)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
@@ -86,13 +76,35 @@ export function Game ({ gameId }) {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (changeTic) {
-        refresh()
-      } else {
-        act()
+      if (host) {
+        if (changeTic) {
+          if (tic === 2) {
+            spawnAliens(gameId)
+            setTic(0)
+          } else {
+            refresh(gameId)
+          }
+        } else {
+          act(gameId)
+        }
+        source.onmessage = function (event) {
+          const data = JSON.parse(event.data)
+          setBoard(data)
+          /*
+          lifeGreenOvni = data.green_ovni_life
+          lifeBlueOvni = data.blue_ovni_life
+          liveBlueAliens = data.live_blue_aliens
+          liveGreenAliens = data.live_green_aliens
+          */
+        }
+        source.onerror = function (event) {
+          console.error('Error en la conexión SSE:', event)
+        }
       }
+      getGame(gameId)
+      console.log('Aca esta el board de host:', host, '\n', board)
       setChangeTic(!changeTic)
-    }, 1000)
+    }, 10000)
     return () => clearTimeout(timeoutId)
   }, [board])
 
