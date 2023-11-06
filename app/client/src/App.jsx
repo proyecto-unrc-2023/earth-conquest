@@ -12,7 +12,22 @@ function App () {
 
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
-  const GET_GAME = 'http://127.0.0.1:5000/games/'
+  const GET_GAME = 'http://127.0.0.1:5000/games'
+
+  // Función para manejar la conexión SSE
+  // function handleSSE(gameId) {
+  //   const eventSource = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
+    
+  //   eventSource.onmessage = function (event) {
+  //     const data = JSON.parse(event.data)
+  //     setBoard(data)
+  //   }
+    
+  //   eventSource.onerror = function (event) {
+  //     console.error('Error en la conexión SSE:', event)
+  //   }
+  // }
+
 
   const createGame = async () => {
     try {
@@ -48,6 +63,7 @@ function App () {
       // if (data.success) {
       //   setStatusGame(gameStatus.started)
       // }
+      //handleSSE(gameId)
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
@@ -82,7 +98,7 @@ function App () {
       }
       {
         statusGame === gameStatus.started &&
-          <Game gameId={gameId} getGame={getGame} board={board} host={host} setBoard={setBoard} />
+          <Game gameId={gameId} getGame={getGame} board={board} host={host} setBoard={setBoard}/>
       }
 
     </main>
