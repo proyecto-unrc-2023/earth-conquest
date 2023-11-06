@@ -17,7 +17,7 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
 
-  const refresh = useCallback(async () => {
+  const refresh = async (gameId) => {
     try {
       const response = await fetch(`${REFRESH}/${gameId}`, {
         method: 'PUT'
@@ -28,9 +28,9 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
-  }, [gameId]);
+  }
 
-  const act = useCallback(async () => {
+  const act = async (gameId) => {
     try {
       const response = await fetch(`${ACT}/${gameId}`, {
         method: 'PUT'
@@ -41,7 +41,20 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
     } catch (error) {
       console.error('Error fetching data in act:', error)
     }
-  }, [gameId]);
+  }
+
+  const spawnAliens = async (gameId) => {
+    try {
+      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`, {
+        method: 'PUT'
+      })
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+    } catch (error) {
+      console.error('Error spawn aliens in base:', error)
+    }
+  }
 
   useEffect(() => {
     const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
@@ -58,23 +71,18 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
   
     return () => {
       sse.close();
-    };
+    }
+    
   }, [])
   
   useEffect(() => {
     if (host) {
-      const timeoutId = setTimeout(() => {
-        if (changeTic) {
-          refresh();
-        } else {
-          act();
-        }
-        setChangeTic(prevChangeTic => !prevChangeTic);
-      }, 3000);
-    
-      return () => {
-        clearTimeout(timeoutId);
+      if (changeTic) {
+        refresh(gameId)
+      } else {
+        act(gameId)
       }
+      setChangeTic(prevChangeTic => !prevChangeTic)
     }
   }, [board])
 
