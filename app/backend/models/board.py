@@ -326,20 +326,27 @@ class Board:
                 return directioner.last_pos
             else:
                 if directioner.direction == Direction.LEFT or directioner.direction == Direction.RIGHT:
-                    if self.can_alien_move_to_pos(x - 1, y) or self.can_alien_move_to_pos(x + 1, y):
+                    valid_positions = []
+                    if self.can_alien_move_to_pos(x - 1, y):
+                        valid_positions.append((x-1,y))
+                    if self.can_alien_move_to_pos(x + 1, y):
+                        valid_positions.append((x+1,y))
+                    if valid_positions:
                         # the alien will move to a random adjacent position that's not equal to the snd_pos
-                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
-                        while new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]:
-                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        new_x, new_y = random.choice(valid_positions)
                         return new_x, new_y
                     else:
+                        # the alien has nowhere to move, it'll stay on its position
                         return x, y
                 if directioner.direction == Direction.DOWNWARDS or directioner.direction == Direction.UPWARDS:
-                    if self.can_alien_move_to_pos(x, y - 1) or self.can_alien_move_to_pos(x, y + 1):
+                    valid_positions = []
+                    if self.can_alien_move_to_pos(x, y-1):
+                        valid_positions.append((x,y-1))
+                    if self.can_alien_move_to_pos(x, y+1):
+                        valid_positions.append((x,y+1))
+                    if valid_positions:
                         # the alien will move to a random adjacent position that's not equal to the snd_pos
-                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
-                        while new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]:
-                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        new_x, new_y = random.choice(valid_positions)
                         return new_x, new_y
                     else:
                         return x, y
