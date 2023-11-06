@@ -1,0 +1,194 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Check the Earth Conquest project routes here",
+    "version": "1.0.0",
+    "title": "earth-conquest-api"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Game Request",
+      "description": "Example API for requesting and returning game requests"
+    }
+  ],
+  "paths": {
+    "/games": {
+      "get": {
+        "tags": [
+          "Games list"
+        ],
+        "summary": "Returns all active games",
+        "responses": {
+          "200": {
+            "description": "All games retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Create a Game"
+        ],
+        "summary": "Create a new game",
+        "responses": {
+          "201": {
+            "description": "Game created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GameSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "STARTED",
+              "NOT_STARTED",
+              "OVER"
+            ]
+          },
+          "green_player": {
+            "type": "string"
+          },
+          "blue_player": {
+            "type": "string"
+          },
+          "board": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "items": {
+                  "$ref": "#/components/schemas/CellSchema"
+                }
+              }
+            }
+          },
+          "winner": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "team": {
+                "type": "string",
+                "enum": [
+                  "BLUE",
+                  "GREEN"
+                ]
+              }
+            }
+          },
+          "alive_green_aliens": {
+            "type": "integer"
+          },
+          "blue_green_aliens": {
+            "type": "integer"
+          }
+        }
+      },
+      "BoardSchema": {
+        "type": "object",
+        "properties": {
+          "board": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "items": {
+                  "$ref": "#/components/schemas/CellSchema"
+                }
+              }
+            }
+          },
+          "blue_ovni_range": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "integer"
+              },
+              "y": {
+                "type": "integer"
+              }
+            }
+          },
+          "green_ovni_range": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "integer"
+              },
+              "y": {
+                "type": "integer"
+              }
+            }
+          },
+          "base_range_dimentions": {
+            "type": "integer"
+          }
+        }
+      },
+      "CellSchema": {
+        "type": "object",
+        "properties": {
+          "aliens": {
+            "type": "integer"
+          },
+          "modifier": {
+            "type": "string",
+            "enum": [
+              "MOUNTAIN_RANGE",
+              "KILLER",
+              "MULTIPLIER"
+            ]
+          },
+          "alterator": {
+            "type": "object"
+          }
+        }
+      },
+      "AlienSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "eyes": {
+            "type": "integer"
+          },
+          "team": {
+            "type": "string",
+            "enum": ["BLUE", "GREEN"]
+          }
+        }
+      }
+    }
+  }
+}
