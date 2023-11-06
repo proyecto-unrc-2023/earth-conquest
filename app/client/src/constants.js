@@ -20,7 +20,7 @@ export const team = {
 }
 
 export const gameStatus = {
-  started: 'started',
-  notStarted: 'notStarted',
-  over: 'over'
+  STARTED: 'STARTED',
+  NOT_STARTED: 'NOT_STARTED',
+  OVER: 'OVER'
 }

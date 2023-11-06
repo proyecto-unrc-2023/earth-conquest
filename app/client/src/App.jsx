@@ -5,10 +5,12 @@ import { gameStatus } from './constants'
 
 function App () {
   const [board, setBoard] = useState(null)
-  const [statusGame, setStatusGame] = useState(gameStatus.notStarted)
+  const [statusGame, setStatusGame] = useState(gameStatus.NOT_STARTED)
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
   const [host, setHost] = useState(null)
+  const [greenOvniRange, setGreenOvniRange] = useState(null)
+  const [blueOvniRange, setBlueOvniRange] = useState(null)
 
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
@@ -27,9 +29,11 @@ function App () {
       }
       const data = await response.json()
       console.log('CREATE GAME:', data)
-      setGameId(data.data.gameId)
-      setMessage(data.message)
       setHost(true)
+      setMessage(data.message)
+      setGameId(data.data.gameId)
+      setGreenOvniRange(data.data.game.board.green_ovni_range)
+      setBlueOvniRange(data.data.game.board.blue_ovni_range)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -45,6 +49,7 @@ function App () {
       }
       const data = await response.json()
       console.log('START GAME:', data)
+      setStatusGame(gameStatus.STARTED)
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
@@ -58,8 +63,6 @@ function App () {
       }
       const data = await response.json()
       console.log('GET BOARD:', data)
-      setBoard(data.data.game.board.board)
-      setStatusGame(gameStatus.started)
     } catch (error) {
       console.error('Error spawn aliens in base:', error)
     }
@@ -74,12 +77,29 @@ function App () {
   return (
     <main>
       {
-        statusGame !== gameStatus.started &&
-          <Menu createGame={createGame} getGame={getGame} startGame={startGame} setGameId={setGameId} setHost={setHost} gameId={gameId} message={message} />
+        statusGame !== gameStatus.STARTED &&
+          <Menu
+            createGame={createGame}
+            getGame={getGame}
+            setGameId={setGameId}
+            startGame={startGame}
+            setHost={setHost}
+            gameId={gameId}
+            message={message}
+          />
       }
       {
-        statusGame === gameStatus.started &&
-          <Game gameId={gameId} getGame={getGame} board={board} host={host} setBoard={setBoard}/>
+        statusGame === gameStatus.STARTED &&
+          <Game
+            gameId={gameId}
+            setStatusGame={setStatusGame}
+            greenOvniRange={greenOvniRange}
+            blueOvniRange={blueOvniRange}
+            startGame={startGame}
+            board={board}
+            host={host}
+            setBoard={setBoard}
+          />
       }
 
     </main>

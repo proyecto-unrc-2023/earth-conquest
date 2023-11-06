@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import './Lobby.css'
 
-export const Lobby = ({ allGames, joinAs, setGameId, startGame, getGame }) => {
-
+export const Lobby = ({ allGames, startGame, joinAs, setGameId }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
 
   const handleNameBlueChange = (name, index) => {
@@ -11,12 +10,11 @@ export const Lobby = ({ allGames, joinAs, setGameId, startGame, getGame }) => {
     setNameBlue(updatedNameBlue)
     console.log(updatedNameBlue[index])
   }
-  
+
   const handleJoinPlayer = (index, gameId) => {
     joinAs('BLUE', nameBlue[index], gameId)
     setGameId(gameId)
     startGame(gameId)
-    getGame(gameId)
   }
 
   return (

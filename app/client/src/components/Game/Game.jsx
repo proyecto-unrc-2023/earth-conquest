@@ -1,17 +1,21 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
+import { gameStatus } from '../../constants'
 import './Game.css'
 
-export function Game ({ gameId, board, host, setBoard, getGame}) {
+export function Game ({ gameId, startGame, setStatusGame, board, host, setBoard, greenOvniRange, blueOvniRange }) {
   const [alter, setAlterator] = useState(null)
+  const [playerGreen, setPlayerGreen] = useState(null)
+  const [playerBlue, setPlayerBlue] = useState(null)
+  const [blueOvniLife, setBlueOvniLife] = useState(null)
+  const [greenOvniLife, setGreenOvniLife] = useState(null)
+  const [aliveGreenAliens, setAliveGreenAliens] = useState(null)
+  const [aliveBlueAliens, setAliveBlueAliens] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
   const [tic, setTic] = useState(0)
-
-  const NOMBRE_G = 'Nombre_player_green'
-  const NOMBRE_B = 'Nombre_player_blue'
 
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
@@ -58,41 +62,56 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
 
   useEffect(() => {
     const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
-    
+
     sse.onmessage = e => {
-      const parsedData = JSON.parse(e.data)
-      setBoard(parsedData.board.board)
+      const data = JSON.parse(e.data)
+      console.log(data)
+      setStatusGame(data.status)
+      setBoard(data.board.board)
+      setPlayerGreen(data.playerGreen)
+      setPlayerBlue(data.playerBlue)
+      setBlueOvniLife(data.board.green_ovni_life)
+      setGreenOvniLife(data.board.blue_ovni_life)
+      setAliveGreenAliens(data.alive_green_aliens)
+      setAliveBlueAliens(data.alive_blue_aliens)
+      if (playerBlue && playerGreen && data.status !== gameStatus.STARTED) {
+        startGame(gameId)
+      }
     }
-  
+
     sse.onerror = () => {
       // error log here
-      sse.close();
+      sse.close()
     }
-  
+
     return () => {
-      sse.close();
+      sse.close()
     }
-    
   }, [])
-  
+
   useEffect(() => {
     if (host) {
-      if (changeTic) {
-        refresh(gameId)
-      } else {
-        act(gameId)
-      }
+      const timeoutId = setTimeout(() => {
+        if (changeTic) {
+          refresh(gameId)
+        } else {
+          act(gameId)
+        }
+      }, 3000)
       setChangeTic(prevChangeTic => !prevChangeTic)
+      return () => {
+        clearTimeout(timeoutId)
+      }
     }
   }, [board])
 
   return (
     <>
-      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlterator} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
+      <Board board={board} greenOvniRange={greenOvniRange} blueOvniRange={blueOvniRange} setBoard={setBoard} newAlterator={alter} setAlter={setAlterator} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
 
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={0} liveAliens={0} greenName={NOMBRE_G} />
-        <StatsGame team='blue' lifeOvni={0} liveAliens={0} blueName={NOMBRE_B} />
+        <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} greenName={playerGreen} />
+        <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} blueName={playerBlue} />
       </section>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
       <img src='../public/panel_left.jpg' className='panel_left' />

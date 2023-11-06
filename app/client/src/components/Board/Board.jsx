@@ -5,15 +5,12 @@ import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
 
-export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId }) => {
+export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId, blueOvniRange, greenOvniRange }) => {
   const FREE_POSITION = 'http://127.0.0.1:5000/games/isFreePosition' // verificar
   const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/setAlterator' // verificar
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
-
-  const greenOvniRange = data2.green_ovni_range
-  const blueOvniRange = data2.blue_ovni_range
 
   // Funcion para dar el rango de teleport
   const outOfTeleportRange = (row, col, x, y) => {
@@ -34,8 +31,8 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     if (!await isFreePosition(row, col)) return
     if (
       (outOfTeleportRange(row, col, teleportX, teleportY) &&
-      (isBase(row, col, greenOvniRange.x, greenOvniRange.y, team.green) ||
-      isBase(row, col, blueOvniRange.x, blueOvniRange.y, team.blue)))
+      (isBase(row, col, greenOvniRange[0], greenOvniRange[1], team.green) ||
+      isBase(row, col, blueOvniRange[0], blueOvniRange[1], team.blue)))
     ) return
     if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleporter_out)) return
 
@@ -44,9 +41,9 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     setBoard(newBoard)
   }
 
-  const sendAlterator = async (row, col, newAlterator) => {
+  const sendAlterator = async (newAlterator) => {
     try {
-      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
+      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, { // Falta pasar el team
         method: 'PUT',
         body: JSON.stringify({ alterator: newAlterator })
       })
