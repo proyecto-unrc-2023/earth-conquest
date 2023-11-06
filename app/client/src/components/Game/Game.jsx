@@ -18,7 +18,6 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
 
   const refresh = useCallback(async () => {
-    setTic(tic + 1)
     try {
       const response = await fetch(`${REFRESH}/${gameId}`, {
         method: 'PUT'
@@ -29,7 +28,7 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
-  }, [tic, gameId]);
+  }, [gameId]);
 
   const act = useCallback(async () => {
     try {
@@ -63,17 +62,19 @@ export function Game ({ gameId, board, host, setBoard, getGame}) {
   }, [])
   
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (changeTic) {
-        refresh();
-      } else {
-        act();
+    if (host) {
+      const timeoutId = setTimeout(() => {
+        if (changeTic) {
+          refresh();
+        } else {
+          act();
+        }
+        setChangeTic(prevChangeTic => !prevChangeTic);
+      }, 3000);
+    
+      return () => {
+        clearTimeout(timeoutId);
       }
-      setChangeTic(prevChangeTic => !prevChangeTic);
-    }, 3000);
-  
-    return () => {
-      clearTimeout(timeoutId);
     }
   }, [board])
 
