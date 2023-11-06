@@ -26,8 +26,23 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
   let liveBlueAliens
   let liveGreenAliens
 
-  // eslint-disable-next-line no-undef
-  const source = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
+  const handleSSE = () => {
+    // eslint-disable-next-line no-undef
+    const source = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
+    source.onmessage = function (event) {
+      const data = JSON.parse(event.data)
+      setBoard(data.board)
+      /*
+        lifeGreenOvni = data.green_ovni_life
+        lifeBlueOvni = data.blue_ovni_life
+        liveBlueAliens = data.live_blue_aliens
+        liveGreenAliens = data.live_green_aliens
+      */
+    }
+    source.onerror = function (event) {
+      console.error('Error en la conexión SSE:', event)
+    }
+  }
 
   const refresh = async (gameId) => {
     setTic(tic + 1)
@@ -38,7 +53,6 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      // esto se deberia mover a useEffect
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -87,24 +101,11 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
         } else {
           act(gameId)
         }
-        source.onmessage = function (event) {
-          const data = JSON.parse(event.data)
-          setBoard(data)
-          /*
-          lifeGreenOvni = data.green_ovni_life
-          lifeBlueOvni = data.blue_ovni_life
-          liveBlueAliens = data.live_blue_aliens
-          liveGreenAliens = data.live_green_aliens
-          */
-        }
-        source.onerror = function (event) {
-          console.error('Error en la conexión SSE:', event)
-        }
       }
+      handleSSE()
       getGame(gameId)
-      console.log('Aca esta el board de host:', host, '\n', board)
       setChangeTic(!changeTic)
-    }, 10000)
+    }, 1000)
     return () => clearTimeout(timeoutId)
   }, [board])
 

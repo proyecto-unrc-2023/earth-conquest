@@ -41,12 +41,12 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
-    setBoard(newBoard)
+    setBoard(newBoard) // es necesario setearlo si ya detecta el cambio y lo escucha?
   }
 
   const sendAlterator = async (row, col, newAlterator) => {
     try {
-      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
+      const response = await fetch(`${SEND_ALTERATOR}/${gameId}?x=${row}&y=${col}`, {
         method: 'PUT',
         body: JSON.stringify({ alterator: newAlterator })
       })
@@ -79,6 +79,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
           positionInit: { x: row, y: col },
           positionEnd: null,
           direction: null
+          // ver que falta que team lo seteo, ellos esperan eso en el json
         }
         await sendAlterator(row, col, newTrap)
       } else {

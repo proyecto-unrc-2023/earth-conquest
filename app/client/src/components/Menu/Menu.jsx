@@ -26,6 +26,8 @@ export function Menu ({ createGame, startGame, setGameId, setHost, getGame, game
     }
   }
 
+  console.log('el id que viene a Menu es:', { gameId })
+
   const joinAs = async (team, playerName, gameId) => {
     try {
       const response = await fetch(`${JOIN_AS}/${gameId}?team=${team}&player_name=${playerName}`, {

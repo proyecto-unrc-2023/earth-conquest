@@ -12,7 +12,7 @@ function App () {
 
   const CREATE_GAME = 'http://127.0.0.1:5000/games/'
   const START_GAME = 'http://127.0.0.1:5000/games/start_game'
-  const GET_GAME = 'http://127.0.0.1:5000/games/'
+  const GET_GAME = 'http://127.0.0.1:5000/games'
 
   const createGame = async () => {
     try {
@@ -29,7 +29,7 @@ function App () {
       console.log('CREATE GAME:', data)
       setGameId(data.data.gameId)
       setMessage(data.message)
-      // setBoard(data.data.game.board)
+      setBoard(data.data.game.board)
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -54,6 +54,7 @@ function App () {
   }
 
   const getGame = async (gameId) => {
+    console.log('Este es el id que llega a GetGame:', { gameId }, 'con el host', { host })
     try {
       const response = await fetch(`${GET_GAME}/${gameId}`)
       if (!response.ok) {
