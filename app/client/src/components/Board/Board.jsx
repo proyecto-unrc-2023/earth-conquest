@@ -1,5 +1,3 @@
-import data2 from '../../data2.json'
-
 import { Cell } from '../Cell/Cell'
 import { alterator, team } from '../../constants.js'
 import './Board.css'
@@ -19,7 +17,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   // Funcion para dar el rango de la base segun el team
   const isBase = (row, col, x, y, teamBase) => {
-    if (teamBase === team.green) {
+    if (teamBase === team.GREEN) {
       return (row <= x && col <= y)
     } else {
       return (row >= x && col >= y)
@@ -31,14 +29,14 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
     if (!await isFreePosition(row, col)) return
     if (
       (outOfTeleportRange(row, col, teleportX, teleportY) &&
-      (isBase(row, col, greenOvniRange[0], greenOvniRange[1], team.green) ||
-      isBase(row, col, blueOvniRange[0], blueOvniRange[1], team.blue)))
+      (isBase(row, col, greenOvniRange[0], greenOvniRange[1], team.GREEN) ||
+      isBase(row, col, blueOvniRange[0], blueOvniRange[1], team.BLUE)))
     ) return
-    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.teleporter_out)) return
+    if (outOfTeleportRange(row, col, teleportX, teleportY) && (newAlterator === alterator.TELEPORTER_OUT)) return
 
     const newBoard = [...board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
-    setBoard(newBoard)
+    setBoard(newBoard) // ACA NO IRIA SINO QUE ESTA CONTEMPLADO EN EL SSE.ONMESSAJE
   }
 
   const sendAlterator = async (newAlterator) => {
@@ -70,7 +68,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
     if (await isFreePosition(row, col)) {
-      if (newAlterator === alterator.trap) {
+      if (newAlterator === alterator.TRAP) {
         const newTrap = {
           name: newAlterator,
           positionInit: { x: row, y: col },
@@ -83,7 +81,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         const alteratorName = alteratorSplit[0]
         const alteratorDirection = alteratorSplit[1]
 
-        if (alteratorName === 'directioner') {
+        if (alteratorName === 'DIRECTIONER') {
           const newDirectioner = {
             name: alteratorName,
             positionInit: { x: row, y: col },
@@ -91,17 +89,17 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
             direction: alteratorDirection
           }
           await sendAlterator(row, col, newDirectioner)
-        } else if (alteratorName === 'teleport') {
+        } else if (alteratorName === 'TELEPORTER') {
           const newTeleport = {
             name: alteratorName,
             positionInit: { x: row, y: col },
             positionEnd: null,
             direction: alteratorDirection
           }
-          if (alteratorDirection === 'in') {
+          if (alteratorDirection === 'IN') {
             newBoard[row][col].alterator = newAlterator
             // cambia estado a teleport out
-            setAlter(alterator.teleporter_out)
+            setAlter(alterator.TELEPORTER_OUT)
             setTeleporterEnabled(false)
             setTeleportX(row)
             setTeleportY(col)

@@ -1,22 +1,23 @@
 // enums
 export const alterator = {
-  teleporter_in: 'teleporter_in',
-  teleporter_out: 'teleporter_out',
-  trap: 'trap',
-  directioner_up: 'directioner_up',
-  directioner_down: 'directioner_down',
-  directioner_right: 'directioner_right',
-  directioner_left: 'directioner_left'
+  TELEPORTER_IN: 'TELEPORTER_IN',
+  TELEPORTER_OUT: 'TELEPORTER_OUT',
+  TRAP: 'TRAP',
+  DIRECTIONER_UP: 'DIRECTIONER_UP',
+  DIRECTIONER_DOWN: 'DIRECTIONER_DOWN',
+  DIRECTIONER_RIGHT: 'DIRECTIONER_RIGHT',
+  DIRECTIONER_LEFT: 'DIRECTIONER_LEFT'
 }
+
 export const modifier = {
-  killer: 'killer',
-  multiplier: 'multiplier',
-  mountain_range: 'mountain_range'
+  KILLER: 'KILLER',
+  MULTIPLIER: 'MULTIPLIER',
+  MOUNTAIN_RANGE: 'MOUNTAIN_RANGE'
 }
 
 export const team = {
-  blue: 'blue',
-  green: 'green'
+  BLUE: 'BLUE',
+  GREEN: 'GREEN'
 }
 
 export const gameStatus = {

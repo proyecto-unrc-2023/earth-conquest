@@ -14,10 +14,10 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
   if (!teleporterEnabled && outOfTeleportRange(row, col, teleportX, teleportY)) {
     className += 'grey'
   } else {
-    if (isBase(row, col, greenBase[0], greenBase[1], team.green)) {
+    if (isBase(row, col, greenBase[0], greenBase[1], team.GREEN)) {
       className += 'green'
     }
-    if (isBase(row, col, blueBase[0], blueBase[1], team.blue)) {
+    if (isBase(row, col, blueBase[0], blueBase[1], team.BLUE)) {
       className += 'blue'
     }
   }

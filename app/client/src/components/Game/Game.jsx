@@ -5,10 +5,8 @@ import { StatsGame } from '../StatGame/StatsGame'
 import { gameStatus } from '../../constants'
 import './Game.css'
 
-export function Game ({ gameId, startGame, setStatusGame, board, host, setBoard, greenOvniRange, blueOvniRange }) {
+export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, host, setBoard, greenOvniRange, blueOvniRange }) {
   const [alter, setAlterator] = useState(null)
-  const [playerGreen, setPlayerGreen] = useState(null)
-  const [playerBlue, setPlayerBlue] = useState(null)
   const [blueOvniLife, setBlueOvniLife] = useState(null)
   const [greenOvniLife, setGreenOvniLife] = useState(null)
   const [aliveGreenAliens, setAliveGreenAliens] = useState(null)
@@ -68,23 +66,19 @@ export function Game ({ gameId, startGame, setStatusGame, board, host, setBoard,
       console.log(data)
       setStatusGame(data.status)
       setBoard(data.board.board)
-      setPlayerGreen(data.playerGreen)
-      setPlayerBlue(data.playerBlue)
       setBlueOvniLife(data.board.green_ovni_life)
       setGreenOvniLife(data.board.blue_ovni_life)
       setAliveGreenAliens(data.alive_green_aliens)
       setAliveBlueAliens(data.alive_blue_aliens)
-      if (playerBlue && playerGreen && data.status !== gameStatus.STARTED) {
-        startGame(gameId)
-      }
     }
 
-    sse.onerror = () => {
-      // error log here
+    sse.onerror = (e) => {
+      console.error('Error en el sse de game', e)
       sse.close()
     }
 
     return () => {
+      console.log('SE CERRO SSE')
       sse.close()
     }
   }, [])
@@ -97,7 +91,7 @@ export function Game ({ gameId, startGame, setStatusGame, board, host, setBoard,
         } else {
           act(gameId)
         }
-      }, 3000)
+      }, 1000)
       setChangeTic(prevChangeTic => !prevChangeTic)
       return () => {
         clearTimeout(timeoutId)
@@ -110,8 +104,8 @@ export function Game ({ gameId, startGame, setStatusGame, board, host, setBoard,
       <Board board={board} greenOvniRange={greenOvniRange} blueOvniRange={blueOvniRange} setBoard={setBoard} newAlterator={alter} setAlter={setAlterator} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
 
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} greenName={playerGreen} />
-        <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} blueName={playerBlue} />
+        <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} playerName={playerGreen} />
+        <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} playerName={playerBlue} />
       </section>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
       <img src='../public/panel_left.jpg' className='panel_left' />

@@ -1,6 +1,6 @@
 import './StatsGame.css'
 
-export const StatsGame = ({ team, lifeOvni, liveAliens, greenName, blueName }) => {
+export const StatsGame = ({ team, lifeOvni, liveAliens, playerName }) => {
   return (
     <>
       <section className={`health-bar-${team}`}>
@@ -16,7 +16,7 @@ export const StatsGame = ({ team, lifeOvni, liveAliens, greenName, blueName }) =
         </section>
 
         <section className={`${team}_name`}>
-          <p style={{ fontFamily: 'PressStart2P' }}>{`${team}Name`}</p>
+          <p style={{ fontFamily: 'PressStart2P' }}>{`${playerName}`}</p>
         </section>
 
       </section>
