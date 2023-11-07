@@ -2,7 +2,7 @@ import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
-export function Menu ({ createGame, setPlayerGreen, setPlayerBlue, setGameId, setHost, gameId, message }) {
+export function Menu ({ createGame, setPlayerGreen, setPlayerBlue, setTeamPlayer, setGameId, setHost, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
@@ -42,6 +42,7 @@ export function Menu ({ createGame, setPlayerGreen, setPlayerBlue, setGameId, se
         console.log(`seteo jugador ${playerName} al equipo ${team}, gameId: ${currentGameId}`)
       } else {
         setHost(false)
+        setTeamPlayer('BLUE')
         setPlayerBlue(playerName)
         setGameId(currentGameId)
         const guestPlayer = { playerName, team, gameId }

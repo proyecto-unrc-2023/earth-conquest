@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
-import { gameStatus } from '../../constants'
+// import { gameStatus } from '../../constants'
 import './Game.css'
 
-export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, host, setBoard, greenOvniRange, blueOvniRange }) {
+export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, teamPlayer, board, host, setBoard, greenOvniRange, blueOvniRange }) {
   const [alter, setAlterator] = useState(null)
   const [blueOvniLife, setBlueOvniLife] = useState(null)
   const [greenOvniLife, setGreenOvniLife] = useState(null)
@@ -59,6 +59,7 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, h
   }
 
   useEffect(() => {
+    // eslint-disable-next-line no-undef
     const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
 
     sse.onmessage = e => {
@@ -84,13 +85,14 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, h
   }, [])
 
   useEffect(() => {
+    console.log('el equipo es:', teamPlayer)
     if (host) {
       const timeoutId = setTimeout(() => {
-        if (changeTic) {
-          refresh(gameId)
-        } else {
-          act(gameId)
-        }
+        // if (changeTic) {
+        refresh(gameId)
+        // } else {
+        //   act(gameId)
+        // }
       }, 1000)
       setChangeTic(prevChangeTic => !prevChangeTic)
       return () => {
@@ -101,15 +103,23 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, h
 
   return (
     <>
-      <Board board={board} greenOvniRange={greenOvniRange} blueOvniRange={blueOvniRange} setBoard={setBoard} newAlterator={alter} setAlter={setAlterator} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
-
+      <Board
+        board={board}
+        teamPlayer={teamPlayer}
+        greenOvniRange={greenOvniRange}
+        blueOvniRange={blueOvniRange}
+        setBoard={setBoard}
+        newAlterator={alter}
+        setAlter={setAlterator}
+        setTeleporterEnabled={setTeleporterEnabled}
+        teleporterEnabled={teleporterEnabled}
+        gameId={gameId}
+      />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} playerName={playerGreen} />
         <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} playerName={playerBlue} />
       </section>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
-      <img src='../public/panel_left.jpg' className='panel_left' />
-      <img src='../public/panel_right.jpg' className='panel_right' />
     </>
   )
 }

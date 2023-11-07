@@ -3,9 +3,9 @@ import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
 
-export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId, blueOvniRange, greenOvniRange }) => {
-  const FREE_POSITION = 'http://127.0.0.1:5000/games/isFreePosition' // verificar
-  const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/setAlterator' // verificar
+export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId, blueOvniRange, greenOvniRange }) => {
+  const FREE_POSITION = 'http://127.0.0.1:5000/games/is_free_position' // verificar
+  const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/set_alterator' // verificar
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -41,7 +41,7 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
 
   const sendAlterator = async (newAlterator) => {
     try {
-      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, { // Falta pasar el team
+      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
         method: 'PUT',
         body: JSON.stringify({ alterator: newAlterator })
       })
@@ -67,13 +67,17 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
   }
 
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
+    console.log('Entre al setAlterator')
     if (await isFreePosition(row, col)) {
+      console.log('entre a una posicion free')
       if (newAlterator === alterator.TRAP) {
+        console.log('entre a una trampa')
         const newTrap = {
           name: newAlterator,
           positionInit: { x: row, y: col },
           positionEnd: null,
-          direction: null
+          direction: null,
+          team: teamPlayer
         }
         await sendAlterator(row, col, newTrap)
       } else {
@@ -82,19 +86,23 @@ export const Board = ({ board, setBoard, newAlterator, setAlter, setTeleporterEn
         const alteratorDirection = alteratorSplit[1]
 
         if (alteratorName === 'DIRECTIONER') {
+          console.log('entre a un directioner')
           const newDirectioner = {
             name: alteratorName,
             positionInit: { x: row, y: col },
             positionEnd: null,
-            direction: alteratorDirection
+            direction: alteratorDirection,
+            team: teamPlayer
           }
           await sendAlterator(row, col, newDirectioner)
         } else if (alteratorName === 'TELEPORTER') {
+          console.log('entre a un teleporter')
           const newTeleport = {
             name: alteratorName,
             positionInit: { x: row, y: col },
             positionEnd: null,
-            direction: alteratorDirection
+            direction: alteratorDirection,
+            team: teamPlayer
           }
           if (alteratorDirection === 'IN') {
             newBoard[row][col].alterator = newAlterator

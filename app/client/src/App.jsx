@@ -9,6 +9,7 @@ function App () {
   const [gameId, setGameId] = useState(null)
   const [message, setMessage] = useState('')
   const [host, setHost] = useState(null)
+  const [teamPlayer, setTeamPlayer] = useState(null)
   const [greenOvniRange, setGreenOvniRange] = useState(null)
   const [blueOvniRange, setBlueOvniRange] = useState(null)
 
@@ -93,6 +94,7 @@ function App () {
       const data = await response.json()
       console.log('CREATE GAME:', data)
       setHost(true)
+      setTeamPlayer('GREEN')
       setMessage(data.message)
       setGameId(data.data.gameId)
     } catch (error) {
@@ -147,6 +149,7 @@ function App () {
             setPlayerBlue={setPlayerBlue}
             setHost={setHost}
             message={message}
+            setTeamPlayer={setTeamPlayer}
           />
       }
       {
@@ -161,6 +164,7 @@ function App () {
             startGame={startGame}
             board={board}
             host={host}
+            teamPlayer={teamPlayer}
             setBoard={setBoard}
           />
       }

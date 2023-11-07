@@ -1,8 +1,8 @@
 .cell {
   display: grid;
   place-items: center;
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   border: 1px solid #00dc3b4b;
   cursor: pointer;
 }
@@ -24,7 +24,7 @@
   display: grid;
   place-items: center;
   position: absolute;
-  width: 11vw;
+  width: 10vw;
   transform: translate(-5px, -50px);
   rotate: -1deg;
   opacity: 90%;
@@ -34,7 +34,7 @@
 
 .blue_nave{
   position: absolute;
-  width: 11vw;
+  width: 10vw;
   transform: translate(10px, -40px);
   rotate: 1deg;
   opacity: 90%;
