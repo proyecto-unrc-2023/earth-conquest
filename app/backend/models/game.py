@@ -115,7 +115,7 @@ class Game:
     def set_alterator(self, alterator, team, x=None, y=None):
 
         # chose the team
-        alive_team_aliens = self.alive_green_aliens if team == Team.BLUE else self.alive_green_aliens
+        alive_team_aliens = self.alive_green_aliens if team == Team.GREEN else self.alive_blue_aliens
 
         if isinstance(alterator, Directioner):
             if alive_team_aliens >= 4:
