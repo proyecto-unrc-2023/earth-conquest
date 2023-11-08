@@ -104,7 +104,7 @@ class Cell:
 
             else:   # two different team aliens fight
                 self.fight()
-        else:  # reproduces aliens of the same team
+        elif self.aliens.__len__() > 1:  # reproduces aliens of the same team
             self.reproduce()
         if self.aliens != [] and self.modifier == Modifier.MULTIPLIER or self.modifier == Modifier.KILLER:
             self.action_modifier()
