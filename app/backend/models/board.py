@@ -264,7 +264,7 @@ class Board:
             x = key[0]
             y = key[1]
             cell = self.get_cell(x, y)
-            if cell.aliens.__len__() > 1:   # action the cell if there is more than one alien
+            if cell.aliens.__len__() >= 1:   # action the cell if there is more than one alien
                 cell.action()
                 self.aliens[(x, y)] = cell.aliens   # updates the dict
 
