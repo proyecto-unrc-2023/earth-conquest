@@ -54,9 +54,12 @@ class Game:
             raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
 
     def set_initial_crew(self):
-        for i in range(INIT_CREW):
-            self.add_alien_to_range(team.Team.BLUE)
-            self.add_alien_to_range(team.Team.GREEN)
+        if self.status is TGame.NOT_STARTED:
+            for i in range(INIT_CREW):
+                self.add_alien_to_range(team.Team.BLUE)
+                self.add_alien_to_range(team.Team.GREEN)
+        else:
+            raise Exception("initial crew cannot be launched. Game status is not NOT_STARTED")
 
     def add_alien_to_range(self, t):
         if t == team.Team.GREEN:

@@ -13,7 +13,7 @@
   "tags": [
     {
       "name": "Game Request",
-      "description": "Example API for requesting and returning game requests"
+      "description": "Earth conquest API for requesting and returning game requests"
     }
   ],
   "paths": {
@@ -41,6 +41,7 @@
           "Create a Game"
         ],
         "summary": "Create a new game",
+        "description": "Creates a game as NOT_STARTED, modifiers are set randomly on the 10x15 default board",
         "responses": {
           "201": {
             "description": "Game created successfully",
@@ -51,6 +52,369 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/games/{id}": {
+      "get": {
+        "tags": [
+          "Game details"
+        ],
+        "summary": "Return a game by its id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/games/join/{id}": {
+      "put": {
+        "tags": [
+          "Join to a Game"
+        ],
+        "summary": "Player joins a Game as blue or green player",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          },
+          {
+            "in": "query",
+            "name": "team",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["BLUE", "GREEN"]
+            }
+          },
+          {
+            "in": "query",
+            "name": "player_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player 'name' has joined to game as 'team' player",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          },
+          "400": {
+            "description": "team is already taken"
+          }
+        }
+      }
+    },
+    "/games/start_game/{id}": {
+      "put": {
+        "tags": [
+          "Start Game"
+        ],
+        "summary": "Start a game",
+        "description": "Intial crew is launched (six aliens of each team on their respective areas). Set the game status in STARTED",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          },
+          "400": {
+            "description": "can not start the game, some player is left or game status is not NOT_STARTED"
+          }
+        }
+      }
+    },
+    "/games/refresh_board/{id}": {
+      "put": {
+        "tags": [
+          "Refresh Board"
+        ],
+        "summary": "Refresh Board",
+        "description": "All aliens are moved to an adjacent cell",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board refreshes successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/games/act_board/{id}": {
+      "put": {
+        "tags": [
+          "Act Board"
+        ],
+        "summary": "Act Board",
+        "description": "Each cell acts on depending aliens quantity and its teams",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game acts successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/games/spawn_aliens/{id}": {
+      "put": {
+        "tags": [
+          "Spawn aliens"
+        ],
+        "summary": "Spawn one new alien of each team on their respective areas",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Game acts successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Game not found"
+          },
+          "400": {
+            "description": "can not spawn aliens, game status is not NOT_STARTED"
+          }
+        }
+      }
+    },
+    "/games/is_free_position/{id}": {
+      "get": {
+        "tags": [
+          "Is free position"
+        ],
+        "summary": "Returns true if a given position is not occupied and it's not an area",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          },
+          {
+            "in": "query",
+            "name": "x",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "y",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succes: True if position is free, false in other case"
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
+    "/games/set_alterator/{id}": {
+      "put": {
+        "tags": [
+          "Set Alterator"
+        ],
+        "summary": "Set an alterator on the board of a game",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "requestBody": {
+          "description": "Alterator Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "alterator": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "enum": ["trap", "teleporter", "directioner"]
+                      },
+                      "positionInit": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "integer"
+                          },
+                          "y": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "positionEnd": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "integer"
+                          },
+                          "y": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": ["left", "right"]
+                      }
+                    }
+                  },
+                  "team": {
+                    "type": "string",
+                    "enum": ["BLUE", "GREEN"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Alterator setted successfully"
+          },
+          "404": {
+            "description": "Game not found"
+          },
+          "400": {
+            "description": "Not free position or team or alterator not valid"
+          }
+        }
+      }
+    },
+    "/games/sse/{id}": {
+      "get": {
+        "tags": [
+          "Sse"
+        ],
+        "summary": "Returns game details when any game stuff changes",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "sse function that checks game changes everytime"
+          },
+          "404": {
+            "description": "Game not found"
           }
         }
       }

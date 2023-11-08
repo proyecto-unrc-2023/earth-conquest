@@ -7,6 +7,7 @@ from app.backend.models.board import BoardSchema
 from app.backend.models.direction import Direction
 from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema
+from app.backend.models.game_enum import TGame
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 from app.backend.api.redis_config import r
@@ -194,7 +195,14 @@ class GameController:
             return response
 
         game = games_dict.get(id)
-
+        if game.status is not TGame.NOT_STARTED:
+            message = json.dumps(
+                {
+                    "success": False,
+                    'errors': "can not spawn aliens, game status is not NOT_STARTED"
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
         try:
             game.add_alien_to_range(Team.GREEN)
             game.add_alien_to_range(Team.BLUE)
