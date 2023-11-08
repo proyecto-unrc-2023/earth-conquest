@@ -2,35 +2,24 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
+// import { gameStatus } from '../../constants'
 import './Game.css'
 
-export function Game ({ gameId, board, host, setBoard, getGame }) {
+export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, teamPlayer, board, host, setBoard, greenOvniRange, blueOvniRange }) {
   const [alter, setAlterator] = useState(null)
+  const [blueOvniLife, setBlueOvniLife] = useState(null)
+  const [greenOvniLife, setGreenOvniLife] = useState(null)
+  const [aliveGreenAliens, setAliveGreenAliens] = useState(null)
+  const [aliveBlueAliens, setAliveBlueAliens] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
   const [tic, setTic] = useState(0)
-  // const [winner, setWinner] = useState(null)
-
-  const NOMBRE_G = 'Nombre_player_green'
-  const NOMBRE_B = 'Nombre_player_blue'
 
   const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
   const ACT = 'http://127.0.0.1:5000/games/act_board'
   const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
 
-  // vida de las bases
-  let lifeGreenOvni
-  let lifeBlueOvni
-
-  // cantidad de aliens vivos
-  let liveBlueAliens
-  let liveGreenAliens
-
-  // eslint-disable-next-line no-undef
-  const source = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
-
   const refresh = async (gameId) => {
-    setTic(tic + 1)
     try {
       const response = await fetch(`${REFRESH}/${gameId}`, {
         method: 'PUT'
@@ -38,7 +27,6 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      // esto se deberia mover a useEffect
     } catch (error) {
       console.error('Error fetching data in refresh:', error)
     }
@@ -52,10 +40,6 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-      // if (data.winner) {
-      // setWinner(data.winner.team)
-      // aca habría que hacer el game over
-      // }
     } catch (error) {
       console.error('Error fetching data in act:', error)
     }
@@ -75,56 +59,67 @@ export function Game ({ gameId, board, host, setBoard, getGame }) {
   }
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (host) {
-        if (changeTic) {
-          if (tic === 2) {
-            spawnAliens(gameId)
-            setTic(0)
-          } else {
-            refresh(gameId)
-          }
-        } else {
-          act(gameId)
-        }
-        source.onmessage = function (event) {
-          const data = JSON.parse(event.data)
-          setBoard(data)
-          /*
-          lifeGreenOvni = data.green_ovni_life
-          lifeBlueOvni = data.blue_ovni_life
-          liveBlueAliens = data.live_blue_aliens
-          liveGreenAliens = data.live_green_aliens
-          */
-        }
-        source.onerror = function (event) {
-          console.error('Error en la conexión SSE:', event)
-        }
-      }
-      getGame(gameId)
-      console.log('Aca esta el board de host:', host, '\n', board)
-      setChangeTic(!changeTic)
-    }, 10000)
-    return () => clearTimeout(timeoutId)
-  }, [board])
+    // eslint-disable-next-line no-undef
+    const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
 
-  const setAlter = (newAlterator) => {
-    setAlterator(newAlterator)
-  }
+    sse.onmessage = e => {
+      const data = JSON.parse(e.data)
+      console.log(data)
+      setStatusGame(data.status)
+      setBoard(data.board.board)
+      setBlueOvniLife(data.board.green_ovni_life)
+      setGreenOvniLife(data.board.blue_ovni_life)
+      setAliveGreenAliens(data.alive_green_aliens)
+      setAliveBlueAliens(data.alive_blue_aliens)
+    }
+
+    sse.onerror = (e) => {
+      console.error('Error en el sse de game', e)
+      sse.close()
+    }
+
+    return () => {
+      console.log('SE CERRO SSE')
+      sse.close()
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log('el equipo es:', teamPlayer)
+    if (host) {
+      const timeoutId = setTimeout(() => {
+        // if (changeTic) {
+        refresh(gameId)
+        // } else {
+        //   act(gameId)
+        // }
+      }, 1000)
+      setChangeTic(prevChangeTic => !prevChangeTic)
+      return () => {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [board])
 
   return (
     <>
-
-      <Board board={board} setBoard={setBoard} newAlterator={alter} setAlter={setAlter} setTeleporterEnabled={setTeleporterEnabled} teleporterEnabled={teleporterEnabled} gameId={gameId} />
-
+      <Board
+        board={board}
+        teamPlayer={teamPlayer}
+        greenOvniRange={greenOvniRange}
+        blueOvniRange={blueOvniRange}
+        setBoard={setBoard}
+        newAlterator={alter}
+        setAlter={setAlterator}
+        setTeleporterEnabled={setTeleporterEnabled}
+        teleporterEnabled={teleporterEnabled}
+        gameId={gameId}
+      />
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={lifeGreenOvni} liveAliens={liveGreenAliens} greenName={NOMBRE_G} />
-        <StatsGame team='blue' lifeOvni={lifeBlueOvni} liveAliens={liveBlueAliens} blueName={NOMBRE_B} />
+        <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} playerName={playerGreen} />
+        <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} playerName={playerBlue} />
       </section>
-      <Panel setAlter={setAlter} teleporterEnabled={teleporterEnabled} />
-      <img src='../public/panel_left.jpg' className='panel_left' />
-      <img src='../public/panel_right.jpg' className='panel_right' />
-
+      <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
     </>
   )
 }

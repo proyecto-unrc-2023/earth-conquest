@@ -2,14 +2,14 @@ import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import './Menu.css'
 
-export function Menu ({ createGame, startGame, setGameId, setHost, getGame, gameId, message }) {
+export function Menu ({ createGame, setPlayerGreen, setPlayerBlue, setTeamPlayer, setGameId, setHost, gameId, message }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
 
   const JOIN_AS = 'http://127.0.0.1:5000/games/join'
-  const GET_ALL_GAMES = 'http://127.0.0.1:5000/games/'
+  const GET_ALL_GAMES = 'http://127.0.0.1:5000/games'
 
   const getAllGames = async () => {
     try {
@@ -26,9 +26,9 @@ export function Menu ({ createGame, startGame, setGameId, setHost, getGame, game
     }
   }
 
-  const joinAs = async (team, playerName, gameId) => {
+  const joinAs = async (team, playerName, currentGameId) => {
     try {
-      const response = await fetch(`${JOIN_AS}/${gameId}?team=${team}&player_name=${playerName}`, {
+      const response = await fetch(`${JOIN_AS}/${currentGameId}?team=${team}&player_name=${playerName}`, {
         method: 'PUT'
       })
       if (!response.ok) {
@@ -38,20 +38,17 @@ export function Menu ({ createGame, startGame, setGameId, setHost, getGame, game
       console.log(data)
       if (team === 'GREEN') {
         setHost(true)
-        const hostPlayer = { host: true, playerName, team, gameId }
-        // eslint-disable-next-line no-undef
-        localStorage.setItem('hostPlayer', JSON.stringify(hostPlayer))
-        // eslint-disable-next-line no-undef
-        console.log('local storage: ', localStorage.getItem('hostPlayer'))
+        setPlayerGreen(playerName)
+        console.log(`seteo jugador ${playerName} al equipo ${team}, gameId: ${currentGameId}`)
       } else {
         setHost(false)
-        const guestPlayer = { host: false, playerName, team, gameId }
+        setTeamPlayer('BLUE')
+        setPlayerBlue(playerName)
+        setGameId(currentGameId)
+        const guestPlayer = { playerName, team, gameId }
         // eslint-disable-next-line no-undef
         localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
-        // eslint-disable-next-line no-undef
-        console.log('local storage: ', localStorage.getItem('guestPlayer'))
       }
-      console.log(`seteo jugador ${playerName} al equipo ${team}`)
     } catch (error) {
       console.error('Error fetching data: ', error)
     }
@@ -101,7 +98,7 @@ export function Menu ({ createGame, startGame, setGameId, setHost, getGame, game
           </>
       }
       {
-        allGames.length > 0 && <Lobby allGames={allGames} setGameId={setGameId} getGame={getGame} joinAs={joinAs} startGame={startGame} />
+        allGames.length > 0 && <Lobby allGames={allGames} setGameId={setGameId} joinAs={joinAs} />
       }
     </>
   )

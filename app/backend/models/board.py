@@ -585,3 +585,5 @@ class BoardSchema(Schema):
     green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     base_range_dimentions = fields.Integer()
     board = fields.List(fields.List(fields.Nested(CellSchema())))
+    green_ovni_life = fields.Integer()
+    blue_ovni_life = fields.Integer()

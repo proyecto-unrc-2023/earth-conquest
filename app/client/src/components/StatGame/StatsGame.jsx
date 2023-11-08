@@ -1,11 +1,11 @@
 import './StatsGame.css'
 
-export const StatsGame = ({ team, lifeOvni, liveAliens, greenName, blueName }) => {
+export const StatsGame = ({ team, lifeOvni, liveAliens, playerName }) => {
   return (
     <>
       <section className={`health-bar-${team}`}>
-        <div className={`bar-${team}`} style={{ width: `${lifeOvni / 2}%` }} />
-        <strong className='text'>{lifeOvni}/200</strong>
+        <div className={`bar-${team}`} style={{ width: `${lifeOvni}%` }} />
+        <strong className='text'>{lifeOvni}/100</strong>
       </section>
 
       <section className={`${team}_user_info`}>
@@ -16,7 +16,7 @@ export const StatsGame = ({ team, lifeOvni, liveAliens, greenName, blueName }) =
         </section>
 
         <section className={`${team}_name`}>
-          <p style={{ fontFamily: 'PressStart2P' }}>{`${team}Name`}</p>
+          <p style={{ fontFamily: 'PressStart2P' }}>{`${playerName}`}</p>
         </section>
 
       </section>

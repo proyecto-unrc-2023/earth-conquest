@@ -8,7 +8,7 @@ from app.backend.api import games_bp
 def create_app(config_name="development"):
     # app stuff
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, supports_credentials=True)
     register_modules(app)
 
     # config stuff

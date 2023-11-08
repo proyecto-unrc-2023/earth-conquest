@@ -77,8 +77,8 @@ font-face {
   grid-template-columns: auto 1fr;
   align-items: center;
   justify-content: center;
-  width: 5vw;
-  height: 6vh;
+  width: 35%;
+  height: 90%;
   font-size: 1.4em;
   border: #2cd04d solid 2px;
   border-radius: 10%;
@@ -91,8 +91,8 @@ font-face {
   grid-template-columns: auto 1fr;
   align-items: center;
   justify-content: center;
-  width: 5vw;
-  height: 6vh;
+  width: 35%;
+  height: 90%;
   font-size: 1.4em;
   border: #2936f5ac solid 2px;
   border-radius: 10%;
@@ -104,30 +104,28 @@ font-face {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 9vw;
-  height: 6vh;
+  width: 60%;
+  height: 90%;
   font-size: 1.2em;
   border: #03da07 solid 2px;
   border-radius: 5%;
   background-color: #131313;  
   color: #00ff88e1; 
-  text-transform: uppercase;  
-  letter-spacing: 2px; 
+  text-overflow: ellipsis; 
 }
 
 .blue_name{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 9vw;
-  height: 6vh;
+  width: 60%;
+  height: 90%;
   font-size: 1em;
   border: #2936f5ac solid 2px;
   border-radius: 5%;
   background-color: #131313;  
   color: #4d9af8f2; 
-  text-transform: uppercase;  
-  letter-spacing: 2px; 
+  text-overflow: ellipsis;  
 }
 
 .blue_alien{

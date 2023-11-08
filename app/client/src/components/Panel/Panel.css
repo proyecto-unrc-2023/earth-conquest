@@ -5,7 +5,7 @@
   align-items: center; 
   border: 1px solid rgba(211, 6, 181, 0.328);
   background-color: #161616c0;
-  width: 22vw; /* Ancho de la sección */
+  width: 50%; 
   margin: 0 auto; /* Centrar la sección horizontalmente */
   padding: 3px;
 }
