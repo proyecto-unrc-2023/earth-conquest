@@ -45,6 +45,7 @@ function App () {
 
   useEffect(() => {
     if (gameId) {
+      // eslint-disable-next-line no-undef
       const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
       console.log('SSE ACTIVO')
       sse.onmessage = e => {
