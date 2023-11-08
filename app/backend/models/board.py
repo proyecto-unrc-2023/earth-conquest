@@ -234,13 +234,23 @@ class Board:
     """
 
     def refresh_board(self):
-        aliens_copy = dict(self.aliens)  # dictionary copy
-        for key in aliens_copy:
-            list_of_aliens = aliens_copy[key]  # list of aliens in that key
-            for alien in list_of_aliens:
-                x = key[0]
-                y = key[1]
+
+        copy = {}
+        for pos in self.aliens.keys():
+            for alien in self.aliens[pos]:
+                if pos in copy:
+                    copy[pos].append(alien)
+                else:
+                    copy[pos] = [alien]
+        # en este entonces estaria copiado self.aliens en copy, con las claves y valores
+
+        for pos in copy.keys():     # se mueven todos los aliens del hash copy
+            x = pos[0]
+            y = pos[1]
+            for alien in copy[pos]:
+                print(alien.id, "moved from", x, y)
                 self.move_alien(x, y, alien)
+
 
     """ 
     This method solves each fight and/or reproduction that may occur between aliens 
@@ -282,23 +292,10 @@ class Board:
         else:
             new_x, new_y = self.get_adjoining_valid_pos(x, y)
 
-        # Remove the alien from the old position if it's there
-        if self.get_cell(x, y).aliens.__contains__(alien):
-            self.get_cell(x, y).remove_alien(alien)
+        self.remove_alien_from_board(x, y, alien)
+        self.set_alien(new_x, new_y, alien)
+        print("moved to", new_x, new_y)
 
-        # Add the alien to the new position
-        self.get_cell(new_x, new_y).add_alien(alien)
-
-        # Update the dictionary
-        if (x, y) in self.aliens:
-            # Remove the alien from the old position in the dictionary if it's there
-            if alien in self.aliens[(x, y)]:
-                self.aliens[(x, y)].remove(alien)
-
-            # Add the alien to the new position in the dictionary
-            self.set_alien_in_dictionary(new_x, new_y, alien)
-        else:
-            raise ValueError("The key provided does not have the alien on its list of aliens")
 
     """
     An alien is placed at a (x,y) position where a teleporter is placed.
