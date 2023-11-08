@@ -86,13 +86,13 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, board, h
   useEffect(() => {
     if (host) {
       const timeoutId = setTimeout(() => {
-        //if (changeTic) {
+        if (changeTic) {
           refresh(gameId)
-        //} else {
-          //act(gameId)
-        //}
+        } else {
+          act(gameId)
+        }
       }, 1000)
-      setChangeTic(prevChangeTic => !prevChangeTic)
+      setChangeTic(!changeTic)
       return () => {
         clearTimeout(timeoutId)
       }

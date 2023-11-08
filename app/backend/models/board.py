@@ -259,13 +259,17 @@ class Board:
     """
 
     def act_board(self):
+
         for key in self.aliens:
             x = key[0]
             y = key[1]
             cell = self.get_cell(x, y)
-            cell.action()  # only one alien will be left or just none after the action
-            self.aliens[(x, y)] = cell.aliens
-            if not cell.aliens == []:
+            if cell.aliens.__len__() > 1:   # action the cell if there is more than one alien
+                cell.action()
+                self.aliens[(x, y)] = cell.aliens   # updates the dict
+
+            # atack enemy ovni
+            if len(cell.aliens) == 1:
                 alien = cell.aliens[0]
                 if (alien.team == Team.BLUE and self.is_position_in_green_range(x, y)
                         or alien.team == Team.GREEN and self.is_position_in_blue_range(x, y)):
@@ -443,12 +447,11 @@ class Board:
     def alien_attack_ovni(self, x, y, alien):
         if alien.team == Team.BLUE and self.is_position_in_green_range(x, y):
             self.green_ovni_life -= alien.eyes
-            if (x, y) in self.aliens:
-                self.aliens[(x, y)].remove(alien)  # removes from hash and cell
         elif alien.team == Team.GREEN and self.is_position_in_blue_range(x, y):
             self.blue_ovni_life -= alien.eyes
-            if (x, y) in self.aliens:
-                self.aliens[(x, y)].remove(alien)
+
+        if (x, y) in self.aliens:
+            self.remove_alien_from_board(x, y, alien)
 
     def any_ovni_destroyed(self):
         return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
