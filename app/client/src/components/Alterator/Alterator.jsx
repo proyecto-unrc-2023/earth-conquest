@@ -8,10 +8,10 @@ export const Alterator = ({ tipo }) => {
         (tipo === alterator.TRAP) && <img src='../public/trap.png' className='img_trap' alt='' />
       }
       {
-        (tipo === alterator.DIRECTIONER_UP) && <img src='../public/directioner_up.png' className='img_directioner' alt='' />
+        (tipo === alterator.DIRECTIONER_UPWARDS) && <img src='../public/directioner_up.png' className='img_directioner' alt='' />
       }
       {
-        (tipo === alterator.DIRECTIONER_DOWN) && <img src='../public/directioner_down.png' className='img_directioner' alt='' />
+        (tipo === alterator.DIRECTIONER_DOWNWARDS) && <img src='../public/directioner_down.png' className='img_directioner' alt='' />
       }
       {
         (tipo === alterator.DIRECTIONER_LEFT) && <img src='../public/directioner_left.png' className='img_directioner' alt='' />

@@ -46,10 +46,10 @@ export const Panel = ({ setAlter, teleporterEnabled }) => {
         )}
         {showDirections && (
           <div className='type_dir'>
-            <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_UP)}>
+            <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_UPWARDS)}>
               <img className='button_img_dir' src='/../public/directioner_up.png' alt='Directioner' />
             </button>
-            <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_DOWN)}>
+            <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_DOWNWARDS)}>
               <img className='button_img_dir' src='/../public/directioner_down.png' alt='Directioner' />
             </button>
             <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_RIGHT)}>

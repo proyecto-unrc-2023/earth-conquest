@@ -279,13 +279,13 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        if info["alterator"] == "directioner":
+        if info["alterator"] == "DIRECTIONER":
             alterator = GameController.create_directioner(info["direction"], info["initPos"])
 
-        elif info["alterator"] == "teleporter":
+        elif info["alterator"] == "TELEPORTER":
             alterator = Teleporter(info["initPos"], info["endPos"])
 
-        elif info["alterator"] == "trap":
+        elif info["alterator"] == "TRAP":
             alterator = Alterator.TRAP
 
         try:
@@ -358,13 +358,13 @@ class GameController:
     """
 
     def create_directioner(direction, initPos):
-        if direction == "right":
+        if direction == "RIGHT":
             return Directioner(initPos, Direction.RIGHT)
-        if direction == "left":
+        if direction == "LEFT":
             return Directioner(initPos, Direction.LEFT)
-        if direction == "downwards":
+        if direction == "DOWNWARDS":
             return Directioner(initPos, Direction.DOWNWARDS)
-        if direction == "upwards":
+        if direction == "UPWARDS":
             return Directioner(initPos, Direction.UPWARDS)
 
 
