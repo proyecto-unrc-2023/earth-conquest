@@ -3,11 +3,9 @@ import time
 
 from flask import jsonify, Response
 from app.backend.models.alterator import Alterator
-from app.backend.models.board import BoardSchema
 from app.backend.models.direction import Direction
 from app.backend.models.directioner import Directioner
 from app.backend.models.game import Game, GameSchema, GameAliensSchema
-from app.backend.models.game_enum import TGame
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 from app.backend.api.redis_config import r
@@ -121,7 +119,6 @@ class GameController:
             game.act_board()
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
-            
 
         except Exception as e:
             message = json.dumps(
@@ -133,7 +130,6 @@ class GameController:
             return Response(message, status=400, mimetype='application/json')
 
         return Response("ok", status=200, mimetype='application/json')
-
 
     def get_all_games():
         games_data = []
@@ -152,7 +148,6 @@ class GameController:
             }
         }
         return jsonify(response)
-
 
     """
         This method checks if a given position is valid (free of modifiers/alterators and 
@@ -221,6 +216,14 @@ class GameController:
 
         elif info["alterator"] == "trap":
             alterator = Alterator.TRAP
+        else:
+            message = json.dumps(
+                {
+                    "success": False,
+                    "message": "Alterator not valid. Must be a trap, a teleporter or a directioner"
+                }
+            )
+            return Response(message, status=400, mimetype='application/json')
 
         try:
             if alterator == Alterator.TRAP:
@@ -237,17 +240,9 @@ class GameController:
             return Response(message, status=400, mimetype='application/json')
 
         games_dict[id] = game
-        game_schema = GameSchema()
-        board_schema = BoardSchema()
-        response = {
-            "success": True,
-            "message": "Alterator setted successfully",
-            "data": {
-                "board": board_schema.dump(game.board),
-            }
-        }
+        game_schema = GameAliensSchema()
         r.set('game_status', json.dumps(game_schema.dump(game)))
-        return jsonify(response)
+        return Response("Alterator setted successfully", status=200, mimetype='application/json')
 
     def join_as(id, team, player_name):
         response = GameController.find_game(id)
@@ -298,7 +293,6 @@ class GameController:
             return Directioner(initPos, Direction.DOWNWARDS)
         if direction == "upwards":
             return Directioner(initPos, Direction.UPWARDS)
-
 
     def sse(id):
         def sse_events():
