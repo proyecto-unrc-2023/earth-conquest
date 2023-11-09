@@ -24,6 +24,7 @@ class Game:
         self.winner = (None, None)  # (Player name, TEAM)
         self.alive_green_aliens = 0
         self.alive_blue_aliens = 0
+        self.refresh_counter = 0   # Amount of times the board has been refreshed
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -88,7 +89,17 @@ class Game:
     def refresh_board(self):
         if not self.board:
             raise Exception("No board created")
+        self.refresh_counter += 1
         self.board.refresh_board()
+
+        if self.refresh_counter == 3:
+            game.add_alien_to_range(Team.GREEN)
+            print("spawned new Green alien")
+            game.add_alien_to_range(Team.BLUE)
+            print("spawned new Blue alien")
+            self.refresh_counter = 0
+
+
 
     def act_board(self):
         if not self.board:
@@ -309,13 +320,23 @@ game = Game()
 game.join_as_blue("matyt")
 game.join_as_green("matytss")
 game.start_game()
-for i in range(5):
+for i in range(6):
+    print()
+    print()
     print('---------------RFR---------------------')
     game.refresh_board()
     print(game.board.__str__())
+    print("--- ALIENS ---")
+    print("  GREEN aliens: ", game.alive_green_aliens, "BLUE aliens: ", game.alive_blue_aliens)
+    print("REFRESH COUNTER:   ", game.refresh_counter)
+
     print('---------------ACT---------------------')
     game.act_board()
     print(game.board.__str__())
+    print("--- ALIENS ---")
+    print("  GREEN aliens: ", game.alive_green_aliens, "BLUE aliens: ", game.alive_blue_aliens)
+
+
 
 #chequear que le pegue a la nave
 print('---------------ATACKKOVNI---------------------')

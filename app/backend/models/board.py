@@ -248,7 +248,7 @@ class Board:
             x = pos[0]
             y = pos[1]
             for alien in copy[pos]:
-                print(alien.id, "moved from", x, y)
+                #print(alien.id, "moved from", x, y)
                 self.move_alien(x, y, alien)
 
 
@@ -266,7 +266,7 @@ class Board:
             cell = self.get_cell(x, y)
             if cell.aliens.__len__() >= 1:   # action the cell if there is more than one alien
                 cell.action()
-                self.aliens[(x, y)] = cell.aliens   # updates the dict
+                self.aliens[(x, y)] = cell.aliens.copy()   # updates the dict
 
             # atack enemy ovni
             if len(cell.aliens) == 1:
@@ -298,7 +298,7 @@ class Board:
 
         self.remove_alien_from_board(x, y, alien)
         self.set_alien(new_x, new_y, alien)
-        print("moved to", new_x, new_y)
+        #print("moved to", new_x, new_y)
 
 
     """
