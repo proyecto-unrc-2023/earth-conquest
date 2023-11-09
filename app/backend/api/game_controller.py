@@ -6,7 +6,7 @@ from app.backend.models.alterator import Alterator
 from app.backend.models.board import BoardSchema
 from app.backend.models.direction import Direction
 from app.backend.models.directioner import Directioner
-from app.backend.models.game import Game, GameSchema
+from app.backend.models.game import Game, GameSchema, GameAliensSchema
 from app.backend.models.game_enum import TGame
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
@@ -67,7 +67,6 @@ class GameController:
                 }
             }
         )
-        r.set('game_status', json.dumps(game_schema.dump(game)))
         return Response(message, status=201, mimetype='application/json')
 
     def start_game(id):
@@ -88,7 +87,7 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-        game_schema = GameSchema()
+        game_schema = GameAliensSchema()
         response = {
             "success": True,
             "message": "Game %d started successfully" % id,
@@ -104,7 +103,7 @@ class GameController:
         This method updates a game.
     '''
 
-    def refresh_board(id):
+    def next_state(id):
         response = GameController.find_game(id)
         if response is not None:
             return response
@@ -124,17 +123,13 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        game_schema = GameSchema()
-        board_schema = BoardSchema()
-        response = {
-            "success": True,
-            "message": "Board %d refreshes successfully" % id,
-            "data": {
-                "board": board_schema.dump(game.board)
-            }
-        }
+        game_schema = GameAliensSchema()
         r.set('game_status', json.dumps(game_schema.dump(game)))
-        return jsonify(response)
+        time.sleep(2)
+        game.act_board()
+        games_dict[id] = game
+        r.set('game_status', json.dumps(game_schema.dump(game)))
+        return Response("ok", status=200, mimetype='application/json')
 
     '''
         This method acts a game.
@@ -160,16 +155,7 @@ class GameController:
             return Response(message, status=400, mimetype='application/json')
 
         game_schema = GameSchema()
-        response = {
-            "success": True,
-            "message": "Game %d acts successfully" % id,
-            "data": {
-                "gameId": id,
-                "game": game_schema.dump(game)
-            }
-        }
         r.set('game_status', json.dumps(game_schema.dump(game)))
-        return jsonify(response)
 
     def get_all_games():
         games_data = []

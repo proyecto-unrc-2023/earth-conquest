@@ -578,19 +578,25 @@ class Board:
         cell = self.get_cell(x, y)
         return len(cell.aliens)
 
-    def json(self):
-        return {
-            'blue_ovni_range': self.blue_ovni_range,
-            'green_ovni_range': self.green_ovni_range,
-            'base_range_dimentions': self.base_range_dimentions,
-            'board': self.board.__str__()
-        }
+
+class AliensPositionField(fields.Field):
+    def _serialize(self, value, attr, obj, **kwargs):
+        cell_dict = {}
+        for key in obj.aliens:
+            cell = obj.get_cell(key[0], key[1])
+            cell_schema = CellSchema()
+            if str(key) in cell_dict:
+                cell_dict[str(key)].append(cell_schema.dump(cell))
+            else:
+                cell_dict[str(key)] = cell_schema.dump(cell)
+        return cell_dict
 
 
 class BoardSchema(Schema):
     blue_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     base_range_dimentions = fields.Integer()
+    aliens = AliensPositionField()
     board = fields.List(fields.List(fields.Nested(CellSchema())))
     green_ovni_life = fields.Integer()
     blue_ovni_life = fields.Integer()
