@@ -266,7 +266,7 @@ class Board:
             cell = self.get_cell(x, y)
             if cell.aliens.__len__() >= 1:   # action the cell if there is more than one alien
                 cell.action()
-                self.aliens[(x, y)] = cell.aliens   # updates the dict
+                self.aliens[(x, y)] = cell.aliens.copy()   # updates the dict
 
             # atack enemy ovni
             if len(cell.aliens) == 1:
