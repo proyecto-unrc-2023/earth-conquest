@@ -78,6 +78,8 @@ class GameController:
         try:
             game.start_game()
             games_dict[id] = game
+            game_schema = GameAliensSchema()
+            r.set('game_status', json.dumps(game_schema.dump(game)))
 
         except Exception as e:
             message = json.dumps(
@@ -87,17 +89,8 @@ class GameController:
                 }
             )
             return Response(message, status=400, mimetype='application/json')
-        game_schema = GameAliensSchema()
-        response = {
-            "success": True,
-            "message": "Game %d started successfully" % id,
-            "data": {
-                "gameId": id,
-                "game": game_schema.dump(game)
-            }
-        }
-        r.set('game_status', json.dumps(game_schema.dump(game)))
-        return jsonify(response)
+
+        return Response("game started successfullly", status=200, mimetype='application/json')
 
     '''
         This method updates a game.
@@ -113,6 +106,12 @@ class GameController:
         try:
             game.refresh_board()
             games_dict[id] = game
+            game_schema = GameAliensSchema()
+            r.set('game_status', json.dumps(game_schema.dump(game)))
+            time.sleep(2)
+            game.act_board()
+            games_dict[id] = game
+            r.set('game_status', json.dumps(game_schema.dump(game)))
 
         except Exception as e:
             message = json.dumps(
@@ -123,12 +122,6 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        game_schema = GameAliensSchema()
-        r.set('game_status', json.dumps(game_schema.dump(game)))
-        time.sleep(2)
-        game.act_board()
-        games_dict[id] = game
-        r.set('game_status', json.dumps(game_schema.dump(game)))
         return Response("ok", status=200, mimetype='application/json')
 
     '''
@@ -193,6 +186,9 @@ class GameController:
             game.add_alien_to_range(Team.GREEN)
             game.add_alien_to_range(Team.BLUE)
             games_dict[id] = game  # save the game on the dict
+            game_schema = GameAliensSchema()
+            r.set('game_status', json.dumps(game_schema.dump(game)))
+
         except Exception as e:
             message = json.dumps(
                 {
@@ -202,17 +198,7 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        game_schema = GameSchema()
-        board_schema = BoardSchema()
-        response = {
-            "success": True,
-            "message": "Aliens blue and green added successfully to game: %d" % id,
-            "data": {
-                "board": board_schema.dump(game.board)
-            }
-        }
-        r.set('game_status', json.dumps(game_schema.dump(game)))
-        return jsonify(response)
+        return Response("aliens spawned successfully", status=200, mimetype='application/json')
 
     """
         This method checks if a given position is valid (free of modifiers/alterators and 
@@ -339,12 +325,10 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        game_schema = GameSchema()
         response = {
             "success": True,
             "message": "Player %s has joined to game: %d as %s player" % (player_name, id, team)
         }
-        r.set('game_status', json.dumps(game_schema.dump(game)))
         return jsonify(response)
 
     """
