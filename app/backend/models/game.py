@@ -308,35 +308,8 @@ class GameAliensSchema(Schema):
     status = fields.Enum(TGame)
     green_player = fields.Str()
     blue_player = fields.Str()
-    board = fields.Nested(BoardSchema(), only=('aliens',))
+    board = fields.Nested(BoardSchema(), only=('cells',))
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
 
-
-# game = Game()
-# game.join_as_blue("matyt")
-# game.join_as_green("matytss")
-# game.start_game()
-# for i in range(5):
-#     print('---------------RFR---------------------')
-#     game.refresh_board()
-#     print(game.board.__str__())
-#     print('---------------ACT---------------------')
-#     game.act_board()
-#     print(game.board.__str__())
-
-# #chequear que le pegue a la nave
-# print('---------------ATACKKOVNI---------------------')
-# game.set_alien(0, 0, Alien(Team.BLUE, 20))
-# print(game.board.__str__())
-# game.act_board()
-# print(game.board.green_ovni_life)
-
-# print('---------------BF-FIGHT---------------------')
-# game.set_alien(8, 8, Alien(Team.BLUE, 2))
-# game.set_alien(8, 8, Alien(Team.GREEN, 1))
-# print(game.board.__str__())
-# game.act_board()
-# print('---------------AF-FIGHT---------------------')
-# print(game.board.__str__())

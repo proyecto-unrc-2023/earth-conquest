@@ -23,6 +23,7 @@ class Board:
         self.rows = rows
         self.cols = cols
         self.aliens = {}  # Dictionary with Key = position on the board, Value = list of aliens in that position
+        self.alterators_positioned = {}
         self.base_range_dimentions = base_range_dimentions
         self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
         self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
@@ -157,6 +158,7 @@ class Board:
     def set_trap(self, x, y):
         if self.is_free_position(x, y) and not self.is_pos_on_any_range(x, y):
             self.get_cell(x, y).alterator = Alterator.TRAP
+            self.alterators_positioned[(x, y)] = Alterator.TRAP
         else:
             raise ValueError("Position isn't free or valid")
 
@@ -177,6 +179,8 @@ class Board:
         ):
             self.get_cell(door_row, door_col).alterator = teleporter
             self.get_cell(exit_row, exit_col).alterator = teleporter
+            self.alterators_positioned[(door_row, door_col)] = teleporter
+            self.alterators_positioned[(exit_row, exit_col)] = teleporter
         else:
             raise ValueError("Positions of the teleporter aren't free or valid")
 
@@ -198,6 +202,7 @@ class Board:
 
         for row, col in positions:
             self.get_cell(row, col).alterator = directioner
+            self.alterators_positioned[(row, col)] = directioner
 
     """ 
     Sets a Modifier on a specific Cell only if on that cell 
@@ -582,13 +587,19 @@ class Board:
 class AliensPositionField(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
         cell_dict = {}
-        for key in obj.aliens:
+        cell_schema = CellSchema()
+        for key in obj.aliens:  # add aliens to the schema
             cell = obj.get_cell(key[0], key[1])
-            cell_schema = CellSchema()
             if str(key) in cell_dict:
                 cell_dict[str(key)].append(cell_schema.dump(cell))
             else:
                 cell_dict[str(key)] = cell_schema.dump(cell)
+
+        for key in obj.alterators_positioned:   # add alterators
+            cell = obj.get_cell(key[0], key[1])
+            if str(key) not in cell_dict:
+                cell_dict[str(key)] = cell_schema.dump(cell)
+
         return cell_dict
 
 
@@ -596,7 +607,7 @@ class BoardSchema(Schema):
     blue_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     base_range_dimentions = fields.Integer()
-    aliens = AliensPositionField()
-    board = fields.List(fields.List(fields.Nested(CellSchema())))
+    cells = AliensPositionField(attribute='aliens')
     green_ovni_life = fields.Integer()
     blue_ovni_life = fields.Integer()
+    grid = fields.List(fields.List(fields.Nested(CellSchema())), attribute='board')
