@@ -36,7 +36,9 @@ def test_blue_alien_attack_green_base(init_a_default_board):
     alien = Alien(Team.BLUE, 3)
     board.set_alien(2, 2, alien)
     board.green_ovni_life = 7
+
     board.act_board()
+
     assert board.green_ovni_life == (7 - alien.eyes)
     assert not alien in board.aliens
 
@@ -70,8 +72,6 @@ def test_green_alien_attack_blue_base(init_a_default_board):
     board.act_board()
 
     assert board.blue_ovni_life == (5 - alien.eyes)
-    assert board.aliens[6, 11] == []
-
     assert not alien in board.aliens
     assert not alien in board.get_cell(6, 11).aliens
 
@@ -126,6 +126,7 @@ def test_set_invalid_directioner(init_a_default_board):
         board.set_directioner(directioner)
     assert str(exc_info.value) == "Positions of the directioner aren't free or valid"
 
+
 def test_remove_alien_from_board(init_a_default_board):
     board = init_a_default_board
     alien = Alien(Team.GREEN)
@@ -133,9 +134,12 @@ def test_remove_alien_from_board(init_a_default_board):
     with pytest.raises(Exception) as exc_info:
         board.remove_alien_from_board(8, 8, alien)
     assert str(exc_info.value) == "alien not found"
+
     board.remove_alien_from_board(1, 1, alien)
-    assert board.aliens[(1, 1)] == []
+
+    assert board.aliens == {}
     assert board.get_cell(1, 1).aliens == []
+
 
 def test_cant_move_alien(init_a_default_board):
     board = init_a_default_board
@@ -146,5 +150,14 @@ def test_cant_move_alien(init_a_default_board):
     assert str(exc_info.value) == "alien not found in position"
 
 
+def test_multiplier_act(init_a_default_board):
+    board = init_a_default_board
+    alien = (Alien(Team.GREEN))
+    alien.add_eyes(1)
+    board.set_alien(5, 5, alien)
+    board.set_modifier(Modifier.MULTIPLIER, 5, 5)
 
+    board.act_board()
 
+    assert len(board.aliens[(5, 5)]) == 2
+    assert board.get_num_aliens_in_position(5, 5) == 2

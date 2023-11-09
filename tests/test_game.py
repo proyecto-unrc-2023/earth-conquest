@@ -57,12 +57,14 @@ def test_game_not_started(init_a_default_game):
     game = init_a_default_game
     assert game.status == TGame.NOT_STARTED
 
+
 def test_start_game(init_a_default_game):
     game = init_a_default_game
     game.join_as_blue("Pepe")
     game.join_as_green("Antonio")
     game.start_game()
     assert game.status == TGame.STARTED
+
 
 def test_set_initial_crew(init_a_default_game):
     game = init_a_default_game
@@ -72,14 +74,17 @@ def test_set_initial_crew(init_a_default_game):
     game.start_game()
     assert game.alive_blue_aliens == 6 and game.alive_green_aliens == 6
 
+
 def test_refresh_board_alien_cant_move_diagonally(init_a_default_game):
     game = init_a_default_game
-
     alien = Alien(Team.GREEN)
     game.set_alien(5, 3, alien)
+
     game.refresh_board()
-    assert alien not in game.get_aliens_in_pos(5, 3) 
-    assert alien not in game.get_aliens_in_pos(4, 2) 
-    assert alien not in game.get_aliens_in_pos(6, 2) 
+
+    assert alien not in game.get_aliens_in_pos(5, 3)
+
+    assert alien not in game.get_aliens_in_pos(4, 2)
+    assert alien not in game.get_aliens_in_pos(6, 2)
     assert alien not in game.get_aliens_in_pos(6, 4)
     assert alien not in game.get_aliens_in_pos(4, 4)

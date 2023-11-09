@@ -111,7 +111,6 @@ class Game:
     """
 
     def end_game(self):
-        print('Game ended')
         self.blue_player = None
         self.green_player = None
         self.status = TGame.OVER
@@ -148,6 +147,10 @@ class Game:
             raise Exception("invalid alterator")
         self.update_aliens_cant(team)   # updates de attribute with the new aliens cant
 
+    '''
+    
+    '''
+
     def update_aliens_cant(self, team):
         new_aliens_cant = self.board.list_aliens_of_team(team).__len__()
         if team == Team.GREEN:
@@ -159,7 +162,7 @@ class Game:
         return self.winner[1]
     
     '''
-    
+        This method add a blue alien and a green alien in a randomly position of theirs respective ranges.
     '''
     
     def spawn_aliens(self):
@@ -312,31 +315,3 @@ class GameAliensSchema(Schema):
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
-
-
-# game = Game()
-# game.join_as_blue("matyt")
-# game.join_as_green("matytss")
-# game.start_game()
-# for i in range(5):
-#     print('---------------RFR---------------------')
-#     game.refresh_board()
-#     print(game.board.__str__())
-#     print('---------------ACT---------------------')
-#     game.act_board()
-#     print(game.board.__str__())
-
-# #chequear que le pegue a la nave
-# print('---------------ATACKKOVNI---------------------')
-# game.set_alien(0, 0, Alien(Team.BLUE, 20))
-# print(game.board.__str__())
-# game.act_board()
-# print(game.board.green_ovni_life)
-
-# print('---------------BF-FIGHT---------------------')
-# game.set_alien(8, 8, Alien(Team.BLUE, 2))
-# game.set_alien(8, 8, Alien(Team.GREEN, 1))
-# print(game.board.__str__())
-# game.act_board()
-# print('---------------AF-FIGHT---------------------')
-# print(game.board.__str__())
