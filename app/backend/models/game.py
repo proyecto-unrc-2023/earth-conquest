@@ -24,6 +24,7 @@ class Game:
         self.winner = (None, None)  # (Player name, TEAM)
         self.alive_green_aliens = 0
         self.alive_blue_aliens = 0
+        self.spawn_aliens_tick = 0
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -156,6 +157,14 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
+    
+    '''
+    
+    '''
+    
+    def spawn_aliens(self):
+        self.add_alien_to_range(Team.GREEN)
+        self.add_alien_to_range(Team.BLUE)
 
     '''
     This method sets a modifier on the given position if this one's free and valid.
@@ -305,29 +314,29 @@ class GameAliensSchema(Schema):
     alive_blue_aliens = fields.Integer()
 
 
-game = Game()
-game.join_as_blue("matyt")
-game.join_as_green("matytss")
-game.start_game()
-for i in range(5):
-    print('---------------RFR---------------------')
-    game.refresh_board()
-    print(game.board.__str__())
-    print('---------------ACT---------------------')
-    game.act_board()
-    print(game.board.__str__())
+# game = Game()
+# game.join_as_blue("matyt")
+# game.join_as_green("matytss")
+# game.start_game()
+# for i in range(5):
+#     print('---------------RFR---------------------')
+#     game.refresh_board()
+#     print(game.board.__str__())
+#     print('---------------ACT---------------------')
+#     game.act_board()
+#     print(game.board.__str__())
 
-#chequear que le pegue a la nave
-print('---------------ATACKKOVNI---------------------')
-game.set_alien(0, 0, Alien(Team.BLUE, 20))
-print(game.board.__str__())
-game.act_board()
-print(game.board.green_ovni_life)
+# #chequear que le pegue a la nave
+# print('---------------ATACKKOVNI---------------------')
+# game.set_alien(0, 0, Alien(Team.BLUE, 20))
+# print(game.board.__str__())
+# game.act_board()
+# print(game.board.green_ovni_life)
 
-print('---------------BF-FIGHT---------------------')
-game.set_alien(8, 8, Alien(Team.BLUE, 2))
-game.set_alien(8, 8, Alien(Team.GREEN, 1))
-print(game.board.__str__())
-game.act_board()
-print('---------------AF-FIGHT---------------------')
-print(game.board.__str__())
+# print('---------------BF-FIGHT---------------------')
+# game.set_alien(8, 8, Alien(Team.BLUE, 2))
+# game.set_alien(8, 8, Alien(Team.GREEN, 1))
+# print(game.board.__str__())
+# game.act_board()
+# print('---------------AF-FIGHT---------------------')
+# print(game.board.__str__())

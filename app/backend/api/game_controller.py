@@ -14,6 +14,7 @@ from app.backend.api.redis_config import r
 
 
 games_dict = {}
+SPAWN_TIME = 3
 
 '''
     This is the GameController class. It is used to control the game.
@@ -104,14 +105,23 @@ class GameController:
         game = games_dict.get(id)
 
         try:
+            # REFRESH: Move aliens 
             game.refresh_board()
+            game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
             r.set('game_status', json.dumps(game_schema.dump(game)))
+            
             time.sleep(2)
+            
+            # ACT: Act cells on board
+            if game.spawn_aliens_tick % SPAWN_TIME == 0:
+                game.spawn_aliens()
+            
             game.act_board()
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
+            
 
         except Exception as e:
             message = json.dumps(
@@ -124,31 +134,6 @@ class GameController:
 
         return Response("ok", status=200, mimetype='application/json')
 
-    '''
-        This method acts a game.
-    '''
-
-    def act_board(id):
-        response = GameController.find_game(id)
-        if response is not None:
-            return response
-
-        game = games_dict.get(id)
-
-        try:
-            game.act_board()
-            games_dict[id] = game
-        except Exception as e:
-            message = json.dumps(
-                {
-                    "success": False,
-                    'errors': str(e)
-                }
-            )
-            return Response(message, status=400, mimetype='application/json')
-
-        game_schema = GameSchema()
-        r.set('game_status', json.dumps(game_schema.dump(game)))
 
     def get_all_games():
         games_data = []
@@ -168,37 +153,6 @@ class GameController:
         }
         return jsonify(response)
 
-    def spawn_aliens(id):
-        response = GameController.find_game(id)
-        if response is not None:
-            return response
-
-        game = games_dict.get(id)
-        if game.status is not TGame.NOT_STARTED:
-            message = json.dumps(
-                {
-                    "success": False,
-                    'errors': "can not spawn aliens, game status is not NOT_STARTED"
-                }
-            )
-            return Response(message, status=400, mimetype='application/json')
-        try:
-            game.add_alien_to_range(Team.GREEN)
-            game.add_alien_to_range(Team.BLUE)
-            games_dict[id] = game  # save the game on the dict
-            game_schema = GameAliensSchema()
-            r.set('game_status', json.dumps(game_schema.dump(game)))
-
-        except Exception as e:
-            message = json.dumps(
-                {
-                    "success": False,
-                    'errors': str(e)
-                }
-            )
-            return Response(message, status=400, mimetype='application/json')
-
-        return Response("aliens spawned successfully", status=200, mimetype='application/json')
 
     """
         This method checks if a given position is valid (free of modifiers/alterators and 
