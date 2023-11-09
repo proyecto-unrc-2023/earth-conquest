@@ -72,11 +72,10 @@ class Cell:
         if self.all_aliens_same_team() and len(self.aliens) > 1:
             team = self.aliens[0].team
             eyes = self.sum_aliens_eyes()
-            self.aliens = []
-            alien = Alien(team)
-            alien.add_eyes(eyes - 1)
+            self.aliens.clear()
             if not (eyes > 5):
-                self.add_alien(alien)
+                alien = Alien(team, eyes)
+                self.aliens.append(alien)
         else:
             raise ValueError(f'this method is only applicable for aliens from the same team and for at least 2 aliens')
 
@@ -87,21 +86,25 @@ class Cell:
     """
 
     def action(self):
-        if self.aliens != [] and (not self.all_aliens_same_team()):
-            aliens = self.divide_aliens_for_different_teams()
-            aliens1 = aliens[0]
-            aliens2 = aliens[1]
-            cell_aux = Cell()
-            self.aliens = aliens1
-            cell_aux.aliens = aliens2
-            if len(self.aliens) > 1:
-                self.reproduce()
-            if len(cell_aux.aliens) > 1:
-                cell_aux.reproduce()
-            for i in range(len(cell_aux.aliens)):
-                self.add_alien(cell_aux.aliens[i])
-            self.fight()
-        elif len(self.aliens) > 1:
+        if not self.all_aliens_same_team():
+            if self.aliens.__len__() > 2:
+                aliens_blue, aliens_green = self.divide_aliens_for_different_teams()    # divido aliens por equipo
+                blue_eyes = self.sum_eyes_list_of_aliens(aliens_blue)   # suma de todos los ojos de cada equipos
+                green_eyes = self.sum_eyes_list_of_aliens(aliens_green)
+                self.aliens.clear()     # all aliens removed
+                if blue_eyes > green_eyes:
+                    eyes_of_winner_alien = blue_eyes - green_eyes
+                    winner_alien = Alien(Team.BLUE, eyes_of_winner_alien)
+                    self.aliens.append(winner_alien)
+                elif green_eyes > blue_eyes:
+                    eyes_of_winner_alien = green_eyes - blue_eyes
+                    winner_alien = Alien(Team.GREEN, eyes_of_winner_alien)
+                    self.aliens.append(winner_alien)
+                # un else es que sean de igual cantidad, todos mueren, se hace arriba ya con .clear()
+
+            else:   # two different team aliens fight
+                self.fight()
+        elif self.aliens.__len__() > 1:  # reproduces aliens of the same team
             self.reproduce()
         if self.aliens != [] and self.modifier == Modifier.MULTIPLIER or self.modifier == Modifier.KILLER:
             self.action_modifier()
@@ -118,13 +121,20 @@ class Cell:
             eyes += self.aliens[i].eyes
         return eyes
 
+    def sum_eyes_list_of_aliens(self, aliens):
+        sum = 0
+        for alien in aliens:
+            sum += alien.eyes
+        return sum
+
     """
     Method that returns True if all aliens on the list of aliens are from the same team.
     """
 
     def all_aliens_same_team(self):
-        for i in range(len(self.aliens)):
-            if not self.aliens[0].team == self.aliens[i].team:
+        team = self.aliens[0].team
+        for alien in self.aliens:
+            if alien.team is not team:
                 return False
         return True
 
@@ -134,15 +144,14 @@ class Cell:
     """
 
     def divide_aliens_for_different_teams(self):
-        aliens_team1 = []
-        aliens_team2 = []
-        for i in range(len(self.aliens)):
-            if self.aliens[i].team == Team.BLUE:
-                aliens_team1.append(self.aliens[i])
+        aliens_blue = []
+        aliens_green = []
+        for alien in self.aliens:
+            if alien.team == Team.BLUE:
+                aliens_blue.append(alien)
             else:
-                aliens_team2.append(self.aliens[i])
-        all_aliens = [aliens_team1, aliens_team2]
-        return all_aliens
+                aliens_green.append(alien)
+        return aliens_blue, aliens_green
 
     def __str__(self):
         if self.aliens:

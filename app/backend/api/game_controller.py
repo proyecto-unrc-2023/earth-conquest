@@ -379,7 +379,7 @@ class GameController:
     def sse(id):
         def sse_events():
             old_status = None
-                
+
             while True:
                 new_status = r.get('game_status')
                 
