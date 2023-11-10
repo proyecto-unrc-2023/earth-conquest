@@ -1,3 +1,4 @@
+import copy
 from marshmallow import Schema, fields
 
 from app.backend.models import modifier, directioner
@@ -213,7 +214,7 @@ class Cell:
         if self.modifier == Modifier.KILLER:
             self.aliens = []
         elif self.modifier == Modifier.MULTIPLIER:
-            self.aliens.append(self.aliens[0])
+            self.aliens.append(copy.deepcopy(self.aliens[0]))
 
     """
     Method that makes a Trap act on the current alien 
