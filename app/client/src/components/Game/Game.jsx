@@ -2,61 +2,14 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
-// import { gameStatus } from '../../constants'
+import { refresh, act, spawnAliens } from '../../services/appService'
 import './Game.css'
 
-export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, teamPlayer, board, host, setBoard, greenOvniRange, blueOvniRange }) {
+export function Game ({ game, setGame, startGame }) {
   const [alter, setAlterator] = useState(null)
-  const [blueOvniLife, setBlueOvniLife] = useState(null)
-  const [greenOvniLife, setGreenOvniLife] = useState(null)
-  const [aliveGreenAliens, setAliveGreenAliens] = useState(null)
-  const [aliveBlueAliens, setAliveBlueAliens] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [changeTic, setChangeTic] = useState(true)
   const [tic, setTic] = useState(0)
-
-  const REFRESH = 'http://127.0.0.1:5000/games/refresh_board'
-  const ACT = 'http://127.0.0.1:5000/games/act_board'
-  const SPAWN_ALIENS = 'http://127.0.0.1:5000/games/spawn_aliens'
-
-  const refresh = async (gameId) => {
-    try {
-      const response = await fetch(`${REFRESH}/${gameId}`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-    } catch (error) {
-      console.error('Error fetching data in refresh:', error)
-    }
-  }
-
-  const act = async (gameId) => {
-    try {
-      const response = await fetch(`${ACT}/${gameId}`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-    } catch (error) {
-      console.error('Error fetching data in act:', error)
-    }
-  }
-
-  const spawnAliens = async (gameId) => {
-    try {
-      const response = await fetch(`${SPAWN_ALIENS}/${gameId}`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-    } catch (error) {
-      console.error('Error spawn aliens in base:', error)
-    }
-  }
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -65,12 +18,15 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, teamPlay
     sse.onmessage = e => {
       const data = JSON.parse(e.data)
       console.log(data)
-      setStatusGame(data.status)
-      setBoard(data.board.board)
-      setBlueOvniLife(data.board.green_ovni_life)
-      setGreenOvniLife(data.board.blue_ovni_life)
-      setAliveGreenAliens(data.alive_green_aliens)
-      setAliveBlueAliens(data.alive_blue_aliens)
+      setGame((prevState) => ({
+        ...prevState,
+        setStatusGame: data.status,
+        board: data.board.board,
+        blueOvniLife: data.board.blue_ovni_life,
+        greenOvniLife: data.board.green_ovni_life,
+        aliveGreenAliens: data.alive_green_aliens,
+        aliveBlueAliens: data.alive_blue_aliens
+      }))
     }
 
     sse.onerror = (e) => {
@@ -85,39 +41,30 @@ export function Game ({ gameId, playerBlue, playerGreen, setStatusGame, teamPlay
   }, [])
 
   useEffect(() => {
-    console.log('el equipo es:', teamPlayer)
-    if (host) {
+    if (game.host) {
       const timeoutId = setTimeout(() => {
-        // if (changeTic) {
-        refresh(gameId)
-        // } else {
-        //   act(gameId)
-        // }
+        refresh()
+        act()
+        spawnAliens()
       }, 1000)
-      setChangeTic(prevChangeTic => !prevChangeTic)
       return () => {
         clearTimeout(timeoutId)
       }
     }
-  }, [board])
+  }, [game.board])
 
   return (
     <>
       <Board
-        board={board}
-        teamPlayer={teamPlayer}
-        greenOvniRange={greenOvniRange}
-        blueOvniRange={blueOvniRange}
-        setBoard={setBoard}
+        game={game}
         newAlterator={alter}
         setAlter={setAlterator}
         setTeleporterEnabled={setTeleporterEnabled}
         teleporterEnabled={teleporterEnabled}
-        gameId={gameId}
       />
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={greenOvniLife} liveAliens={aliveGreenAliens} playerName={playerGreen} />
-        <StatsGame team='blue' lifeOvni={blueOvniLife} liveAliens={aliveBlueAliens} playerName={playerBlue} />
+        <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
+        <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
       </section>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
     </>
