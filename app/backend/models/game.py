@@ -24,6 +24,7 @@ class Game:
         self.winner = (None, None)  # (Player name, TEAM)
         self.alive_green_aliens = 0
         self.alive_blue_aliens = 0
+        self.spawn_aliens_tick = 0
 
     def join_as_green(self, name):
         if self.green_player is not None:
@@ -54,9 +55,12 @@ class Game:
             raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
 
     def set_initial_crew(self):
-        for i in range(INIT_CREW):
-            self.add_alien_to_range(team.Team.BLUE)
-            self.add_alien_to_range(team.Team.GREEN)
+        if self.status is TGame.NOT_STARTED:
+            for i in range(INIT_CREW):
+                self.add_alien_to_range(team.Team.BLUE)
+                self.add_alien_to_range(team.Team.GREEN)
+        else:
+            raise Exception("initial crew cannot be launched. Game status is not NOT_STARTED")
 
     def add_alien_to_range(self, t):
         if t == team.Team.GREEN:
@@ -107,7 +111,6 @@ class Game:
     """
 
     def end_game(self):
-        print('Game ended')
         self.blue_player = None
         self.green_player = None
         self.status = TGame.OVER
@@ -115,7 +118,7 @@ class Game:
     def set_alterator(self, alterator, team, x=None, y=None):
 
         # chose the team
-        alive_team_aliens = self.alive_green_aliens if team == Team.BLUE else self.alive_green_aliens
+        alive_team_aliens = self.alive_green_aliens if team == Team.GREEN else self.alive_blue_aliens
 
         if isinstance(alterator, Directioner):
             if alive_team_aliens >= 4:
@@ -144,6 +147,10 @@ class Game:
             raise Exception("invalid alterator")
         self.update_aliens_cant(team)   # updates de attribute with the new aliens cant
 
+    '''
+    
+    '''
+
     def update_aliens_cant(self, team):
         new_aliens_cant = self.board.list_aliens_of_team(team).__len__()
         if team == Team.GREEN:
@@ -153,6 +160,14 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
+    
+    '''
+        This method add a blue alien and a green alien in a randomly position of theirs respective ranges.
+    '''
+    
+    def spawn_aliens(self):
+        self.add_alien_to_range(Team.GREEN)
+        self.add_alien_to_range(Team.BLUE)
 
     '''
     This method sets a modifier on the given position if this one's free and valid.
@@ -281,11 +296,20 @@ class Game:
 
 
 class GameSchema(Schema):
-    id = fields.Integer()
     status = fields.Enum(TGame)
     green_player = fields.Str()
     blue_player = fields.Str()
-    board = fields.Nested(BoardSchema(), only=('board',))
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
+    board = fields.Nested(BoardSchema())
+
+
+class GameAliensSchema(Schema):
+    status = fields.Enum(TGame)
+    green_player = fields.Str()
+    blue_player = fields.Str()
+    winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
+    alive_green_aliens = fields.Integer()
+    alive_blue_aliens = fields.Integer()
+    board = fields.Nested(BoardSchema(), only=('cells',))

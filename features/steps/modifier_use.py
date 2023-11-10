@@ -27,5 +27,6 @@ def step_when(context, action_modifier, result_modifier):
     if context.game.get_modifier_in_position(2,9) == Modifier.MULTIPLIER:
         assert (context.game.get_num_aliens_in_position(2,9) == 2)
     else:
+        print(context.game.get_num_aliens_in_position(2,9))
         assert (context.game.get_num_aliens_in_position(2,9) == 0)
 
