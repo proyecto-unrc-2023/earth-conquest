@@ -41,11 +41,6 @@ class NextState(Resource):
         return GameController.next_state(game_id)
 
 
-class SpawnAliens(Resource):
-    def put(self, game_id):
-        return GameController.spawn_aliens(game_id)
-
-
 class JoinAs(Resource):
     # /join/game_id?team=GREEN&player_name=pepitoIsOut
     def put(self, game_id):
@@ -63,7 +58,6 @@ api.add_resource(GamesResource, '/')
 api.add_resource(GameDetails, '/<int:game_id>')                 # get details of a game by its id
 api.add_resource(StartGame, '/start_game/<int:game_id>')        # launch initial crew and set status game as STARTED
 api.add_resource(NextState, '/next_state/<int:game_id>')          # moves and act all aliens, 2 secs interval
-api.add_resource(SpawnAliens, '/spawn_aliens/<int:game_id>')    # spawn of two aliens , one of each team in their areas
 api.add_resource(JoinAs, '/join/<int:game_id>')                 # player joins to a game as blue or green player with his name
 api.add_resource(IsFreePosition, '/is_free_position/<int:game_id>')  # get position info of a game with its id
 api.add_resource(SetAlterator, '/set_alterator/<int:game_id>')  # set alterator on board of game with id

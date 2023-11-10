@@ -89,7 +89,12 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        return Response("game started successfullly", status=200, mimetype='application/json')
+        response = {
+            "success": True,
+            "gameId": str(id),
+            "message": "Game started successfully"
+        }
+        return jsonify(response)
 
     '''
         This method updates a game.
@@ -129,7 +134,12 @@ class GameController:
             )
             return Response(message, status=400, mimetype='application/json')
 
-        return Response("ok", status=200, mimetype='application/json')
+        response = {
+            "success": True,
+            "gameId": str(id),
+            "message": "New state has been updated successfully"
+        }
+        return jsonify(response)
 
     def get_all_games():
         games_data = []
@@ -242,7 +252,13 @@ class GameController:
         games_dict[id] = game
         game_schema = GameAliensSchema()
         r.set('game_status', json.dumps(game_schema.dump(game)))
-        return Response("Alterator setted successfully", status=200, mimetype='application/json')
+
+        response = {
+            "success": True,
+            "gameId": str(id),
+            "message": "Alterator setted successfully"
+        }
+        return jsonify(response)
 
     def join_as(id, team, player_name):
         response = GameController.find_game(id)
