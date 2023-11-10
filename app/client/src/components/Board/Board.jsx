@@ -2,10 +2,9 @@ import { Cell } from '../Cell/Cell'
 import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
+import { isFreePosition, sendAlterator } from '../../services/appService'
 
-export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, gameId, blueOvniRange, greenOvniRange }) => {
-  const FREE_POSITION = 'http://127.0.0.1:5000/games/is_free_position'
-  const SEND_ALTERATOR = 'http://127.0.0.1:5000/games/set_alterator'
+export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -26,45 +25,11 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
 
   const updateBoard = async (row, col) => {
     if (newAlterator === null) return
-    if (!await isFreePosition(row, col)) return
+    if (!await isFreePosition(row, col, game.gameId)) return
     if ((newAlterator === alterator.TELEPORTER_OUT) && outOfTeleportRange(row, col, teleportX, teleportY)) return
 
-    const newBoard = [...board]
+    const newBoard = [...game.board]
     setAlteratorInCell(row, col, newAlterator, newBoard)
-  }
-
-  const sendAlterator = async (newAlterator) => {
-    console.log('esto es lo que mando a la api: ', JSON.stringify(newAlterator))
-    try {
-      const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
-        method: 'PUT',
-        headers:
-        {
-          'Content-Type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify(newAlterator)
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-    } catch (error) {
-      console.error('Error set alterator', error)
-    }
-  }
-
-  const isFreePosition = async (row, col) => {
-    try {
-      const response = await fetch(`${FREE_POSITION}/${gameId}?x=${row}&y=${col}`)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      return (data.success)
-    } catch (error) {
-      console.error('Error is valid position', error)
-    }
   }
 
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
@@ -76,7 +41,7 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
           positionEnd: { x: -1, y: -1 },
           direction: '-'
         },
-        team: teamPlayer
+        team: game.teamPlayer
       }
       await sendAlterator(newTrap)
     } else {
@@ -93,7 +58,7 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
             positionEnd: { x: -1, y: -1 },
             direction: alteratorDirection
           },
-          team: teamPlayer
+          team: game.teamPlayer
         }
 
         await sendAlterator(newDirectioner)
@@ -113,7 +78,7 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
               positionEnd: { x: row, y: col },
               direction: alteratorDirection
             },
-            team: teamPlayer
+            team: game.teamPlayer
           }
           await sendAlterator(newTeleport)
           setAlter(null)
@@ -125,7 +90,7 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
   return (
     <section className='board'>
       {
-        board.map((row, i) => {
+        game.board.map((row, i) => {
           return (
             row.map((cell, j) => {
               return (
@@ -134,8 +99,8 @@ export const Board = ({ board, setBoard, teamPlayer, newAlterator, setAlter, set
                   col={j}
                   row={i}
                   updateBoard={updateBoard}
-                  greenBase={greenOvniRange}
-                  blueBase={blueOvniRange}
+                  greenBase={game.greenOvniRange}
+                  blueBase={game.blueOvniRange}
                   teleporterEnabled={teleporterEnabled}
                   teleportX={teleportX}
                   teleportY={teleportY}
