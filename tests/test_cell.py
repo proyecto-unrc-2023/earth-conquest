@@ -216,4 +216,6 @@ def test_cell_with_modifier_multiplier():
     cell.add_alien(alien)
     cell.action()
     assert cell.aliens[0] == alien
-    assert cell.aliens[1] == alien
+    assert isinstance(cell.aliens[1], Alien)
+    assert cell.aliens[1].team == Team.GREEN
+    assert cell.aliens[1].eyes == cell.aliens[0].eyes

@@ -9,8 +9,6 @@ const REFRESH = `${API}games/refresh_board`
 const ACT = `${API}games/act_board`
 const SPAWN_ALIENS = `${API}games/spawn_aliens`
 
-
-
 export const createGame = async () => {
   try {
     const response = await fetch(API + CREATE_GAME, {
@@ -92,7 +90,6 @@ export const sendAlterator = async (newAlterator) => {
   }
 }
 
-
 export const refresh = async (gameId) => {
   try {
     const response = await fetch(REFRESH + gameId, {
@@ -121,7 +118,7 @@ export const act = async (gameId) => {
 
 export const spawnAliens = async (gameId) => {
   try {
-    const response = await fetch(SPAWN_ALIENS  + gameId, {
+    const response = await fetch(SPAWN_ALIENS + gameId, {
       method: 'PUT'
     })
     if (!response.ok) {

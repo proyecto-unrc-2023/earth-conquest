@@ -23,6 +23,7 @@ class Board:
         self.rows = rows
         self.cols = cols
         self.aliens = {}  # Dictionary with Key = position on the board, Value = list of aliens in that position
+        self.alterators_positioned = {}
         self.base_range_dimentions = base_range_dimentions
         self.green_ovni_range = (base_range_dimentions - 1, base_range_dimentions - 1)
         self.blue_ovni_range = (rows - 1 - (base_range_dimentions - 1), cols - 1 - (base_range_dimentions - 1))
@@ -36,7 +37,6 @@ class Board:
     default modifiers: MountainRange, Killer, Multiplier
     that are set outside the ovnis ranges.
     """
-
     def create_board(self):
         rows = self.rows
         cols = self.cols
@@ -59,7 +59,6 @@ class Board:
     This method sets a mountain range on the board with a random orientation and on a random, 
     valid and free position of the board.
     """
-
     def set_mountain_range_on_board(self):
         while True:
             x, y = self.get_random_free_pos()
@@ -83,7 +82,6 @@ class Board:
     Returns a free position of the board which it is not
     a modifier, nor an alterator or is in any ovnis ranges.
     """
-
     def get_random_free_pos(self):
         while True:  # se ejecuta infinitamente hasta que se le isntruccione salir del bucle
             x = random.randint(0, self.rows - 1)
@@ -94,7 +92,6 @@ class Board:
     """
     Checks if a given position is within the board's perimeter
     """
-
     def is_within_board_range(self, x, y):
         return 0 <= x < self.rows and 0 <= y < self.cols
 
@@ -102,7 +99,6 @@ class Board:
     Returns True if he position is on the board range 
     and it's not a modifier or an alterator.
     """
-
     def is_free_position(self, x, y):
         if self.is_within_board_range(x, y):
             if self.get_cell(x, y).modifier is None and self.get_cell(x, y).alterator is None:
@@ -115,14 +111,12 @@ class Board:
     """
     Returns True if the position is on any of the ranges of the ovnis
     """
-
     def is_pos_on_any_range(self, x, y):
         return self.is_position_in_blue_range(x, y) or self.is_position_in_green_range(x, y)
 
     """
     Returns True if the position is on the blue base range.
     """
-
     def is_position_in_blue_range(self, x, y):
         if self.blue_ovni_range[0] <= x < self.rows and self.blue_ovni_range[1] <= y < self.cols:
             return True
@@ -132,17 +126,12 @@ class Board:
     """
     Returns True if the position is on the green base range.
     """
-
     def is_position_in_green_range(self, x, y):
-        if 0 <= x <= self.green_ovni_range[0] and 0 <= y <= self.green_ovni_range[1]:
-            return True
-        else:
-            return False
+        return 0 <= x <= self.green_ovni_range[0] and 0 <= y <= self.green_ovni_range[1]
 
     """
     Returns the Cell that's at a specific position.
     """
-
     def get_cell(self, x, y):
         if 0 <= x < self.rows and 0 <= y < self.cols:
             return self.board[x][y]
@@ -153,10 +142,10 @@ class Board:
     Sets a Trap on a specific Cell only if on that cell 
     there's no Modifier or Alterator already placed there.
     """
-
     def set_trap(self, x, y):
         if self.is_free_position(x, y) and not self.is_pos_on_any_range(x, y):
             self.get_cell(x, y).alterator = Alterator.TRAP
+            self.alterators_positioned[(x, y)] = Alterator.TRAP
         else:
             raise ValueError("Position isn't free or valid")
 
@@ -164,7 +153,6 @@ class Board:
     Sets a Teleporter on two specific Cells (door and exit) only if on those 
     cells there's no Modifier or Alterator already placed there.
     """
-
     def set_teleporter(self, teleporter):
         door_row, door_col = teleporter.door_pos
         exit_row, exit_col = teleporter.exit_pos
@@ -177,6 +165,8 @@ class Board:
         ):
             self.get_cell(door_row, door_col).alterator = teleporter
             self.get_cell(exit_row, exit_col).alterator = teleporter
+            self.alterators_positioned[(door_row, door_col)] = teleporter
+            self.alterators_positioned[(exit_row, exit_col)] = teleporter
         else:
             raise ValueError("Positions of the teleporter aren't free or valid")
 
@@ -184,7 +174,6 @@ class Board:
     Sets a Directioner on three specific Cells only if on those 
     cells there's no Modifier or Alterator already placed there.
     """
-
     def set_directioner(self, directioner):
         positions = [
             directioner.init_pos,
@@ -198,12 +187,12 @@ class Board:
 
         for row, col in positions:
             self.get_cell(row, col).alterator = directioner
+            self.alterators_positioned[(row, col)] = directioner
 
     """ 
     Sets a Modifier on a specific Cell only if on that cell 
     there's no Modifier or Alterator already placed there.
     """
-
     def set_modifier(self, modifier, x, y):
         if self.is_free_position(x, y):
             self.get_cell(x, y).modifier = modifier
@@ -213,14 +202,12 @@ class Board:
     """ 
     Returns the Modifier that's on a specific Cell.
     """
-
     def get_modifier(self, x, y):
         return self.get_cell(x, y).modifier
 
     """
     Method that sets an alien on the alive aliens dictionary.
     """
-
     def set_alien_in_dictionary(self, x, y, alien):
         position = (x, y)
         # if there's already aliens at that position
@@ -232,30 +219,39 @@ class Board:
     """ 
     Updates the board by moving each alien to a free random adjoining position.
     """
-
     def refresh_board(self):
-        aliens_copy = dict(self.aliens)  # dictionary copy
-        for key in aliens_copy:
-            list_of_aliens = aliens_copy[key]  # list of aliens in that key
-            for alien in list_of_aliens:
-                x = key[0]
-                y = key[1]
+
+        copy = {}
+        for pos in self.aliens.keys():
+            for alien in self.aliens[pos]:
+                if pos in copy:
+                    copy[pos].append(alien)
+                else:
+                    copy[pos] = [alien]
+        # en este entonces estaria copiado self.aliens en copy, con las claves y valores
+
+        for pos in copy.keys():     # se mueven todos los aliens del hash copy
+            x = pos[0]
+            y = pos[1]
+            for alien in copy[pos]:
                 self.move_alien(x, y, alien)
 
-    """ 
+    """
     This method solves each fight and/or reproduction that may occur between aliens 
     on each cell. 
     It also solves any action that may occur between aliens and Alterators/Modifiers.
     """
-
     def act_board(self):
-        for key in self.aliens:
-            x = key[0]
-            y = key[1]
+
+        for key in list(self.aliens.keys()):
+            x, y = key[0], key[1]
             cell = self.get_cell(x, y)
-            cell.action()  # only one alien will be left or just none after the action
-            self.aliens[(x, y)] = cell.aliens
-            if not cell.aliens == []:
+            if cell.aliens.__len__() >= 1:   # action the cell if there is more than one alien
+                cell.action()
+                self.aliens[(x, y)] = cell.aliens.copy()   # updates the dict
+
+            # atack enemy ovni
+            if len(cell.aliens) == 1:
                 alien = cell.aliens[0]
                 if (alien.team == Team.BLUE and self.is_position_in_green_range(x, y)
                         or alien.team == Team.GREEN and self.is_position_in_blue_range(x, y)):
@@ -268,7 +264,6 @@ class Board:
     x, y represent the position where the alien is currently placed at.
     It updates both the dictionary and board.
     """
-
     def move_alien(self, x, y, alien):
         if not self.get_cell(x, y).aliens.__contains__(alien):
             raise ValueError("alien not found in position")
@@ -282,29 +277,13 @@ class Board:
         else:
             new_x, new_y = self.get_adjoining_valid_pos(x, y)
 
-        # Remove the alien from the old position if it's there
-        if self.get_cell(x, y).aliens.__contains__(alien):
-            self.get_cell(x, y).remove_alien(alien)
-
-        # Add the alien to the new position
-        self.get_cell(new_x, new_y).add_alien(alien)
-
-        # Update the dictionary
-        if (x, y) in self.aliens:
-            # Remove the alien from the old position in the dictionary if it's there
-            if alien in self.aliens[(x, y)]:
-                self.aliens[(x, y)].remove(alien)
-
-            # Add the alien to the new position in the dictionary
-            self.set_alien_in_dictionary(new_x, new_y, alien)
-        else:
-            raise ValueError("The key provided does not have the alien on its list of aliens")
+        self.remove_alien_from_board(x, y, alien)
+        self.set_alien(new_x, new_y, alien)
 
     """
     An alien is placed at a (x,y) position where a teleporter is placed.
     This method returns the position where the alien has to move to.
     """
-
     def new_alien_pos_with_teleporter(self, x, y, teleporter):
         if x == teleporter.door_pos[0] and y == teleporter.door_pos[1]:
             return teleporter.exit_pos
@@ -315,7 +294,6 @@ class Board:
     An alien is placed at a (x,y) position where a directioner is placed.
     This method returns the position where the alien has to move to.
     """
-
     def new_alien_pos_with_directioner(self, x, y, directioner):
         if x == directioner.init_pos[0] and y == directioner.init_pos[1]:
             return directioner.snd_pos
@@ -326,20 +304,27 @@ class Board:
                 return directioner.last_pos
             else:
                 if directioner.direction == Direction.LEFT or directioner.direction == Direction.RIGHT:
-                    if self.can_alien_move_to_pos(x - 1, y) or self.can_alien_move_to_pos(x - 1, y):
+                    valid_positions = []
+                    if self.can_alien_move_to_pos(x - 1, y):
+                        valid_positions.append((x-1,y))
+                    if self.can_alien_move_to_pos(x + 1, y):
+                        valid_positions.append((x+1,y))
+                    if valid_positions:
                         # the alien will move to a random adjacent position that's not equal to the snd_pos
-                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
-                        while new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]:
-                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        new_x, new_y = random.choice(valid_positions)
                         return new_x, new_y
                     else:
+                        # the alien has nowhere to move, it'll stay on its position
                         return x, y
                 if directioner.direction == Direction.DOWNWARDS or directioner.direction == Direction.UPWARDS:
-                    if self.can_alien_move_to_pos(x, y - 1) or self.can_alien_move_to_pos(x, y + 1):
+                    valid_positions = []
+                    if self.can_alien_move_to_pos(x, y-1):
+                        valid_positions.append((x,y-1))
+                    if self.can_alien_move_to_pos(x, y+1):
+                        valid_positions.append((x,y+1))
+                    if valid_positions:
                         # the alien will move to a random adjacent position that's not equal to the snd_pos
-                        new_x, new_y = self.get_adjoining_valid_pos(x, y)
-                        while new_x == directioner.snd_pos[0] and new_y == directioner.snd_pos[1]:
-                            new_x, new_y = self.get_adjoining_valid_pos(x, y)
+                        new_x, new_y = random.choice(valid_positions)
                         return new_x, new_y
                     else:
                         return x, y
@@ -349,7 +334,6 @@ class Board:
     it is on the board dimension and 
     it is not a modifier nor an alterator
     """
-
     def get_adjoining_valid_pos(self, x, y):
         # the alien can only stay on it's place
         if not self.alien_has_free_adjacent_positions(x, y):
@@ -373,39 +357,26 @@ class Board:
     Method that returns True if there's a free adjacent position for the alien
     to move to. False if there's none.
     """
-
     def alien_has_free_adjacent_positions(self, x, y):
-        if self.can_alien_move_to_pos(x - 1, y):
-            return True
-        elif self.can_alien_move_to_pos(x + 1, y):
-            return True
-        elif self.can_alien_move_to_pos(x, y - 1):
-            return True
-        elif self.can_alien_move_to_pos(x, y + 1):
-            return True
-        else:
-            return False
+        positions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        for new_x, new_y in positions:
+            if self.can_alien_move_to_pos(x + new_x, y + new_y):
+                return True
+        return False
+
 
     """
     Given a position, returns True if the alien can move there.
     The alien can move there if the position is within the board's perimeter and
     there's no mountain there.
     """
-
     def can_alien_move_to_pos(self, x, y):
-        if 0 <= x < self.rows and 0 <= y < self.cols:
-            if self.get_cell(x, y).modifier is Modifier.MOUNTAIN_RANGE:
-                return False
-            else:
-                return True
-        else:
-            return False
+        return 0 <= x < self.rows and 0 <= y < self.cols and self.get_cell(x, y).modifier is not Modifier.MOUNTAIN_RANGE
 
     """
     Methods that sets an alien on the board at a given position.
     The dictionary of aliens is updated.
     """
-
     def set_alien(self, x, y, alien):
         self.get_cell(x, y).add_alien(alien)
         self.set_alien_in_dictionary(x, y, alien)
@@ -414,20 +385,33 @@ class Board:
     Methods that removes an alien on the board at a given position.
     The dictionary of aliens is updated.
     """
-
     def remove_alien_from_board(self, x, y, alien):
         if isinstance(alien, Alien) and self.aliens.__contains__((x, y)):
             self.get_cell(x, y).remove_alien(alien)
-            if (x, y) in self.aliens and alien in self.aliens[(x,y)]:
-                self.aliens[(x, y)].remove(alien)
+            self.remove_alien_in_dict(x, y, alien)
         else:
             raise ValueError(f'alien not found')
+
+    '''
+    This method removes an alien ONLY from the dictionary of aliens
+    '''
+    def remove_alien_in_dict(self, x, y, alien):
+        if self.aliens[(x, y)].__len__() == 1:
+            self.aliens.pop((x, y))
+        elif self.aliens[(x, y)].__len__() > 1:
+            self.aliens[(x, y)].remove(alien)
+
+    """
+    This method returns True if the game is over.
+    The game is over when any of the OVNI's life is 0.
+    """
+    def any_ovni_destroyed(self):
+        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
     """
     Given an alien, this method returns the position were the alien is placed
     on the board. The position is returned in the form of a tuple.
     """
-
     def get_alien_position(self, alien):
         for key in self.aliens:
             list_of_aliens = self.aliens[key]  # list of aliens in that key
@@ -437,22 +421,22 @@ class Board:
 
     """
     This code defines a method for handling alien attacks on OVNI (UFO) units in a game scenario.
-
     The method checks the team of the attacking alien (either "BLUE" or "GREEN") and compares its position with the 
     range of the opposing team's OVNI. It then reduces the OVNI's life points based on the alien's "eyes" attribute, 
     and if the alien's position matches an entry in the 'aliens' dictionary, it removes the alien from that position.
     """
-
     def alien_attack_ovni(self, x, y, alien):
         if alien.team == Team.BLUE and self.is_position_in_green_range(x, y):
             self.green_ovni_life -= alien.eyes
-            if (x, y) in self.aliens:
-                self.aliens[(x, y)].remove(alien)  # removes from hash and cell
         elif alien.team == Team.GREEN and self.is_position_in_blue_range(x, y):
             self.blue_ovni_life -= alien.eyes
-            if (x, y) in self.aliens:
-                self.aliens[(x, y)].remove(alien)
 
+        if (x, y) in self.aliens:
+            self.remove_alien_from_board(x, y, alien)
+
+    '''
+    The method returns True if any of the OVNI's life is 0.
+    '''
     def any_ovni_destroyed(self):
         return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
@@ -507,13 +491,9 @@ class Board:
     def put_cell(self, row, column, cell):
         self.board[row][column] = cell
 
-    def any_ovni_destroyed(self):
-        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
-
     '''
     This method kills a given number of aliens of a given team  
     '''
-
     def kill_aliens(self, team, cant):
         team_aliens = self.list_aliens_of_team(team)
         # en este punto todos los aliens del equipo 'team' estaran almacenados en team_aliens
@@ -530,7 +510,6 @@ class Board:
     '''
     This method returns a dict with the aliens of a given team as keys and their positions as values
     '''
-
     def list_aliens_of_team(self, team):
         team_aliens = {}  # dict que llevara los aliens como clave y su pos como valor
         for pos, aliens_on_cell in self.aliens.items():
@@ -543,14 +522,12 @@ class Board:
     '''
     This method returns the number of aliens of a given team
     '''
-
     def get_aliens_cant_of_team(self, team):
         return self.list_aliens_of_team(team).__len__()
 
     '''
     This method adds eyes to an alien in a given position
     '''
-
     def add_eyes_to_alien(self, x, y, alien_pos_in_list, num_eyes):
         cell = self.get_cell(x, y)
         cell.aliens[alien_pos_in_list].add_eyes(num_eyes)
@@ -558,7 +535,6 @@ class Board:
     '''
     This method returns an alien in a given position
     '''
-
     def get_alien_in_position(self, x, y, alien_pos_in_list):
         cell = self.get_cell(x, y)
         return cell.aliens[alien_pos_in_list]
@@ -566,24 +542,35 @@ class Board:
     '''
     This method returns the number of aliens in a given position 
     '''
-
     def get_num_aliens_in_position(self, x, y):
         cell = self.get_cell(x, y)
         return len(cell.aliens)
 
-    def json(self):
-        return {
-            'blue_ovni_range': self.blue_ovni_range,
-            'green_ovni_range': self.green_ovni_range,
-            'base_range_dimentions': self.base_range_dimentions,
-            'board': self.board.__str__()
-        }
+
+class AliensPositionField(fields.Field):
+    def _serialize(self, value, attr, obj, **kwargs):
+        cell_dict = {}
+        cell_schema = CellSchema()
+        for key in obj.aliens:  # add aliens to the schema
+            cell = obj.get_cell(key[0], key[1])
+            if str(key) in cell_dict:
+                cell_dict[str(key)].append(cell_schema.dump(cell))
+            else:
+                cell_dict[str(key)] = cell_schema.dump(cell)
+
+        for key in obj.alterators_positioned:   # add alterators
+            cell = obj.get_cell(key[0], key[1])
+            if str(key) not in cell_dict:
+                cell_dict[str(key)] = cell_schema.dump(cell)
+
+        return cell_dict
 
 
 class BoardSchema(Schema):
     blue_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     green_ovni_range = fields.Tuple((fields.Integer(), fields.Integer()))
     base_range_dimentions = fields.Integer()
-    board = fields.List(fields.List(fields.Nested(CellSchema())))
+    cells = AliensPositionField(attribute='aliens')
     green_ovni_life = fields.Integer()
     blue_ovni_life = fields.Integer()
+    grid = fields.List(fields.List(fields.Nested(CellSchema())), attribute='board')
