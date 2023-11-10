@@ -11,6 +11,13 @@ from app.backend.models.teleporter import Teleporter, TeleporterSchema
 
 
 class Cell:
+    """
+    A cell represents a location on a grid where aliens can be placed. It can contain zero or more aliens,
+    and may also have a modifier or trap that affects the aliens in some way. The cell can perform actions
+    on the aliens, such as making them fight or reproduce, and can also apply the effects of the modifier
+    or trap. The cell can be serialized to a string representation, and deserialized from a string to a
+    Cell object.
+    """
 
     def __init__(self):
         self.aliens = []
@@ -78,7 +85,8 @@ class Cell:
                 alien = Alien(team, eyes)
                 self.aliens.append(alien)
         else:
-            raise ValueError(f'this method is only applicable for aliens from the same team and for at least 2 aliens')
+            raise ValueError(
+                f'this method is only applicable for aliens from the same team and for at least 2 aliens')
 
     """
     This method acts on the aliens list. It makes the aliens reproduce and/or fight according
@@ -89,8 +97,10 @@ class Cell:
     def action(self):
         if not self.all_aliens_same_team():
             if self.aliens.__len__() > 2:
-                aliens_blue, aliens_green = self.divide_aliens_for_different_teams()    # divido aliens por equipo
-                blue_eyes = self.sum_eyes_list_of_aliens(aliens_blue)   # suma de todos los ojos de cada equipos
+                # divido aliens por equipo
+                aliens_blue, aliens_green = self.divide_aliens_for_different_teams()
+                # suma de todos los ojos de cada equipos
+                blue_eyes = self.sum_eyes_list_of_aliens(aliens_blue)
                 green_eyes = self.sum_eyes_list_of_aliens(aliens_green)
                 self.aliens.clear()     # all aliens removed
                 if blue_eyes > green_eyes:
@@ -154,41 +164,60 @@ class Cell:
                 aliens_green.append(alien)
         return aliens_blue, aliens_green
 
+    '''
+    Returns a string representation of the cell.
+    '''
+
     def __str__(self):
+        modifier_mapping = {
+            modifier.Modifier.MOUNTAIN_RANGE: 'M',
+            modifier.Modifier.KILLER: 'K',
+            modifier.Modifier.MULTIPLIER: '2',
+        }
+
+        alterator_mapping = {
+            Alterator.TRAP: 'TRAP',  # Assuming Alterator.TRAP is a type
+        }
+
         if self.aliens:
-            res = ""
-            for i in range(len(self.aliens)):
-                res += self.aliens[i].__str__()
-            return res
-        if self.modifier is modifier.Modifier.MOUNTAIN_RANGE:
-            return 'M'
-        if self.modifier is modifier.Modifier.KILLER:
-            return 'K'
-        if self.modifier is modifier.Modifier.MULTIPLIER:
-            return '2'
-        if isinstance(self.alterator, Directioner):
-            return 'D'
-        if isinstance(self.alterator, Teleporter):
-            return 'T'
-        if self.alterator is alterator.Alterator.TRAP:
-            return 'TRAP'
+            return ''.join(str(alien) for alien in self.aliens)
+
+        if self.modifier in modifier_mapping:
+            return modifier_mapping[self.modifier]
+
+        for alterator_type, alterator_str in alterator_mapping.items():
+            if self.alterator == alterator_type:  # Check for equality, not isinstance
+                return alterator_str
+
         return ' '
 
     @staticmethod
     def from_string(cell_str):
         if cell_str == '   ':
             return Cell()
-        elif cell_str == ' B ':
+        elif cell_str.startswith('B:'):
             cell = Cell()
-            cell.add_alien(Team.BLUE)
+            eyes = int(cell_str[2:])
+            alien = Alien(Team.BLUE, eyes)
+            cell.add_alien(alien)
+            return cell
+        elif cell_str.startswith('G:'):
+            cell = Cell()
+            eyes = int(cell_str[2:])
+            alien = Alien(Team.GREEN, eyes)
+            cell.add_alien(alien)
             return cell
         elif cell_str == ' G ':
             cell = Cell()
             cell.add_alien(Team.GREEN)
             return cell
+        elif cell_str == ' B ':
+            cell = Cell()
+            cell.add_alien(Team.BLUE)
+            return cell
         elif cell_str == ' D ':
             cell = Cell()
-            cell.alterator = directioner
+            cell.alterator = Alterator.DIRECTIONER
             return cell
         elif cell_str == ' M ':
             cell = Cell()
