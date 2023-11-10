@@ -132,13 +132,12 @@ export const spawnAliens = async (gameId) => {
 const getGame = async (currentGameId) => {
   try {
     const response = await fetch(GET_GAME + currentGameId)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log('GET BOARD:', data)
-    } catch (error) {
-      console.error('Error get game:', error)
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
     }
+    const data = await response.json()
+    console.log('GET BOARD:', data)
+  } catch (error) {
+    console.error('Error get game:', error)
   }
 }

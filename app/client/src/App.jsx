@@ -8,7 +8,7 @@ function App () {
   const [game, setGame] = useState({
     gameId: null,
     board: null,
-    statusGame: null,
+    statusGame: gameStatus.NOT_STARTED,
     host: null,
     playerBlue: null,
     playerGreen: null,
@@ -27,6 +27,7 @@ function App () {
   }))
   */
 
+  /*
   const hash = {
     '(6, 14)': {
       aliens: [],
@@ -45,7 +46,8 @@ function App () {
       alterator: null
     }
   }
-
+  */
+  /*
   const actualizarBoardConHash = (nuevoHash) => {
     const newBoard = [...game.board]
     for (const position in nuevoHash) {
@@ -59,69 +61,71 @@ function App () {
         newBoard[row][col] = nuevoHash[position]
       }
     }
+  }
+  */
 
-    useEffect(() => {
-      if (game.gameId) {
+  useEffect(() => {
+    if (game.gameId) {
       // eslint-disable-next-line no-undef
-        const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
-        console.log('SSE ACTIVO')
-        sse.onmessage = e => {
-          const data = JSON.parse(e.data)
+      const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      console.log('SSE ACTIVO')
+
+      sse.onmessage = e => {
+        const data = JSON.parse(e.data)
+        setGame((prevState) => ({
+          ...prevState,
+          statusGame: data.status
+        }))
+        if (data.status !== gameStatus.STARTED) {
+          console.log(data)
           setGame((prevState) => ({
             ...prevState,
-            statusGame: data.status
+            greenOvniRange: data.board.green_ovni_range,
+            blue_ovni_range: data.board.blue_ovni_range,
+            playerBlue: data.blue_player,
+            playerGreen: data.green_player
           }))
-          if (data.status !== gameStatus.STARTED) {
-            console.log(data)
-            setGame((prevState) => ({
-              ...prevState,
-              greenOvniRange: data.board.green_ovni_range,
-              blue_ovni_range: data.board.blue_ovni_range,
-              playerBlue: data.blue_player,
-              playerGreen: data.green_player
-            }))
-            actualizarBoardConHash(data.board.cells)
-            if (game.playerBlue && game.playerGreen) {
-              console.log('STARTEO DESDE SSE')
-              if (!game.host) startGame(game.gameId)
-            }
+          actualizarBoardConHash(data.board.cells)
+          if (game.playerBlue && game.playerGreen) {
+            console.log('STARTEO DESDE SSE')
+            if (!game.host) startGame(game.gameId)
           }
         }
+      }
 
-        sse.onerror = () => {
-          // error log here
-          sse.close()
+      sse.onerror = () => {
+        // error log here
+        sse.close()
+      }
+
+      return () => {
+        sse.close()
+      }
+    } else {
+      console.log('Entre al else del sse')
+    }
+  }, [game.playerBlue, game.playerGreen])
+
+  return (
+    <main>
+      {
+          game.statusGame !== gameStatus.STARTED &&
+            <Menu
+              game={game}
+              setGame={setGame}
+            />
+        }
+      {
+          game.statusGame === gameStatus.STARTED &&
+            <Game
+              game={game}
+              setGame={setGame}
+              startGame={startGame}
+            />
         }
 
-        return () => {
-          sse.close()
-        }
-      } else {
-        console.log('Entre al else del sse')
-      }
-    }, [game.playerBlue, game.playerGreen])
-
-    return (
-      <main>
-        {
-        game.statusGame !== gameStatus.STARTED &&
-          <Menu
-            game={game}
-            setGame={setGame}
-          />
-      }
-        {
-        game.statusGame === gameStatus.STARTED &&
-          <Game
-            game={game}
-            setGame={setGame}
-            startGame={startGame}
-          />
-      }
-
-      </main>
-    )
-  }
+    </main>
+  )
 }
 
 export default App
