@@ -18,14 +18,15 @@
   ],
   "paths": {
     "/games": {
-      "get": {
+            "post": {
         "tags": [
-          "Games list"
+          "Create a Game"
         ],
-        "summary": "Returns all active games",
+        "summary": "Create a new game",
+        "description": "Creates a game as NOT_STARTED, modifiers are set randomly on the 10x15 default board",
         "responses": {
-          "200": {
-            "description": "All games retrieved successfully",
+          "201": {
+            "description": "Game created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -36,15 +37,14 @@
           }
         }
       },
-      "post": {
+      "get": {
         "tags": [
-          "Create a Game"
+          "Games list"
         ],
-        "summary": "Create a new game",
-        "description": "Creates a game as NOT_STARTED, modifiers are set randomly on the 10x15 default board",
+        "summary": "Returns all active games",
         "responses": {
-          "201": {
-            "description": "Game created successfully",
+          "200": {
+            "description": "All games retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -122,20 +122,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Player 'name' has joined to game as 'team' player",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameSchema"
-                }
-              }
-            }
+            "description": "Player 'name' has joined to game as 'team' player"
           },
           "404": {
             "description": "Game not found"
           },
           "400": {
-            "description": "team is already taken"
+            "description": "team or name is already taken"
           }
         }
       }
@@ -158,14 +151,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Game retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameSchema"
-                }
-              }
-            }
+            "description": "Game started successfully"
           },
           "404": {
             "description": "Game not found"
@@ -176,13 +162,13 @@
         }
       }
     },
-    "/games/refresh_board/{id}": {
+    "/games/next_state/{id}": {
       "put": {
         "tags": [
-          "Refresh Board"
+          "Next State"
         ],
-        "summary": "Refresh Board",
-        "description": "All aliens are moved to an adjacent cell",
+        "summary": "Refresh and act Board",
+        "description": "All aliens are moved to an adjacent cell, the game status is updated. Two seconds later the boards acts and the game status is updated if so required. After three next_states, one alien of each team is spawned on its respective area. Data is auto-uploaded to the sse function after refresh and act.",
         "parameters": [
           {
             "in": "path",
@@ -194,122 +180,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Board refreshes successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameSchema"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Game not found"
-          }
-        }
-      }
-    },
-    "/games/act_board/{id}": {
-      "put": {
-        "tags": [
-          "Act Board"
-        ],
-        "summary": "Act Board",
-        "description": "Each cell acts on depending aliens quantity and its teams",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "required": true,
-            "description": "Game id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Game acts successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameSchema"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Game not found"
-          }
-        }
-      }
-    },
-    "/games/spawn_aliens/{id}": {
-      "put": {
-        "tags": [
-          "Spawn aliens"
-        ],
-        "summary": "Spawn one new alien of each team on their respective areas",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "required": true,
-            "description": "Game id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Game acts successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GameSchema"
-                }
-              }
-            }
+            "description": "New state has been updated successfully"
           },
           "404": {
             "description": "Game not found"
           },
           "400": {
-            "description": "can not spawn aliens, game status is not NOT_STARTED"
-          }
-        }
-      }
-    },
-    "/games/is_free_position/{id}": {
-      "get": {
-        "tags": [
-          "Is free position"
-        ],
-        "summary": "Returns true if a given position is not occupied and it's not an area",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "type": "integer",
-            "required": true,
-            "description": "Game id"
-          },
-          {
-            "in": "query",
-            "name": "x",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "in": "query",
-            "name": "y",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "succes: True if position is free, false in other case"
-          },
-          "404": {
-            "description": "Game not found"
+            "description": "An error occurred updating the state"
           }
         }
       }
@@ -394,12 +271,48 @@
         }
       }
     },
+    "/games/is_free_position/{id}": {
+      "get": {
+        "tags": ["Is free position"],
+        "summary": "Returns true if a given position is not occupied and it's not an area",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Game id"
+          },
+          {
+            "in": "query",
+            "name": "x",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "y",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "succes: True if position is free, false in other case"
+          },
+          "404": {
+            "description": "Game not found"
+          }
+        }
+      }
+    },
     "/games/sse/{id}": {
       "get": {
         "tags": [
           "Sse"
         ],
-        "summary": "Returns game details when any game stuff changes",
+        "summary": "Returns game status where its updated",
+        "description": "This route returns a function that checks everytime if the game status has changed. That's occurs on the methods: Start Game, Next State, Set Alterator. When Next State route it's executed, game status its updated with the aliens movement (refresh) and two seconds later, when the board acts.",
         "parameters": [
           {
             "in": "path",
@@ -411,10 +324,17 @@
         ],
         "responses": {
           "200": {
-            "description": "sse function that checks game changes everytime"
+            "description": ""
           },
           "404": {
             "description": "Game not found"
+          },
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GameAlienSchema"
+              }
+            }
           }
         }
       }
@@ -425,9 +345,6 @@
       "GameSchema": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
-          },
           "status": {
             "type": "string",
             "enum": [
@@ -447,10 +364,7 @@
             "items": {
               "type": "array",
               "items": {
-                "type": "object",
-                "items": {
-                  "$ref": "#/components/schemas/CellSchema"
-                }
+                "$ref": "#/components/schemas/CellSchema"
               }
             }
           },
@@ -477,10 +391,94 @@
           }
         }
       },
+      "GameAlienSchema": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["STARTED", "NOT_STARTED", "OVER"]
+          },
+          "green_player": {
+            "type": "string"
+          },
+          "blue_player": {
+            "type": "string"
+          },
+          "board": {
+            "type": "object",
+            "properties": {
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CellSchema"
+                  }
+                }
+              },
+              "blue_ovni_range": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer"
+                  },
+                  "y": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "green_ovni_range": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer"
+                  },
+                  "y": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "base_range_dimentions": {
+                "type": "integer"
+              }
+            }
+          },
+          "winner": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "team": {
+                "type": "string",
+                "enum": ["BLUE", "GREEN"]
+              }
+            }
+          },
+          "alive_green_aliens": {
+            "type": "integer"
+          },
+          "blue_green_aliens": {
+            "type": "integer"
+          }
+        }
+      },
       "BoardSchema": {
         "type": "object",
         "properties": {
           "board": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "items": {
+                  "$ref": "#/components/schemas/CellSchema"
+                }
+              }
+            }
+          },
+          "cells": {
             "type": "array",
             "items": {
               "type": "array",
