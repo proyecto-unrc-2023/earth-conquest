@@ -48,14 +48,14 @@ class Game:
         self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))
 
     def start_game(self):
-        if (self.status is TGame.NOT_STARTED and
-                self.blue_player is not None and
-                self.green_player is not None):
-            self.set_initial_crew()
-            self.status = TGame.STARTED
-        else:
-            raise Exception(
-                "can not start the game, some player is left or game status is not NOT_STARTED")
+        if self.status is not TGame.NOT_STARTED:
+            raise Exception("The game has already started.")
+        if self.blue_player is None:
+            raise Exception("Blue player is missing.")
+        if self.green_player is None:
+            raise Exception("Green player is missing.")
+        self.set_initial_crew()
+        self.status = TGame.STARTED
 
     def set_initial_crew(self):
         if self.status is TGame.NOT_STARTED:
