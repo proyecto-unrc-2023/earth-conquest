@@ -42,8 +42,10 @@ class Game:
 
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
-            raise Exception("Invalid dimensions. Minimum board is 4x6. Max is 25x45")
-        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
+            raise Exception(
+                "Invalid dimensions. Minimum board is 4x6. Max is 25x45")
+        # raiz cuadrada del 10% del area de la matriz
+        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))
 
     def start_game(self):
         if (self.status is TGame.NOT_STARTED and
@@ -52,7 +54,8 @@ class Game:
             self.set_initial_crew()
             self.status = TGame.STARTED
         else:
-            raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
+            raise Exception(
+                "can not start the game, some player is left or game status is not NOT_STARTED")
 
     def set_initial_crew(self):
         if self.status is TGame.NOT_STARTED:
@@ -60,7 +63,8 @@ class Game:
                 self.add_alien_to_range(team.Team.BLUE)
                 self.add_alien_to_range(team.Team.GREEN)
         else:
-            raise Exception("initial crew cannot be launched. Game status is not NOT_STARTED")
+            raise Exception(
+                "initial crew cannot be launched. Game status is not NOT_STARTED")
 
     def add_alien_to_range(self, t):
         if t == team.Team.GREEN:
@@ -97,10 +101,12 @@ class Game:
         res = self.board.act_board()
         if res is not None:
             self.status = TGame.OVER
-            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
+            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (
+                self.blue_player, Team.BLUE)
 
         # Updates cants of aliens
-        self.alive_green_aliens = self.board.get_aliens_cant_of_team(Team.GREEN)
+        self.alive_green_aliens = self.board.get_aliens_cant_of_team(
+            Team.GREEN)
         self.alive_blue_aliens = self.board.get_aliens_cant_of_team(Team.BLUE)
 
     def has_game_ended(self):
@@ -122,7 +128,8 @@ class Game:
 
         if isinstance(alterator, Directioner):
             if alive_team_aliens >= 4:
-                self.board.set_directioner(alterator)  # hara el chequeo de si la pos es valida antes de matar a los
+                # hara el chequeo de si la pos es valida antes de matar a los
+                self.board.set_directioner(alterator)
                 # aliens
                 self.board.kill_aliens(team, 4)
             else:
@@ -145,7 +152,8 @@ class Game:
                 raise Exception("not enough aliens to put a TRAP")
         else:
             raise Exception("invalid alterator")
-        self.update_aliens_cant(team)   # updates de attribute with the new aliens cant
+        # updates de attribute with the new aliens cant
+        self.update_aliens_cant(team)
 
     '''
     
@@ -160,11 +168,11 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
-    
+
     '''
         This method add a blue alien and a green alien in a randomly position of theirs respective ranges.
     '''
-    
+
     def spawn_aliens(self):
         self.add_alien_to_range(Team.GREEN)
         self.add_alien_to_range(Team.BLUE)
@@ -278,7 +286,8 @@ class Game:
     '''
 
     def add_eyes_to_alien(self, x, y, alien_pos_in_list, eyes):
-        self.board.get_alien_in_position(x, y, alien_pos_in_list).add_eyes(eyes)
+        self.board.get_alien_in_position(
+            x, y, alien_pos_in_list).add_eyes(eyes)
 
     '''
     This method returns the aliens list in a given position

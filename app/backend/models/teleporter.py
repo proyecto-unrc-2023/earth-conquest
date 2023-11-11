@@ -9,6 +9,6 @@ class Teleporter:
 
 
 class TeleporterSchema(Schema):
-    name = fields.Str(default ="teleporter")
+    name = fields.Str(default="teleporter")
     door_pos = fields.Tuple((fields.Integer(), fields.Integer()))
     exit_pos = fields.Tuple((fields.Integer(), fields.Integer()))
