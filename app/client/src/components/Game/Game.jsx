@@ -13,17 +13,19 @@ export function Game ({ game, setGame, startGame }) {
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
-    const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
-
+    const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+    const BOARD = game.board
+    console.log('SSE ACTIVO BOARD', BOARD)
     sse.onmessage = e => {
       const data = JSON.parse(e.data)
       console.log(data)
       // actualizar board con hash
-      handleHash(aliens, data.board.cells, game.board)
+      const newBoard = handleHash(aliens, data.board.cells, BOARD)
       // refreshBoard(data.board.board)
       setGame((prevState) => ({
         ...prevState,
-        board: data.game.board.grid,
+        // no podemos pisar el board original
+        board: newBoard,
         setStatusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,

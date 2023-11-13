@@ -20,13 +20,11 @@ function App () {
     aliveGreenAliens: null,
     aliveBlueAliens: null
   })
-  const [message, setMessage] = useState('')
 
   useEffect(() => {
     if (game.gameId) {
       const sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       console.log('SSE ACTIVO')
-
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
         console.log('Esto viene en el sse:', data)
@@ -34,13 +32,13 @@ function App () {
           ...prevState,
           statusGame: data.status
         }))
-        setMessage(data.message)
         if (data.status !== gameStatus.STARTED) {
           console.log('status no es started', data)
           setGame((prevState) => ({
             ...prevState,
+            board: data.board.grid,
             greenOvniRange: data.board.green_ovni_range,
-            blue_ovni_range: data.board.blue_ovni_range,
+            blueOvniRange: data.board.blue_ovni_range,
             playerBlue: data.blue_player,
             playerGreen: data.green_player
           }))
@@ -71,7 +69,6 @@ function App () {
           <Menu
             game={game}
             setGame={setGame}
-            message={message}
           />
       }
       {

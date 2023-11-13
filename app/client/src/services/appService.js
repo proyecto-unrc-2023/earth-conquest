@@ -132,7 +132,6 @@ export const spawnAliens = async (gameId) => {
 
 // Menu service
 export const joinAs = async (team, playerName, currentGameId) => {
-  console.log('JOIN AS: ', JOIN_AS, currentGameId, team, playerName)
   try {
     const response = await fetch(`${JOIN_AS}${currentGameId}?team=${team}&player_name=${playerName}`, {
       method: 'PUT'
@@ -140,6 +139,8 @@ export const joinAs = async (team, playerName, currentGameId) => {
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
+    const data = await response.json()
+    console.log('JOIN AS: ', data)
   } catch (error) {
     console.error('Error fetching data: ', error)
   }

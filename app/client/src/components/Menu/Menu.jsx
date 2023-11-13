@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { createGame, getAllGames, joinAs } from '../../services/appService'
 import './Menu.css'
 
-export function Menu ({ game, setGame, message }) {
+export function Menu ({ game, setGame }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)

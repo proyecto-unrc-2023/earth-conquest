@@ -28,6 +28,7 @@ export const handleHash = (aliens, cells, newBoard) => {
 
     newBoard[row][col] = cell
   })
+  return newBoard
 }
 
 /*
