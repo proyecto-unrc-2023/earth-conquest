@@ -6,7 +6,7 @@ export const Alien = ({ team, eyes }) => {
   const className = `img_${teamLower}_alien`
 
   return (
-    <div className='alien'>
+    <div className={`alien ${direction}`}>
       <img src={imagen} className={className} alt={className} />
     </div>
   )

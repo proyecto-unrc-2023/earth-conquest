@@ -3,24 +3,14 @@ import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import { refresh, act, spawnAliens } from '../../services/appService'
+import { handleHash } from '../../services/alienService'
 import './Game.css'
 
 export function Game ({ game, setGame, startGame }) {
   const [alter, setAlterator] = useState(null)
+  const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
 
-  /*
-  const refreshBoard = (cells) => {
-    const newBoard = [...game.board]
-    for (const pos in hash) {
-      const [row, col] = pos.slice(1, -1).split(', ').map(Number)
-      newBoard[row][col] = cells[pos]
-    }
-    setGame((prevState) => ({
-      ...prevState.
-      board: newBoard)
-  }))
-  */
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
@@ -29,9 +19,11 @@ export function Game ({ game, setGame, startGame }) {
       const data = JSON.parse(e.data)
       console.log(data)
       // actualizar board con hash
+      handleHash(aliens, data.board.cells, game.board)
       // refreshBoard(data.board.board)
       setGame((prevState) => ({
         ...prevState,
+        board: data.game.board.grid,
         setStatusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,

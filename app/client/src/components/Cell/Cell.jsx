@@ -29,9 +29,9 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
       }
 
       {
-        children.aliens.map((alien, index) => {
+        children.aliens.map((alien) => {
           return (
-            <Alien key={index} team={alien.team} eyes={alien.eyes} />
+            <Alien key={alien.id} team={alien.team} eyes={alien.eyes} />
           )
         })
       }

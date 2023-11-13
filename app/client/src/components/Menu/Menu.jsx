@@ -1,6 +1,6 @@
 import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
-import { createGame, getAllGames, joinAs} from '../../services/appService'
+import { createGame, getAllGames, joinAs } from '../../services/appService'
 import './Menu.css'
 
 export function Menu ({ game, setGame, message }) {
@@ -14,7 +14,7 @@ export function Menu ({ game, setGame, message }) {
     console.log('CREATE GAME: ', data)
     setGame((prevState) => ({
       ...prevState,
-      board: data.game.board.grid, // ver bien como llega
+      board: data.game.board.grid,
       host: true,
       teamPlayer: 'GREEN',
       gameId: data.gameId
@@ -56,13 +56,6 @@ export function Menu ({ game, setGame, message }) {
       <h2>Main menu</h2>
       <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
       <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
-      {
-        message.length !== 0 &&
-          <>
-            <p className='message'>{message}</p>
-            <p className='message'>Game id: {game.gameId}</p>
-          </>
-      }
       {
         game.gameId !== null && // revisar esto
           <>

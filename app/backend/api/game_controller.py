@@ -281,6 +281,8 @@ class GameController:
                 return Response(message, status=400, mimetype='application/json')
 
             games_dict[id] = game  # save the game on the dict
+            game_schema = GameSchema()
+            r.set('game_status', json.dumps(game_schema.dump(game)))
         except Exception as e:
             message = json.dumps(
                 {

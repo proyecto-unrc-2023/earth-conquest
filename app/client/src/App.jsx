@@ -8,7 +8,7 @@ function App () {
   const [game, setGame] = useState({
     gameId: null,
     board: null,
-    statusGame: gameStatus.NOT_STARTED,
+    statusGame: null,
     host: null,
     playerBlue: null,
     playerGreen: null,
@@ -24,20 +24,19 @@ function App () {
 
   useEffect(() => {
     if (game.gameId) {
-      // eslint-disable-next-line no-undef
-      const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      const sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       console.log('SSE ACTIVO')
 
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
-        console.log('ESto viene en el sse:', data)
+        console.log('Esto viene en el sse:', data)
         setGame((prevState) => ({
           ...prevState,
-          statusGame: data.game.status
+          statusGame: data.status
         }))
         setMessage(data.message)
         if (data.status !== gameStatus.STARTED) {
-          console.log(data)
+          console.log('status no es started', data)
           setGame((prevState) => ({
             ...prevState,
             greenOvniRange: data.board.green_ovni_range,
@@ -45,7 +44,6 @@ function App () {
             playerBlue: data.blue_player,
             playerGreen: data.green_player
           }))
-          // actualizarBoardConHash(data.board.cells)
           if (game.playerBlue && game.playerGreen) {
             console.log('STARTEO DESDE SSE')
             if (!game.host) startGame(game.gameId)
@@ -69,21 +67,21 @@ function App () {
   return (
     <main>
       {
-          game.statusGame !== gameStatus.STARTED &&
-            <Menu
-              game={game}
-              setGame={setGame}
-              message={message}
-            />
-        }
+        game.statusGame !== gameStatus.STARTED &&
+          <Menu
+            game={game}
+            setGame={setGame}
+            message={message}
+          />
+      }
       {
-          game.statusGame === gameStatus.STARTED &&
-            <Game
-              game={game}
-              setGame={setGame}
-              startGame={startGame}
-            />
-        }
+        game.statusGame === gameStatus.STARTED &&
+          <Game
+            game={game}
+            setGame={setGame}
+            startGame={startGame}
+          />
+      }
 
     </main>
   )
