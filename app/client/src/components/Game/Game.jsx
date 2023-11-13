@@ -8,9 +8,19 @@ import './Game.css'
 export function Game ({ game, setGame, startGame }) {
   const [alter, setAlterator] = useState(null)
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
-  const [changeTic, setChangeTic] = useState(true)
-  const [tic, setTic] = useState(0)
 
+  /*
+  const refreshBoard = (cells) => {
+    const newBoard = [...game.board]
+    for (const pos in hash) {
+      const [row, col] = pos.slice(1, -1).split(', ').map(Number)
+      newBoard[row][col] = cells[pos]
+    }
+    setGame((prevState) => ({
+      ...prevState.
+      board: newBoard)
+  }))
+  */
   useEffect(() => {
     // eslint-disable-next-line no-undef
     const sse = new EventSource(`http://localhost:5000/games/sse/${gameId}`)
@@ -18,10 +28,11 @@ export function Game ({ game, setGame, startGame }) {
     sse.onmessage = e => {
       const data = JSON.parse(e.data)
       console.log(data)
+      // actualizar board con hash
+      // refreshBoard(data.board.board)
       setGame((prevState) => ({
         ...prevState,
         setStatusGame: data.status,
-        board: data.board.board,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,
         aliveGreenAliens: data.alive_green_aliens,

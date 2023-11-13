@@ -43,7 +43,7 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
         },
         team: game.teamPlayer
       }
-      await sendAlterator(newTrap)
+      await sendAlterator(game.gameId, newTrap)
     } else {
       const alteratorSplit = newAlterator.split('_')
       const alteratorName = alteratorSplit[0]
@@ -61,7 +61,7 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
           team: game.teamPlayer
         }
 
-        await sendAlterator(newDirectioner)
+        await sendAlterator(game.gameId, newDirectioner)
       } else if (alteratorName === 'TELEPORTER') {
         console.log('entre a un teleporter')
         if (alteratorDirection === 'IN') {
@@ -80,7 +80,7 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
             },
             team: game.teamPlayer
           }
-          await sendAlterator(newTeleport)
+          await sendAlterator(game.gameId, newTeleport)
           setAlter(null)
           setTeleporterEnabled(true)
         }

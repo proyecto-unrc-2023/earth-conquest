@@ -8,6 +8,7 @@ const SEND_ALTERATOR = `${API}games/set_alterator`
 const REFRESH = `${API}games/refresh_board`
 const ACT = `${API}games/act_board`
 const SPAWN_ALIENS = `${API}games/spawn_aliens`
+const JOIN_AS = `${API}games/join/`
 
 export const createGame = async () => {
   try {
@@ -69,10 +70,10 @@ export const isFreePosition = async (row, col, gameId) => {
   }
 }
 
-export const sendAlterator = async (newAlterator) => {
+export const sendAlterator = async (gameId, newAlterator) => {
   console.log('esto es lo que mando a la api: ', JSON.stringify(newAlterator))
   try {
-    const response = await fetch(`${SEND_ALTERATOR}/${game.gameId}`, {
+    const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
       method: 'PUT',
       headers:
       {
@@ -126,6 +127,21 @@ export const spawnAliens = async (gameId) => {
     }
   } catch (error) {
     console.error('Error spawn aliens in base:', error)
+  }
+}
+
+// Menu service
+export const joinAs = async (team, playerName, currentGameId) => {
+  console.log('JOIN AS: ', JOIN_AS, currentGameId, team, playerName)
+  try {
+    const response = await fetch(`${JOIN_AS}${currentGameId}?team=${team}&player_name=${playerName}`, {
+      method: 'PUT'
+    })
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+  } catch (error) {
+    console.error('Error fetching data: ', error)
   }
 }
 
