@@ -46,6 +46,7 @@ function App () {
             console.log('STARTEO DESDE SSE')
             if (!game.host) startGame(game.gameId)
           }
+          // sse.close()
         }
       }
 

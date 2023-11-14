@@ -5,7 +5,7 @@ const GET_GAME = `${API}games/`
 const GET_ALL_GAMES = `${API}games`
 const FREE_POSITION = `${API}games/is_free_position`
 const SEND_ALTERATOR = `${API}games/set_alterator`
-const REFRESH = `${API}games/refresh_board`
+const REFRESH = `${API}games/next_state/`
 const ACT = `${API}games/act_board`
 const SPAWN_ALIENS = `${API}games/spawn_aliens`
 const JOIN_AS = `${API}games/join/`
@@ -91,7 +91,7 @@ export const sendAlterator = async (gameId, newAlterator) => {
   }
 }
 
-export const refresh = async (gameId) => {
+export const nextState = async (gameId) => {
   try {
     const response = await fetch(REFRESH + gameId, {
       method: 'PUT'

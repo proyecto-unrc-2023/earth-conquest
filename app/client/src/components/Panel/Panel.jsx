@@ -30,33 +30,33 @@ export const Panel = ({ setAlter, teleporterEnabled }) => {
         {showAlterators && (
           <>
             <button onClick={() => handleAlterator(alterator.TRAP)}>
-              <img className='button_img_trap' src='/../public/trap.png' alt='Trap' />
+              <img className='button_img_trap' src='/../trap.png' alt='Trap' />
             </button>
             <button onClick={() => handleAlterator(alterator.TELEPORTER_IN)}>
-              <img className='button_img_teleport1' src='/../public/teleport_in.gif' alt='Teleporter' />
-              <img className='button_img_teleport1' src='/../public/teleport_out.gif' alt='Teleporter' />
+              <img className='button_img_teleport1' src='/../teleport_in.gif' alt='Teleporter' />
+              <img className='button_img_teleport1' src='/../teleport_out.gif' alt='Teleporter' />
             </button>
             <button onClick={handleShowDirections}>
-              <img className='button_img_dir1' src='/../public/directioner_up.png' alt='Directioner' />
-              <img className='button_img_dir1' src='/../public/directioner_right.png' alt='Directioner' />
-              <img className='button_img_dir1' src='/../public/directioner_down.png' alt='Directioner' />
-              <img className='button_img_dir1' src='/../public/directioner_left.png' alt='Directioner' />
+              <img className='button_img_dir1' src='/../directioner_up.png' alt='Directioner' />
+              <img className='button_img_dir1' src='/../directioner_right.png' alt='Directioner' />
+              <img className='button_img_dir1' src='/../directioner_down.png' alt='Directioner' />
+              <img className='button_img_dir1' src='/../directioner_left.png' alt='Directioner' />
             </button>
           </>
         )}
         {showDirections && (
           <div className='type_dir'>
             <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_UPWARDS)}>
-              <img className='button_img_dir' src='/../public/directioner_up.png' alt='Directioner' />
+              <img className='button_img_dir' src='/../directioner_up.png' alt='Directioner' />
             </button>
             <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_DOWNWARDS)}>
-              <img className='button_img_dir' src='/../public/directioner_down.png' alt='Directioner' />
+              <img className='button_img_dir' src='/../directioner_down.png' alt='Directioner' />
             </button>
             <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_RIGHT)}>
-              <img className='button_img_dir' src='/../public/directioner_right.png' alt='Directioner' />
+              <img className='button_img_dir' src='/../directioner_right.png' alt='Directioner' />
             </button>
             <button onClick={() => handleDirectionClick(alterator.DIRECTIONER_LEFT)}>
-              <img className='button_img_dir' src='/../public/directioner_left.png' alt='Directioner' />
+              <img className='button_img_dir' src='/../directioner_left.png' alt='Directioner' />
             </button>
           </div>
         )}

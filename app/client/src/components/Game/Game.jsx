@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
-import { refresh, act, spawnAliens } from '../../services/appService'
+import { nextState } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
 import './Game.css'
 
-export function Game ({ game, setGame, startGame }) {
+export function Game ({ game, setGame }) {
   const [alter, setAlterator] = useState(null)
   const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
@@ -18,13 +18,11 @@ export function Game ({ game, setGame, startGame }) {
     console.log('SSE ACTIVO BOARD', BOARD)
     sse.onmessage = e => {
       const data = JSON.parse(e.data)
-      console.log(data)
+      console.log('ACA VIENE EN EL SSE', data)
       // actualizar board con hash
       const newBoard = handleHash(aliens, data.board.cells, BOARD)
-      // refreshBoard(data.board.board)
       setGame((prevState) => ({
         ...prevState,
-        // no podemos pisar el board original
         board: newBoard,
         setStatusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
@@ -41,17 +39,15 @@ export function Game ({ game, setGame, startGame }) {
 
     return () => {
       console.log('SE CERRO SSE')
-      sse.close()
+      // sse.close()
     }
   }, [])
 
   useEffect(() => {
     if (game.host) {
-      const timeoutId = setTimeout(() => {
-        refresh()
-        act()
-        spawnAliens()
-      }, 1000)
+      const timeoutId = setTimeout(async () => {
+        await nextState(game.gameId)
+      }, 5000)
       return () => {
         clearTimeout(timeoutId)
       }
