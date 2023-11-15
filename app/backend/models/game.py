@@ -322,3 +322,38 @@ class GameAliensSchema(Schema):
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
     board = fields.Nested(BoardSchema(), only=('cells',))
+
+
+
+"""
+game = Game()
+game.join_as_blue("delfi")
+game.join_as_green("delfiiii")
+game.start_game()
+directioner = Directioner((7,4), Direction.UPWARDS)
+game.set_alterator(directioner, Team.BLUE)
+alien = Alien(Team.BLUE)
+game.set_alien(7, 4, alien)
+
+teleporter = Teleporter((4, 1), (6, 10))
+game.set_alterator(teleporter, Team.GREEN)
+alien = Alien(Team.GREEN)
+game.set_alien(4, 1, alien)
+for i in range(5):
+    print()
+    print()
+    print('---------------ACT---------------------')
+    game.act_board()
+    print(game.board.__str__())
+    print("--- ALIENS ---")
+    print("  GREEN aliens: ", game.alive_green_aliens, "BLUE aliens: ", game.alive_blue_aliens)
+
+    
+    print('---------------RFR---------------------')
+    game.refresh_board()
+    print(game.board.__str__())
+    print("--- ALIENS ---")
+    print("  GREEN aliens: ", game.alive_green_aliens, "BLUE aliens: ", game.alive_blue_aliens)
+    #print("REFRESH COUNTER:   ", game.refresh_counter)
+
+"""
