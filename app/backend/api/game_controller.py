@@ -110,18 +110,20 @@ class GameController:
         try:
             # REFRESH: Move aliens 
             game.refresh_board()
+            print("==================== HICE EL REFRESH =============")
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
             r.set('game_status', json.dumps(game_schema.dump(game)))
             
-            time.sleep(2)
+            time.sleep(4)
             
             # ACT: Act cells on board
             if game.spawn_aliens_tick % SPAWN_TIME == 0:
                 game.spawn_aliens()
             
             game.act_board()
+            print("=====================ACTUOOOOOOOOOOOO=============")
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
 

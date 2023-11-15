@@ -8,6 +8,7 @@ function App () {
   const [game, setGame] = useState({
     gameId: null,
     board: null,
+    cleanBoard: null,
     statusGame: null,
     host: null,
     playerBlue: null,
@@ -20,6 +21,7 @@ function App () {
     aliveGreenAliens: null,
     aliveBlueAliens: null
   })
+  const [originalBoard, setOriginalBoard] = useState(null)
 
   useEffect(() => {
     if (game.gameId) {
@@ -27,16 +29,19 @@ function App () {
       console.log('SSE ACTIVO')
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
-        console.log('Esto viene en el sse:', data)
+        console.log('Esto viene en el sse de app:', data)
         setGame((prevState) => ({
           ...prevState,
           statusGame: data.status
         }))
+        setOriginalBoard(data.board.grid)
+
         if (data.status !== gameStatus.STARTED) {
           console.log('status no es started', data)
           setGame((prevState) => ({
             ...prevState,
             board: data.board.grid,
+            cleanBoard: data.board.grid,
             greenOvniRange: data.board.green_ovni_range,
             blueOvniRange: data.board.blue_ovni_range,
             playerBlue: data.blue_player,
@@ -45,8 +50,13 @@ function App () {
           if (game.playerBlue && game.playerGreen) {
             console.log('STARTEO DESDE SSE')
             if (!game.host) startGame(game.gameId)
+            setGame((prevState) => ({
+              ...prevState,
+              statusGame: gameStatus.STARTED
+            }))
+            console.log('ORIGINAL BOARD', originalBoard)
+            sse.close()
           }
-          // sse.close()
         }
       }
 
@@ -56,6 +66,7 @@ function App () {
       }
 
       return () => {
+        console.log('SE CERRO SSE DE APP CON RETURN')
         sse.close()
       }
     } else {
@@ -78,6 +89,7 @@ function App () {
             game={game}
             setGame={setGame}
             startGame={startGame}
+            originalBoard={originalBoard}
           />
       }
 

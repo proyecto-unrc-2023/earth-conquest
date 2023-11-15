@@ -1,6 +1,6 @@
 import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
-import { createGame, getAllGames, joinAs } from '../../services/appService'
+import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
 import './Menu.css'
 
 export function Menu ({ game, setGame }) {
@@ -8,18 +8,21 @@ export function Menu ({ game, setGame }) {
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
+  const [message, setMessage] = useState({ gameMessage: '', joinMessage: '' })
 
-  const handleNewGameClick = async () => {
-    const data = await createGame()
-    console.log('CREATE GAME: ', data)
-    setGame((prevState) => ({
-      ...prevState,
-      board: data.game.board.grid,
-      host: true,
-      teamPlayer: 'GREEN',
-      gameId: data.gameId
-    }))
-    setJoinGameClicked(true)
+  const handleNewGameClick = () => {
+    createGame().then((data) => {
+      console.log('CREATE GAME: ', data)
+      setMessage((prevState) => ({
+        ...prevState,
+        gameMessage: data.message
+      }))
+      setGame((prevState) => ({
+        ...prevState,
+        gameId: data.data.gameId
+      }))
+      setJoinGameClicked(true)
+    })
   }
 
   const handleJoinGameClick = async () => {
@@ -30,31 +33,41 @@ export function Menu ({ game, setGame }) {
   }
 
   const cuandoSeJoinea = (team, name, currentId) => {
-    joinAs(team, name, currentId)
-    if (team === 'GREEN') {
-      setGame((prevState) => ({
+    joinAs(team, name, currentId).then((data) => {
+      setMessage((prevState) => ({
         ...prevState,
-        host: true,
-        playerGreen: name
+        joinMessage: data.message
       }))
-    } else {
-      setGame((prevState) => ({
-        ...prevState,
-        host: false,
-        teamPlayer: team,
-        playerBlue: name,
-        gameId: currentId
-      }))
-      const guestPlayer = { name, team, currentId }
-      // eslint-disable-next-line no-undef
-      localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
-    }
+    })
+    getGame(currentId).then((game) => {
+      console.log('GAME: ', game)
+      if (team === 'GREEN') {
+        setGame((prevState) => ({
+          ...prevState,
+          host: true,
+          board: game.board.grid,
+          teamPlayer: team,
+          playerGreen: name
+        }))
+      } else {
+        setGame((prevState) => ({
+          ...prevState,
+          host: false,
+          teamPlayer: team,
+          cleanBoard: game.board.grid,
+          board: game.board.grid,
+          playerBlue: name,
+          gameId: currentId
+        }))
+      }
+    })
   }
 
   return (
     <>
       <h2>Main menu</h2>
       <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
+      {message.gameMessage?.length > 0 && <p className='message'>{message.gameMessage}</p>}
       <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
       {
         game.gameId !== null && // revisar esto
@@ -74,6 +87,9 @@ export function Menu ({ game, setGame }) {
               >Join
               </button>
             </label>
+            {
+              message.joinMessage.length > 0 && <p className='message'>{message.joinMessage}</p>
+            }
           </>
       }
       {

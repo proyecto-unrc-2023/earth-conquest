@@ -6,29 +6,29 @@
 */
 
 export const handleHash = (aliens, cells, newBoard) => {
+  const copyBoard = structuredClone(newBoard)
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
 
-    cell.aliens.forEach((cellAlien) => {
-      const alien = aliens.find(alien => alien.id === cellAlien.id)
+    // cell.aliens.forEach((cellAlien) => {
+    //   const alien = aliens.find(alien => alien.id === cellAlien.id)
 
-      if (alien) {
-        // si el alien ya existe en la lista, actualiza su posición
-        alien.oldPosition = { ...alien.newPosition }
-        alien.newPosition = { row, col }
-      } else {
-        // si el alien no existe en la lista, lo agrego
-        aliens.push({
-          id: cellAlien.id,
-          oldPosition: { row, col },
-          newPosition: { row, col }
-        })
-      }
-    })
-
-    newBoard[row][col] = cell
+    //   if (alien) {
+    //     // si el alien ya existe en la lista, actualiza su posición
+    //     alien.oldPosition = { ...alien.newPosition }
+    //     alien.newPosition = { row, col }
+    //   } else {
+    //     // si el alien no existe en la lista, lo agrego
+    //     aliens.push({
+    //       id: cellAlien.id,
+    //       oldPosition: { row, col },
+    //       newPosition: { row, col }
+    //     })
+    //   }
+    // })
+    copyBoard[row][col] = cell
   })
-  return newBoard
+  return copyBoard
 }
 
 /*

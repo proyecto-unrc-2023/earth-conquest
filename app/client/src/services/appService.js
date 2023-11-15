@@ -22,7 +22,7 @@ export const createGame = async () => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    return data.data
+    return data
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -141,19 +141,20 @@ export const joinAs = async (team, playerName, currentGameId) => {
     }
     const data = await response.json()
     console.log('JOIN AS: ', data)
+    return data
   } catch (error) {
     console.error('Error fetching data: ', error)
   }
 }
 
-const getGame = async (currentGameId) => {
+export const getGame = async (currentGameId) => {
   try {
     const response = await fetch(GET_GAME + currentGameId)
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    console.log('GET BOARD:', data)
+    return data.data.game
   } catch (error) {
     console.error('Error get game:', error)
   }
