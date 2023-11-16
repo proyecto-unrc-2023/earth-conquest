@@ -16,7 +16,7 @@ export const StatsGame = ({ team, lifeOvni, liveAliens, playerName }) => {
         </section>
 
         <section className={`${team}_name`}>
-          <p style={{ fontFamily: 'PressStart2P' }}>{`${playerName}`}</p>
+          <p>{`${playerName}`}</p>
         </section>
 
       </section>
