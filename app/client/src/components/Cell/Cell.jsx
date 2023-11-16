@@ -29,19 +29,19 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
       }
 
       {
-        children.aliens.map((alien, index) => {
+        children.aliens.map((alien) => {
           return (
-            <Alien key={index} team={alien.team} eyes={alien.eyes} />
+            <Alien key={alien.id} team={alien.team} eyes={alien.eyes} />
           )
         })
       }
 
       {children.alterator && <Alterator tipo={children.alterator} />}
       {
-          (row === 0 && col === 0) && <img src='../public/green_ovni.png' className='green_nave' />
+          (row === 0 && col === 0) && <img src='../green_ovni.png' className='green_nave' />
         }
       {
-          (row === 9 && col === 14) && <img src='../public/blue_ovni.png' className='blue_nave' />
+          (row === 9 && col === 14) && <img src='../blue_ovni.png' className='blue_nave' />
         }
     </div>
   )

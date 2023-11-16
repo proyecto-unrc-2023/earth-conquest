@@ -1,0 +1,803 @@
+{
+  "data": {
+    "game": {
+      "alive_blue_aliens": 0,
+      "alive_green_aliens": 0,
+      "blue_player": null,
+      "board": {
+        "base_range_dimentions": 4,
+        "blue_ovni_life": 100,
+        "blue_ovni_range": [
+          6,
+          11
+        ],
+        "cells": {},
+        "green_ovni_life": 100,
+        "green_ovni_range": [
+          3,
+          3
+        ],
+        "grid": [
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "KILLER"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "KILLER"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MULTIPLIER"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MULTIPLIER"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ],
+          [
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": "MOUNTAIN_RANGE"
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            },
+            {
+              "aliens": [],
+              "alterator": null,
+              "modifier": null
+            }
+          ]
+        ]
+      },
+      "green_player": null,
+      "status": "NOT_STARTED",
+      "winner": [
+        null,
+        null
+      ]
+    }
+  },
+  "message": "Game 1 retrieved successfully",
+  "success": true
+}

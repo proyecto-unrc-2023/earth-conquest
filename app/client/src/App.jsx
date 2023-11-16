@@ -8,7 +8,8 @@ function App () {
   const [game, setGame] = useState({
     gameId: null,
     board: null,
-    statusGame: gameStatus.NOT_STARTED,
+    cleanBoard: null,
+    statusGame: null,
     host: null,
     playerBlue: null,
     playerGreen: null,
@@ -20,75 +21,41 @@ function App () {
     aliveGreenAliens: null,
     aliveBlueAliens: null
   })
-  /*
-  setGame((prevState) => ({
-    ...prevState,
-    board: nuevoValorDeLaTabla,
-  }))
-  */
-
-  /*
-  const hash = {
-    '(6, 14)': {
-      aliens: [],
-      modifier: null,
-      alterator: null
-    },
-    '(6, 13)': {
-      aliens: [
-        {
-          id: 38,
-          eyes: 1,
-          team: 'BLUE'
-        }
-      ],
-      modifier: null,
-      alterator: null
-    }
-  }
-  */
-  /*
-  const actualizarBoardConHash = (nuevoHash) => {
-    const newBoard = [...game.board]
-    for (const position in nuevoHash) {
-      if (nuevoHash.hasOwnProperty(position)) {
-        const [row, col] = position
-          .slice(1, -1)
-          .split(', ')
-          .map(coord => Number(coord))
-
-        // Actualizar la matriz board con los datos de la celda correspondiente.
-        newBoard[row][col] = nuevoHash[position]
-      }
-    }
-  }
-  */
+  const [originalBoard, setOriginalBoard] = useState(null)
 
   useEffect(() => {
     if (game.gameId) {
-      // eslint-disable-next-line no-undef
-      const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      const sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       console.log('SSE ACTIVO')
-
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
+        console.log('Esto viene en el sse de app:', data)
         setGame((prevState) => ({
           ...prevState,
           statusGame: data.status
         }))
+        setOriginalBoard(data.board.grid)
+
         if (data.status !== gameStatus.STARTED) {
-          console.log(data)
+          console.log('status no es started', data)
           setGame((prevState) => ({
             ...prevState,
+            board: data.board.grid,
+            cleanBoard: data.board.grid,
             greenOvniRange: data.board.green_ovni_range,
-            blue_ovni_range: data.board.blue_ovni_range,
+            blueOvniRange: data.board.blue_ovni_range,
             playerBlue: data.blue_player,
             playerGreen: data.green_player
           }))
-          actualizarBoardConHash(data.board.cells)
           if (game.playerBlue && game.playerGreen) {
             console.log('STARTEO DESDE SSE')
             if (!game.host) startGame(game.gameId)
+            setGame((prevState) => ({
+              ...prevState,
+              statusGame: gameStatus.STARTED
+            }))
+            console.log('ORIGINAL BOARD', originalBoard)
+            sse.close()
           }
         }
       }
@@ -99,6 +66,7 @@ function App () {
       }
 
       return () => {
+        console.log('SE CERRO SSE DE APP CON RETURN')
         sse.close()
       }
     } else {
@@ -109,20 +77,21 @@ function App () {
   return (
     <main>
       {
-          game.statusGame !== gameStatus.STARTED &&
-            <Menu
-              game={game}
-              setGame={setGame}
-            />
-        }
+        game.statusGame !== gameStatus.STARTED &&
+          <Menu
+            game={game}
+            setGame={setGame}
+          />
+      }
       {
-          game.statusGame === gameStatus.STARTED &&
-            <Game
-              game={game}
-              setGame={setGame}
-              startGame={startGame}
-            />
-        }
+        game.statusGame === gameStatus.STARTED &&
+          <Game
+            game={game}
+            setGame={setGame}
+            startGame={startGame}
+            originalBoard={originalBoard}
+          />
+      }
 
     </main>
   )

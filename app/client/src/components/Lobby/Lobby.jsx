@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './Lobby.css'
 
-export const Lobby = ({ allGames, joinAs }) => {
+export const Lobby = ({ allGames, cuandoSeJoinea }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
 
   const handleNameBlueChange = (name, index) => {
@@ -10,8 +10,8 @@ export const Lobby = ({ allGames, joinAs }) => {
     setNameBlue(updatedNameBlue)
   }
 
-  const handleJoinPlayer = (index, gameId) => {
-    joinAs('BLUE', nameBlue[index], gameId)
+  const handleJoinPlayer = (index, currentGameId) => {
+    cuandoSeJoinea('BLUE', nameBlue[index], currentGameId)
   }
 
   return (

@@ -1,6 +1,6 @@
 import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
-import { createGame, getAllGames, API } from '../../services/appService'
+import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
 import './Menu.css'
 
 export function Menu ({ game, setGame }) {
@@ -8,56 +8,21 @@ export function Menu ({ game, setGame }) {
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
-  const [message, setMessage] = useState('')
-  const JOIN_AS = `${API}games/join`
+  const [message, setMessage] = useState({ gameMessage: '', joinMessage: '' })
 
-  const joinAs = async (team, playerName, currentGameId) => {
-    console.log('JOIN AS: ', JOIN_AS, currentGameId, team, playerName)
-    try {
-      const response = await fetch(`${JOIN_AS}/${currentGameId}?team=${team}&player_name=${playerName}`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-      if (team === 'GREEN') {
-        setGame((prevState) => ({
-          ...prevState,
-          host: true,
-          playerGreen: playerName
-        }))
-        console.log(`seteo jugador ${playerName} al equipo ${team}, gameId: ${currentGameId}`)
-      } else {
-        setGame((prevState) => ({
-          ...prevState,
-          host: false,
-          teamPlayer: 'BLUE',
-          playerBlue: playerName,
-          gameId: currentGameId
-        }))
-        // const guestPlayer = { playerName, team, game.gameId }
-        // // eslint-disable-next-line no-undef
-        // localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
-      }
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-    }
-  }
-
-  const handleNewGameClick = async () => {
-    const data = await createGame()
-    console.log('CREATE GAME: ', data)
-    setGame((prevState) => ({
-      ...prevState,
-      board: data.game.board.grid, // ver bien como llega
-      host: true,
-      teamPlayer: 'GREEN',
-      gameId: data.gameId
-    }))
-    setMessage(data.message)
-    setJoinGameClicked(true)
+  const handleNewGameClick = () => {
+    createGame().then((data) => {
+      console.log('CREATE GAME: ', data)
+      setMessage((prevState) => ({
+        ...prevState,
+        gameMessage: data.message
+      }))
+      setGame((prevState) => ({
+        ...prevState,
+        gameId: data.data.gameId
+      }))
+      setJoinGameClicked(true)
+    })
   }
 
   const handleJoinGameClick = async () => {
@@ -67,18 +32,43 @@ export function Menu ({ game, setGame }) {
     document.getElementById('join').innerText = 'Refresh games'
   }
 
+  const cuandoSeJoinea = (team, name, currentId) => {
+    joinAs(team, name, currentId).then((data) => {
+      setMessage((prevState) => ({
+        ...prevState,
+        joinMessage: data.message
+      }))
+    })
+    getGame(currentId).then((game) => {
+      console.log('GAME: ', game)
+      if (team === 'GREEN') {
+        setGame((prevState) => ({
+          ...prevState,
+          host: true,
+          board: game.board.grid,
+          teamPlayer: team,
+          playerGreen: name
+        }))
+      } else {
+        setGame((prevState) => ({
+          ...prevState,
+          host: false,
+          teamPlayer: team,
+          cleanBoard: game.board.grid,
+          board: game.board.grid,
+          playerBlue: name,
+          gameId: currentId
+        }))
+      }
+    })
+  }
+
   return (
     <>
       <h2>Main menu</h2>
       <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
+      {message.gameMessage?.length > 0 && <p className='message'>{message.gameMessage}</p>}
       <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
-      {
-        message.length !== 0 &&
-          <>
-            <p className='message'>{message}</p>
-            <p className='message'>Game id: {game.gameId}</p>
-          </>
-      }
       {
         game.gameId !== null && // revisar esto
           <>
@@ -92,15 +82,18 @@ export function Menu ({ game, setGame }) {
                 }}
               />
               <button
-                onClick={() => joinAs('GREEN', nameGreen, game.gameId)}
+                onClick={() => cuandoSeJoinea('GREEN', nameGreen, game.gameId)}
                 disabled={!nameGreen}
               >Join
               </button>
             </label>
+            {
+              message.joinMessage.length > 0 && <p className='message'>{message.joinMessage}</p>
+            }
           </>
       }
       {
-        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} />
+        allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} />
       }
     </>
   )
