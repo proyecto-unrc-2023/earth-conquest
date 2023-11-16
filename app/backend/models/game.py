@@ -60,8 +60,7 @@ class Game:
     def set_initial_crew(self):
         if self.status is TGame.NOT_STARTED:
             for i in range(INIT_CREW):
-                self.add_alien_to_range(team.Team.BLUE)
-                self.add_alien_to_range(team.Team.GREEN)
+                self.spawn_aliens()
         else:
             raise Exception(
                 "initial crew cannot be launched. Game status is not NOT_STARTED")
@@ -128,9 +127,7 @@ class Game:
 
         if isinstance(alterator, Directioner):
             if alive_team_aliens >= 4:
-                # hara el chequeo de si la pos es valida antes de matar a los
                 self.board.set_directioner(alterator)
-                # aliens
                 self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a Directioner")
