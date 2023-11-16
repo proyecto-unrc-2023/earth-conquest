@@ -1,6 +1,8 @@
 import { Lobby } from '../Lobby/Lobby'
 import { useState } from 'react'
 import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
+import hoverSound from '../../sound/select.mp3' // ver
+
 import './Menu.css'
 
 export function Menu ({ game, setGame }) {
@@ -9,6 +11,12 @@ export function Menu ({ game, setGame }) {
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
   const [message, setMessage] = useState({ gameMessage: '', joinMessage: '' })
+
+  const playHoverSound = () => {
+    // eslint-disable-next-line no-undef
+    const audio = new Audio(hoverSound)
+    audio.play()
+  }
 
   const handleNewGameClick = () => {
     createGame().then((data) => {
@@ -65,10 +73,11 @@ export function Menu ({ game, setGame }) {
 
   return (
     <>
-      <h2>Main menu</h2>
-      <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
+      <h1 className='tittle-main'>EARTH CONQUEST </h1>
+      <h2>  MENU  </h2>
+      <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={playHoverSound}>NEW GAME</button>
       {message.gameMessage?.length > 0 && <p className='message'>{message.gameMessage}</p>}
-      <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
+      <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playHoverSound} id='join'>JOIN GAME</button>
       {
         game.gameId !== null && // revisar esto
           <>
