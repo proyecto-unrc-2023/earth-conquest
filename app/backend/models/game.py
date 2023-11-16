@@ -321,7 +321,7 @@ class GameAliensSchema(Schema):
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
-    board = fields.Nested(BoardSchema(), only=('cells',))
+    board = fields.Nested(BoardSchema(), only=('blue_ovni_life', 'green_ovni_life', 'cells'))
 
 
 
