@@ -10,6 +10,8 @@ export function Game ({ game, setGame, originalBoard }) {
   const [alter, setAlterator] = useState(null)
   const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
+  const [teleportIn, setTeleportIn] = useState({ row: null, col: null })
+  const [teleportOut, setTeleportOut] = useState({ row: null, col: null })
 
   useEffect(() => {
     // eslint-disable-next-line no-undef
@@ -18,10 +20,9 @@ export function Game ({ game, setGame, originalBoard }) {
       const data = JSON.parse(e.data)
       console.log('ACA VIENE EN EL SSE', 'HOST: ', game.host, 'DATA: ', data)
       // actualizar board con hash
-      console.log('SSE ACTIVO BOARD', originalBoard)
       setGame((prevState) => ({
         ...prevState,
-        board: handleHash(aliens, data.board.cells, originalBoard),
+        board: handleHash(aliens, data.board.cells, originalBoard, setTeleportIn, setTeleportOut),
         setStatusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,
@@ -43,10 +44,9 @@ export function Game ({ game, setGame, originalBoard }) {
 
   useEffect(() => {
     if (game.host) {
-      const timeoutId = setTimeout(() => {
-        nextState(game.gameId)
-        console.log('HICE EL NEXT STATE')
-      }, 5000)
+      const timeoutId = setTimeout(async () => {
+        await nextState(game.gameId)
+      }, 2000)
       return () => {
         clearTimeout(timeoutId)
       }
@@ -57,6 +57,8 @@ export function Game ({ game, setGame, originalBoard }) {
     <>
       <Board
         game={game}
+        teleportIn={teleportIn}
+        teleportOut={teleportOut}
         newAlterator={alter}
         setAlter={setAlterator}
         setTeleporterEnabled={setTeleporterEnabled}

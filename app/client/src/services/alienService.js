@@ -5,8 +5,11 @@
 * Tambien actualiza el board con la informacion del hash.
 */
 
-export const handleHash = (aliens, cells, newBoard) => {
+export const handleHash = (aliens, cells, newBoard, setTeleportIn, setTeleportOut) => {
   const copyBoard = structuredClone(newBoard)
+  let teleportIn = null
+  let teleportOut = null
+
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
 
@@ -26,8 +29,22 @@ export const handleHash = (aliens, cells, newBoard) => {
     //     })
     //   }
     // })
+
+    if (cell.alterator !== null && cell.alterator.name === 'TELEPORTER') {
+      const [x, y] = cell.alterator.door_pos
+      const [a, b] = cell.alterator.exit_pos
+      teleportIn = { row: x, col: y }
+      teleportOut = { row: a, col: b }
+    }
+
     copyBoard[row][col] = cell
   })
+
+  if (teleportIn !== null && teleportOut !== null) {
+    setTeleportIn(teleportIn)
+    setTeleportOut(teleportOut)
+  }
+
   return copyBoard
 }
 

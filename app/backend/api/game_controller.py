@@ -116,7 +116,7 @@ class GameController:
             game_schema = GameAliensSchema()
             r.set('game_status', json.dumps(game_schema.dump(game)))
             
-            time.sleep(4)
+            time.sleep(2)
             
             # ACT: Act cells on board
             if game.spawn_aliens_tick % SPAWN_TIME == 0:
