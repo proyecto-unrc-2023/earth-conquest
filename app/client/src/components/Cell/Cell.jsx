@@ -5,8 +5,23 @@ import { team, alterator } from '../../constants.js'
 import './Cell.css'
 
 export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, teleportX, teleportY, teleporterEnabled, teleportIn, teleportOut, outOfTeleportRange, isBase }) => {
-  const { posXIn, posYIn } = teleportIn
-  const { posXOut, posYOut } = teleportOut
+  const { row: posXIn, col: posYIn } = teleportIn
+  const { row: posXOut, col: posYOut } = teleportOut
+
+  const isTeleportIn = (x, y) => {
+    return (
+      teleportIn.find(teleport => teleport.row === x && teleport.col === y) !== undefined
+    )
+  }
+
+  const isTeleportOut = (x, y) => {
+    return (
+
+      teleportOut.find(teleport => teleport.row === x && teleport.col === y) !== undefined
+    )
+  }
+
+  console.log('ESTO VIENE EN LAS POS X Y', teleportIn, teleportOut, 'esto en row col', row, col)
 
   const handleClick = () => {
     updateBoard(row, col)
@@ -40,13 +55,13 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
       }
       {
         children.alterator &&
-        row === posXIn && col === posYIn &&
+        isTeleportIn(row, col) &&
           <Alterator tipo={alterator.TELEPORTER_IN} />
       }
 
       {
         children.alterator &&
-        row === posXOut && col === posYOut &&
+        isTeleportOut(row, col) &&
           <Alterator tipo={alterator.TELEPORTER_OUT} />
       }
 

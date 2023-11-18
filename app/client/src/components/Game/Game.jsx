@@ -10,8 +10,8 @@ export function Game ({ game, setGame, originalBoard }) {
   const [alter, setAlterator] = useState(null)
   const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
-  const [teleportIn, setTeleportIn] = useState({ row: null, col: null })
-  const [teleportOut, setTeleportOut] = useState({ row: null, col: null })
+  const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
+  const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
 
   useEffect(() => {
     let sse
@@ -42,9 +42,7 @@ export function Game ({ game, setGame, originalBoard }) {
       }
     }
 
-    if (game.gameId) {
-      startSSE()
-    }
+    startSSE()
 
     return () => {
       if (sse) {
