@@ -24,53 +24,65 @@ function App () {
   const [originalBoard, setOriginalBoard] = useState(null)
 
   useEffect(() => {
-    if (game.gameId) {
-      const sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+    let sse
+
+    const handleGameUpdate = (data) => {
+      setGame((prevState) => ({
+        ...prevState,
+        statusGame: data.status
+      }))
+      setOriginalBoard(data.board.grid)
+
+      if (data.status !== gameStatus.STARTED) {
+        console.log('status no es started', data)
+        setGame((prevState) => ({
+          ...prevState,
+          board: data.board.grid,
+          cleanBoard: data.board.grid,
+          greenOvniRange: data.board.green_ovni_range,
+          blueOvniRange: data.board.blue_ovni_range,
+          playerBlue: data.blue_player,
+          playerGreen: data.green_player
+        }))
+        if (game.playerBlue && game.playerGreen) {
+          console.log('STARTEO DESDE SSE')
+          if (!game.host) startGame(game.gameId)
+          setGame((prevState) => ({
+            ...prevState,
+            statusGame: gameStatus.STARTED
+          }))
+          console.log('ORIGINAL BOARD', originalBoard)
+          sse.close()
+        }
+      }
+    }
+
+    const startSEE = () => {
+      sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       console.log('SSE ACTIVO')
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
         console.log('Esto viene en el sse de app:', data)
-        setGame((prevState) => ({
-          ...prevState,
-          statusGame: data.status
-        }))
-        setOriginalBoard(data.board.grid)
-
-        if (data.status !== gameStatus.STARTED) {
-          console.log('status no es started', data)
-          setGame((prevState) => ({
-            ...prevState,
-            board: data.board.grid,
-            cleanBoard: data.board.grid,
-            greenOvniRange: data.board.green_ovni_range,
-            blueOvniRange: data.board.blue_ovni_range,
-            playerBlue: data.blue_player,
-            playerGreen: data.green_player
-          }))
-          if (game.playerBlue && game.playerGreen) {
-            console.log('STARTEO DESDE SSE')
-            if (!game.host) startGame(game.gameId)
-            setGame((prevState) => ({
-              ...prevState,
-              statusGame: gameStatus.STARTED
-            }))
-            console.log('ORIGINAL BOARD', originalBoard)
-            sse.close()
-          }
-        }
+        handleGameUpdate(data)
       }
 
       sse.onerror = () => {
         // error log here
         sse.close()
       }
+    }
 
-      return () => {
-        console.log('SE CERRO SSE DE APP CON RETURN')
-        sse.close()
-      }
+    if (game.gameId) {
+      startSEE()
     } else {
       console.log('Entre al else del sse')
+    }
+
+    return () => {
+      console.log('SE CERRO SSE DE APP CON RETURN')
+      if (sse) {
+        sse.close()
+      }
     }
   }, [game.playerBlue, game.playerGreen])
 

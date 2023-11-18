@@ -14,12 +14,9 @@ export function Game ({ game, setGame, originalBoard }) {
   const [teleportOut, setTeleportOut] = useState({ row: null, col: null })
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
-    sse.onmessage = e => {
-      const data = JSON.parse(e.data)
-      console.log('ACA VIENE EN EL SSE', 'HOST: ', game.host, 'DATA: ', data)
-      // actualizar board con hash
+    let sse
+
+    const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
         board: handleHash(aliens, data.board.cells, originalBoard, setTeleportIn, setTeleportOut),
@@ -31,14 +28,28 @@ export function Game ({ game, setGame, originalBoard }) {
       }))
     }
 
-    sse.onerror = (e) => {
-      console.error('Error en el sse de game', e)
-      sse.close()
+    const startSSE = () => {
+      // eslint-disable-next-line no-undef
+      sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      sse.onmessage = (e) => {
+        const data = JSON.parse(e.data)
+        handleGameUpdate(data)
+      }
+
+      sse.onerror = (e) => {
+        console.error('Error en el sse de game', e)
+        sse.close()
+      }
+    }
+
+    if (game.gameId) {
+      startSSE()
     }
 
     return () => {
-      console.log('SE CERRO SSE DE GAME')
-      // sse.close()
+      if (sse) {
+        sse.close()
+      }
     }
   }, [])
 
@@ -47,6 +58,7 @@ export function Game ({ game, setGame, originalBoard }) {
       const timeoutId = setTimeout(async () => {
         await nextState(game.gameId)
       }, 2000)
+
       return () => {
         clearTimeout(timeoutId)
       }
