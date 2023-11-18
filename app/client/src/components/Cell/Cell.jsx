@@ -5,9 +5,6 @@ import { team, alterator } from '../../constants.js'
 import './Cell.css'
 
 export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, teleportX, teleportY, teleporterEnabled, teleportIn, teleportOut, outOfTeleportRange, isBase }) => {
-  const { row: posXIn, col: posYIn } = teleportIn
-  const { row: posXOut, col: posYOut } = teleportOut
-
   const isTeleportIn = (x, y) => {
     return (
       teleportIn.find(teleport => teleport.row === x && teleport.col === y) !== undefined
@@ -21,8 +18,6 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
     )
   }
 
-  console.log('ESTO VIENE EN LAS POS X Y', teleportIn, teleportOut, 'esto en row col', row, col)
-
   const handleClick = () => {
     updateBoard(row, col)
   }
@@ -32,6 +27,9 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
   if (!teleporterEnabled && outOfTeleportRange(row, col, teleportX, teleportY)) {
     className += 'grey'
   } else {
+    if (!teleporterEnabled && teleportX === row && teleportY === col) {
+      className += 'in'
+    }
     if (isBase(row, col, greenBase[0], greenBase[1], team.GREEN)) {
       className += 'green'
     }
@@ -66,7 +64,7 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
       }
 
       {
-        children.alterator && row !== posXIn && col !== posYIn && row !== posXOut && col !== posYOut &&
+        children.alterator && !isTeleportOut(row, col) && !isTeleportIn(row, col) &&
           <Alterator tipo={children.alterator} />
       }
 

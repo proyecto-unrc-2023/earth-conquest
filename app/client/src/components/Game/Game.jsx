@@ -51,17 +51,14 @@ export function Game ({ game, setGame, originalBoard }) {
     }
   }, [])
 
-  useEffect(() => {
+  async function countdown () {
     if (game.host) {
-      const timeoutId = setTimeout(async () => {
-        await nextState(game.gameId)
-      }, 2000)
+      console.log('HAGO NEXT STATE')
+      await nextState(game.gameId)
 
-      return () => {
-        clearTimeout(timeoutId)
-      }
+      setTimeout(countdown, 1000)
     }
-  }, [game.board])
+  }
 
   return (
     <>
@@ -78,6 +75,7 @@ export function Game ({ game, setGame, originalBoard }) {
         <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
         <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
       </section>
+      <button onClick={() => countdown()}>PLAY</button>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
     </>
   )
