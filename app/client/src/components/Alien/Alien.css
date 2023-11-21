@@ -4,8 +4,6 @@
   position: absolute;
 }
 
-
-
 .img_blue_alien{
   width: 55px;
   height: 55px;
@@ -16,4 +14,44 @@
   width: 70px;
   height: 70px;
   z-index: 10;
+}
+
+.right {
+  animation: right ease-in-out .5s forwards;
+}
+
+@keyframes right {
+  to {
+    transform: translateX(55px);
+  }
+}
+
+.left {
+  animation: left ease-in-out .5s forwards;
+}
+
+@keyframes left {
+  to {
+    transform: translateX(-55px);
+  }
+}
+
+.up {
+  animation: up ease-in-out .5s forwards;
+}
+
+@keyframes up {
+  to {
+    transform: translateY(-55px);
+  }
+}
+
+.down {
+  animation: down ease-in-out .5s forwards;
+}
+
+@keyframes down {
+  to {
+    transform: translateY(55px);
+  }
 }

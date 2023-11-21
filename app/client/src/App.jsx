@@ -34,7 +34,6 @@ function App () {
       setOriginalBoard(data.board.grid)
 
       if (data.status !== gameStatus.STARTED) {
-        console.log('status no es started', data)
         setGame((prevState) => ({
           ...prevState,
           board: data.board.grid,
@@ -51,7 +50,6 @@ function App () {
             ...prevState,
             statusGame: gameStatus.STARTED
           }))
-          console.log('ORIGINAL BOARD', originalBoard)
           sse.close()
         }
       }
@@ -62,7 +60,6 @@ function App () {
       console.log('SSE ACTIVO')
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
-        console.log('Esto viene en el sse de app:', data)
         handleGameUpdate(data)
       }
 

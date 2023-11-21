@@ -4,7 +4,7 @@ import { Alterator } from '../Alterator/Alterator'
 import { team, alterator } from '../../constants.js'
 import './Cell.css'
 
-export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, teleportX, teleportY, teleporterEnabled, teleportIn, teleportOut, outOfTeleportRange, isBase }) => {
+export const Cell = ({ aliensDirections, updateBoard, row, col, children, blueBase, greenBase, teleportX, teleportY, teleporterEnabled, teleportIn, teleportOut, outOfTeleportRange, isBase }) => {
   const isTeleportIn = (x, y) => {
     return (
       teleportIn.find(teleport => teleport.row === x && teleport.col === y) !== undefined
@@ -46,8 +46,9 @@ export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, tel
 
       {
         children.aliens.map((alien) => {
+          const alienDirection = aliensDirections.find((alienDir) => alien.id === alienDir.id)?.direction
           return (
-            <Alien key={alien.id} team={alien.team} eyes={alien.eyes} />
+            <Alien key={alien.id} id={alien.id} team={alien.team} eyes={alien.eyes} direction={alienDirection} />
           )
         })
       }

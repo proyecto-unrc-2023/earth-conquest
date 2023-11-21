@@ -139,7 +139,6 @@ export const joinAs = async (team, playerName, currentGameId) => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    console.log('JOIN AS: ', data)
     return data
   } catch (error) {
     console.error('Error fetching data: ', error)

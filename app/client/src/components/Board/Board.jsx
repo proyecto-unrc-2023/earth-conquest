@@ -4,8 +4,7 @@ import './Board.css'
 import { useState } from 'react'
 import { isFreePosition, sendAlterator } from '../../services/appService'
 
-export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
-  console.log('ESTE ES EL BOARD QUE LLEGA A BOARD', game.board)
+export const Board = ({ game, aliensDirections, teleportIn, teleportOut, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -108,6 +107,7 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
                   teleportIn={teleportIn}
                   isBase={isBase}
                   outOfTeleportRange={outOfTeleportRange}
+                  aliensDirections={aliensDirections}
                 >
                   {cell}
                 </Cell>

@@ -214,7 +214,7 @@ class Cell:
         if self.modifier == Modifier.KILLER:
             self.aliens = []
         elif self.modifier == Modifier.MULTIPLIER:
-            self.aliens.append(copy.deepcopy(self.aliens[0]))
+            self.aliens.append(Alien(self.aliens[0].team, self.aliens[0].eyes))
 
     """
     Method that makes a Trap act on the current alien 
