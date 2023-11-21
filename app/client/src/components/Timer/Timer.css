@@ -1,0 +1,11 @@
+.box-timer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  position: absolute;
+  width: 50px; 
+  height: 30px;
+}
