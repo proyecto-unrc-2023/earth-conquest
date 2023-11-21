@@ -3,6 +3,7 @@ import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
 import { startGame } from './services/appService'
+import { GameOver } from './components/GameOver/GameOver'
 
 function App () {
   const [game, setGame] = useState({
@@ -19,7 +20,8 @@ function App () {
     blueOvniLife: null,
     greenOvniLife: null,
     aliveGreenAliens: null,
-    aliveBlueAliens: null
+    aliveBlueAliens: null,
+    winner: null
   })
   const [originalBoard, setOriginalBoard] = useState(null)
 
@@ -86,10 +88,18 @@ function App () {
     }
   }, [game.playerBlue, game.playerGreen])
 
+  /* const handleRestart = () => {
+    setGame((prevState) => ({
+      ...prevState,
+      winner: null,
+      statusGame: game.NOT_SARTED
+    }))
+  } */
+
   return (
     <main>
       {
-        game.statusGame !== gameStatus.STARTED &&
+        (game.statusGame === gameStatus.NOT_STARTED || game.statusGame === null) &&
           <Menu
             game={game}
             setGame={setGame}
@@ -104,6 +114,11 @@ function App () {
             originalBoard={originalBoard}
           />
       }
+      {game.statusGame === gameStatus.OVER &&
+        <GameOver
+          game={game}
+          /* handleRestart={handleRestart} */
+        />}
 
     </main>
   )
