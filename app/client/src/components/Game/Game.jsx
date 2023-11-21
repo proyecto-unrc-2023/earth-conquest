@@ -10,18 +10,16 @@ export function Game ({ game, setGame, originalBoard }) {
   const [alter, setAlterator] = useState(null)
   const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
+  const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
+  const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
 
   useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
-    sse.onmessage = e => {
-      const data = JSON.parse(e.data)
-      console.log('ACA VIENE EN EL SSE', 'HOST: ', game.host, 'DATA: ', data)
-      // actualizar board con hash
-      console.log('SSE ACTIVO BOARD', originalBoard)
+    let sse
+
+    const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
-        board: handleHash(aliens, data.board.cells, originalBoard),
+        board: handleHash(aliens, data.board.cells, originalBoard, setTeleportIn, setTeleportOut),
         setStatusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,
@@ -30,33 +28,44 @@ export function Game ({ game, setGame, originalBoard }) {
       }))
     }
 
-    sse.onerror = (e) => {
-      console.error('Error en el sse de game', e)
-      sse.close()
+    const startSSE = () => {
+      // eslint-disable-next-line no-undef
+      sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      sse.onmessage = (e) => {
+        const data = JSON.parse(e.data)
+        handleGameUpdate(data)
+      }
+
+      sse.onerror = (e) => {
+        console.error('Error en el sse de game', e)
+        sse.close()
+      }
     }
 
+    startSSE()
+
     return () => {
-      console.log('SE CERRO SSE DE GAME')
-      // sse.close()
+      if (sse) {
+        sse.close()
+      }
     }
   }, [])
 
-  useEffect(() => {
+  async function countdown () {
     if (game.host) {
-      const timeoutId = setTimeout(() => {
-        nextState(game.gameId)
-        console.log('HICE EL NEXT STATE')
-      }, 5000)
-      return () => {
-        clearTimeout(timeoutId)
-      }
+      console.log('HAGO NEXT STATE')
+      await nextState(game.gameId)
+
+      setTimeout(countdown, 1000)
     }
-  }, [game.board])
+  }
 
   return (
     <>
       <Board
         game={game}
+        teleportIn={teleportIn}
+        teleportOut={teleportOut}
         newAlterator={alter}
         setAlter={setAlterator}
         setTeleporterEnabled={setTeleporterEnabled}
@@ -66,6 +75,7 @@ export function Game ({ game, setGame, originalBoard }) {
         <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
         <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
       </section>
+      <button onClick={() => countdown()}>PLAY</button>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
     </>
   )

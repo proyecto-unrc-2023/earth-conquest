@@ -4,7 +4,8 @@ import './Board.css'
 import { useState } from 'react'
 import { isFreePosition, sendAlterator } from '../../services/appService'
 
-export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
+export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
+  console.log('ESTE ES EL BOARD QUE LLEGA A BOARD', game.board)
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
@@ -50,7 +51,6 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
       const alteratorDirection = alteratorSplit[1]
 
       if (alteratorName === 'DIRECTIONER') {
-        console.log('entre a un directioner')
         const newDirectioner = {
           alterator: {
             name: alteratorName,
@@ -63,7 +63,6 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
 
         await sendAlterator(game.gameId, newDirectioner)
       } else if (alteratorName === 'TELEPORTER') {
-        console.log('entre a un teleporter')
         if (alteratorDirection === 'IN') {
           newBoard[row][col].alterator = newAlterator
           setAlter(alterator.TELEPORTER_OUT)
@@ -80,6 +79,7 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
             },
             team: game.teamPlayer
           }
+          // esto retorna si se seteo
           await sendAlterator(game.gameId, newTeleport)
           setAlter(null)
           setTeleporterEnabled(true)
@@ -104,6 +104,8 @@ export const Board = ({ game, newAlterator, setAlter, setTeleporterEnabled, tele
                   teleporterEnabled={teleporterEnabled}
                   teleportX={teleportX}
                   teleportY={teleportY}
+                  teleportOut={teleportOut}
+                  teleportIn={teleportIn}
                   isBase={isBase}
                   outOfTeleportRange={outOfTeleportRange}
                 >

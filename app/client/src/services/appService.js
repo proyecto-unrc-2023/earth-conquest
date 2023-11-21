@@ -71,7 +71,6 @@ export const isFreePosition = async (row, col, gameId) => {
 }
 
 export const sendAlterator = async (gameId, newAlterator) => {
-  console.log('esto es lo que mando a la api: ', JSON.stringify(newAlterator))
   try {
     const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
       method: 'PUT',
@@ -85,7 +84,7 @@ export const sendAlterator = async (gameId, newAlterator) => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    console.log(data)
+    return data.success
   } catch (error) {
     console.error('Error set alterator', error)
   }
