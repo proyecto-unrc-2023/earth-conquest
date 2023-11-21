@@ -22,9 +22,6 @@ export function Login ({ game, setNameGreen, cuandoSeJoinea, nameGreen, message,
           Join
         </button>
       </label>
-      {
-        message.joinMessage.length > 0 && <p className='message'>{message.joinMessage}</p>
-      }
     </section>
   )
 }
