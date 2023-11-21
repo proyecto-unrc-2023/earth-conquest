@@ -20,13 +20,14 @@
   border-bottom: 1px solid #eccd08;
 }
 
-.btn{
+.btn-login {
   background-image: url('../boton.png');
-  background-size: cover;
+  background-size: contain; /* Cambio a 'contain' para ajustar la imagen sin distorsionar */
+  background-repeat: no-repeat; /* Evita la repetición de la imagen */
   border-radius: 8px;
   border: 1px solid transparent;
-  width: 300px;
-  height: 140px;
+  width: 200px; /* Reduje el ancho del botón */
+  height: 100px; /* Reduje la altura del botón */
   margin: 15px;
   padding: 0.6em 1.2em;
   font-size: 2em;
@@ -37,21 +38,18 @@
   transition: border-color 0.25s;
 }
 
+
 .tittle-main{
   font-size: 7em;
 }
 
 
-.btn:hover {
+.btn-login:hover {
   border-color: #646cff;
   color: #f7f56d;
 }
-.btn:focus,
-.btn :focus-visible {
+.btn-login:focus,
+.btn-login:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.message {
-  color: #0fd119;
-  font-weight: bold;
-}

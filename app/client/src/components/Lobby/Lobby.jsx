@@ -46,6 +46,7 @@ export const Lobby = ({ allGames, cuandoSeJoinea }) => {
                     <button
                       onClick={() => handleJoinPlayer(index, game.game_id)}
                       disabled={!nameBlue[index]}
+                      className='btn-lobby'
                     >Join
                     </button>
                   </label>

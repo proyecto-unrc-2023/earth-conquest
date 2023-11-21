@@ -17,7 +17,7 @@ export function Login ({ game, setNameGreen, cuandoSeJoinea, nameGreen, message,
           onClick={() => cuandoSeJoinea('GREEN', nameGreen, game.gameId)}
           disabled={!nameGreen}
           onMouseEnter={playHoverSound}
-          className='btn'
+          className='btn-login'
         >
           Join
         </button>

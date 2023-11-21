@@ -1,6 +1,7 @@
 import { Lobby } from '../Lobby/Lobby'
 import { Login } from '../Login/Login'
 import { useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
 import buttonSound from '../../sound/select.mp3'
 
@@ -47,11 +48,13 @@ export function Menu ({ game, setGame }) {
 
   const cuandoSeJoinea = (team, name, currentId) => {
     joinAs(team, name, currentId).then((data) => {
-      setMessage((prevState) => ({
-        ...prevState,
-        joinMessage: data.message
-      }))
+      // setMessage((prevState) => ({
+      //   ...prevState,
+      //   joinMessage: data.message // ver si esto es necesario
+      // }))
+      toast.success(data.message)
     })
+
     getGame(currentId).then((game) => {
       console.log('GAME: ', game)
       if (team === 'GREEN') {
@@ -85,7 +88,6 @@ export function Menu ({ game, setGame }) {
           <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={playSound}>
             NEW GAME
           </button>
-          {message.gameMessage?.length > 0 && <p className='message'>{message.gameMessage}</p>}
           <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playSound} id='join'>
             JOIN GAME
           </button>
@@ -115,6 +117,7 @@ export function Menu ({ game, setGame }) {
           </>
         )
       }
+      <Toaster />
     </>
   )
 }
