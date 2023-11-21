@@ -1,5 +1,23 @@
-body{
-  background-image: url('../fondo8bit.jpg');
+.box-login{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 800px;
+  height: 450px;
+  border: 2px solid rgba(237, 195, 6, 0.844);
+  border-radius: 10px;
+  background-color: #000000ba;
+}
+
+.input{
+  width: 100%;
+  height: 15%;
+  background: transparent;
+  border: none;
+  padding-top: 10px;
+  outline: 0px;
+  border-bottom: 1px solid #eccd08;
 }
 
 .btn{
@@ -20,7 +38,7 @@ body{
 }
 
 .tittle-main{
-  height: 270px;
+  font-size: 7em;
 }
 
 

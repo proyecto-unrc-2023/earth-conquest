@@ -1,5 +1,24 @@
 table {
+ 
+  overflow: auto;
+}
+
+.tabla-scroll {
+  width: 1100px;
+  height: 400px;
   background-color: #131313;
   border-radius: 10px;
   border: #919191 solid 1px;
+  overflow: auto; /* Permite el desplazamiento cuando el contenido excede el tamaño especificado */
+}
+
+/* Estilos adicionales para la tabla (opcionales) */
+.tabla-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-scroll th, .tabla-scroll td {
+  border: 1px solid #000; /* Agrega bordes a celdas y encabezados */
+  padding: 8px; /* Espaciado interno */
 }

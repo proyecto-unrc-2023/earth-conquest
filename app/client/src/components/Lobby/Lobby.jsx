@@ -15,17 +15,18 @@ export const Lobby = ({ allGames, cuandoSeJoinea }) => {
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Game Id</th>
-          <th>Blue Player</th>
-          <th>Green Player</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
+    <div className='tabla-scroll'>
+      <table>
+        <thead>
+          <tr>
+            <th>Game Id</th>
+            <th>Blue Player</th>
+            <th>Green Player</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
           allGames.map((game, index) => {
             return (
 
@@ -54,7 +55,8 @@ export const Lobby = ({ allGames, cuandoSeJoinea }) => {
             )
           })
         }
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   )
 }
