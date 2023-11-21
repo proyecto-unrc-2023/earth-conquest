@@ -1,6 +1,10 @@
 import { Lobby } from '../Lobby/Lobby'
+import { Login } from '../Login/Login'
 import { useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
+import buttonSound from '../../sound/select.mp3'
+
 import './Menu.css'
 
 export function Menu ({ game, setGame }) {
@@ -9,6 +13,14 @@ export function Menu ({ game, setGame }) {
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
   const [message, setMessage] = useState({ gameMessage: '', joinMessage: '' })
+  const [showLogin, setShowLogin] = useState(false)
+  const [showLobby, setShowLobby] = useState(false)
+
+  const playSound = () => {
+    // eslint-disable-next-line no-undef
+    const audio = new Audio(buttonSound)
+    audio.play()
+  }
 
   const handleNewGameClick = () => {
     createGame().then((data) => {
@@ -22,6 +34,7 @@ export function Menu ({ game, setGame }) {
         gameId: data.data.gameId
       }))
       setJoinGameClicked(true)
+      setShowLogin(true)
     })
   }
 
@@ -29,16 +42,19 @@ export function Menu ({ game, setGame }) {
     const games = await getAllGames()
     setAllGames(games)
     setNewGameClicked(true)
-    document.getElementById('join').innerText = 'Refresh games'
+    document.getElementById('join').innerText = 'REFRESH GAMES'
+    if (!showLobby) setShowLobby(true)
   }
 
   const cuandoSeJoinea = (team, name, currentId) => {
     joinAs(team, name, currentId).then((data) => {
-      setMessage((prevState) => ({
-        ...prevState,
-        joinMessage: data.message
-      }))
+      // setMessage((prevState) => ({
+      //   ...prevState,
+      //   joinMessage: data.message // ver si esto es necesario
+      // }))
+      toast.success(data.message)
     })
+
     getGame(currentId).then((game) => {
       console.log('GAME: ', game)
       if (team === 'GREEN') {
@@ -65,36 +81,43 @@ export function Menu ({ game, setGame }) {
 
   return (
     <>
-      <h2>Main menu</h2>
-      <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
-      {message.gameMessage?.length > 0 && <p className='message'>{message.gameMessage}</p>}
-      <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
+      <img className='tittle-main' src='../tittle.png' alt='tittle' />
+      {!showLogin && !showLobby && (
+        <>
+          <h2>MENU</h2>
+          <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={playSound}>
+            NEW GAME
+          </button>
+          <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playSound} id='join'>
+            JOIN GAME
+          </button>
+
+        </>
+      )}
       {
-        game.gameId !== null && // revisar esto
+      showLogin &&
+        <Login
+          game={game}
+          setNameGreen={setNameGreen}
+          cuandoSeJoinea={cuandoSeJoinea}
+          nameGreen={nameGreen}
+          message={message}
+          playSound={playSound}
+        />
+      }
+      {
+        showLobby && (
           <>
-            <label>
-              <input
-                type='text'
-                placeholder='Insert name'
-                value={nameGreen}
-                onChange={(e) => {
-                  setNameGreen(e.target.value)
-                }}
-              />
-              <button
-                onClick={() => cuandoSeJoinea('GREEN', nameGreen, game.gameId)}
-                disabled={!nameGreen}
-              >Join
-              </button>
-            </label>
+            <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playSound} id='join'>
+              REFRESH GAMES
+            </button>
             {
-              message.joinMessage.length > 0 && <p className='message'>{message.joinMessage}</p>
+              allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} />
             }
           </>
+        )
       }
-      {
-        allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} />
-      }
+      <Toaster />
     </>
   )
 }
