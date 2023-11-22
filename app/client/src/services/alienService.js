@@ -32,14 +32,25 @@ export const handleHash = (cells, newBoard, setTeleportIn, setTeleportOut) => {
 
 export const handleAliens = (aliens, cells) => {
   const newAliens = [...aliens]
+  if (aliens.length === 0) {
+    return initAliens(aliens, cells)
+  } else {
+    Object.entries(cells).forEach(([position, cell]) => {
+      const [row, col] = position.slice(1, -1).split(', ').map(Number)
+      updateAliensPositions(newAliens, cell.aliens, row, col)
+    })
+  }
+  return newAliens
+}
+
+const initAliens = (aliens, cells) => {
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
-    updateAliensPositions(newAliens, cell.aliens, row, col)
+    cell.aliens.forEach((alien) => {
+      aliens.push({ id: alien.id, oldPosition: { row, col }, newPosition: { row, col } })
+    })
   })
-  aliens = newAliens
-  const newAliensDirections = getAliensDirections(newAliens)
-  console.log(newAliens)
-  return newAliensDirections
+  return aliens
 }
 
 const updateAliensPositions = (aliens, cellAliens, row, col) => {
@@ -48,16 +59,10 @@ const updateAliensPositions = (aliens, cellAliens, row, col) => {
 
     if (alien) {
       // si el alien ya existe en la lista, actualiza su posición
-      alien.oldPosition = { row: alien.oldPosition.row, col: alien.oldPosition.col } // aca hay algo que esta mal, siempre guarda la misma pos vieja y nueva
+      alien.oldPosition = { row: alien.newPosition.row, col: alien.newPosition.col }
       alien.newPosition = { row, col }
-    } else {
-      // si el alien no existe en la lista, lo agrego
-      aliens.push({
-        id: cellAlien.id,
-        oldPosition: { row, col },
-        newPosition: { row, col }
-      })
-    }
+      aliens.filter(alien => alien.id !== cellAlien.id)
+    } // si no existe, puede existir en otra celda
   })
 }
 

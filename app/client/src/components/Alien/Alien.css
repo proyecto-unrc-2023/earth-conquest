@@ -17,7 +17,7 @@
 }
 
 .right {
-  animation: right ease-in-out .5s forwards;
+  animation: right ease-in-out .3s forwards;
 }
 
 @keyframes right {
@@ -27,7 +27,7 @@
 }
 
 .left {
-  animation: left ease-in-out .5s forwards;
+  animation: left ease-in-out .3s forwards;
 }
 
 @keyframes left {
@@ -37,7 +37,7 @@
 }
 
 .up {
-  animation: up ease-in-out .5s forwards;
+  animation: up ease-in-out .3s forwards;
 }
 
 @keyframes up {
@@ -47,7 +47,7 @@
 }
 
 .down {
-  animation: down ease-in-out .5s forwards;
+  animation: down ease-in-out .3s forwards;
 }
 
 @keyframes down {

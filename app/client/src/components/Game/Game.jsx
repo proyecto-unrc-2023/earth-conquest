@@ -3,20 +3,18 @@ import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState } from '../../services/appService'
-import { handleHash, handleAliens } from '../../services/alienService'
+import { handleHash, handleAliens, getAliensDirections } from '../../services/alienService'
 import './Game.css'
 
 export function Game ({ game, setGame, originalBoard }) {
   const [alter, setAlterator] = useState(null)
-  const aliensPosition = []
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
   const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
   const [aliensDirections, setAliensDirections] = useState([])
-
+  const [aliensPosition, setAliensPosition] = useState([])
   useEffect(() => {
     let sse
-
     const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
@@ -28,8 +26,13 @@ export function Game ({ game, setGame, originalBoard }) {
         aliveBlueAliens: data.alive_blue_aliens
       }))
     }
-    const moveAliens = (data) => {
-      setAliensDirections(handleAliens(aliensPosition, data.board.cells))
+
+    const moveAliens = (cells) => {
+      const newAliensPosition = handleAliens(aliensPosition, cells)
+      setAliensPosition(newAliensPosition)
+      console.log('NEW ALIENS POSITION: ', aliensPosition)
+      const newAliensDirections = getAliensDirections(newAliensPosition)
+      setAliensDirections(newAliensDirections)
     }
 
     const startSSE = () => {
@@ -37,7 +40,7 @@ export function Game ({ game, setGame, originalBoard }) {
       sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       sse.onmessage = (e) => {
         const data = JSON.parse(e.data)
-        moveAliens(data)
+        moveAliens(data.board.cells) // lo hace en el refresh y el act aca, necesito una bandera para que solo lo haga en el refresh
         handleGameUpdate(data)
       }
 
