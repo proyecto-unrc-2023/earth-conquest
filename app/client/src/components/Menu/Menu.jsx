@@ -7,28 +7,18 @@ import buttonSound from '../../sound/select.mp3'
 
 import './Menu.css'
 
-export function Menu ({ game, setGame }) {
+export function Menu ({ game, setGame, playSound }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
-  const [message, setMessage] = useState({ gameMessage: '', joinMessage: '' })
   const [showLogin, setShowLogin] = useState(false)
   const [showLobby, setShowLobby] = useState(false)
-
-  const playSound = () => {
-    // eslint-disable-next-line no-undef
-    const audio = new Audio(buttonSound)
-    audio.play()
-  }
 
   const handleNewGameClick = () => {
     createGame().then((data) => {
       console.log('CREATE GAME: ', data)
-      setMessage((prevState) => ({
-        ...prevState,
-        gameMessage: data.message
-      }))
+      toast.success(data.message) // mensaje de inicio de juego creado
       setGame((prevState) => ({
         ...prevState,
         gameId: data.data.gameId
@@ -48,11 +38,7 @@ export function Menu ({ game, setGame }) {
 
   const cuandoSeJoinea = (team, name, currentId) => {
     joinAs(team, name, currentId).then((data) => {
-      // setMessage((prevState) => ({
-      //   ...prevState,
-      //   joinMessage: data.message // ver si esto es necesario
-      // }))
-      toast.success(data.message)
+      toast.success(data.message) // mensaje de 'join success'
     })
 
     getGame(currentId).then((game) => {
@@ -85,10 +71,10 @@ export function Menu ({ game, setGame }) {
       {!showLogin && !showLobby && (
         <>
           <h2>MENU</h2>
-          <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={playSound}>
+          <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={() => playSound(buttonSound)}>
             NEW GAME
           </button>
-          <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playSound} id='join'>
+          <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={() => playSound(buttonSound)} id='join'>
             JOIN GAME
           </button>
 
@@ -101,18 +87,17 @@ export function Menu ({ game, setGame }) {
           setNameGreen={setNameGreen}
           cuandoSeJoinea={cuandoSeJoinea}
           nameGreen={nameGreen}
-          message={message}
           playSound={playSound}
         />
       }
       {
         showLobby && (
           <>
-            <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={playSound} id='join'>
+            <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={() => playSound(buttonSound)} id='join'>
               REFRESH GAMES
             </button>
             {
-              allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} />
+              allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} playSound={playSound} />
             }
           </>
         )

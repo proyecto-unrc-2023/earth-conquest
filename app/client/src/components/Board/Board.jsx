@@ -3,13 +3,19 @@ import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
 import { isFreePosition, sendAlterator } from '../../services/appService'
+import directSound from '../../sound/directioner.mp3'
+import trapSound from '../../sound/trap.mp3'
+import inSound from '../../sound/in.mp3'
+import uotSound from '../../sound/out.mp3'
 
-export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled }) => {
+
+export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, setTeleporterEnabled, teleporterEnabled, playSound }) => {
   console.log('ESTE ES EL BOARD QUE LLEGA A BOARD', game.board)
   const [teleportX, setTeleportX] = useState(null)
   const [teleportY, setTeleportY] = useState(null)
   const TELEPORT_RANGE = 4
 
+  let sound = false
   // Funcion para dar el rango de teleport
   const outOfTeleportRange = (row, col, x, y) => {
     return (Math.abs(row - x) >= TELEPORT_RANGE || Math.abs(col - y) >= TELEPORT_RANGE)
@@ -44,7 +50,8 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
         },
         team: game.teamPlayer
       }
-      await sendAlterator(game.gameId, newTrap)
+      sound = await sendAlterator(game.gameId, newTrap)
+      if (sound) playSound(trapSound)
     } else {
       const alteratorSplit = newAlterator.split('_')
       const alteratorName = alteratorSplit[0]
@@ -61,10 +68,12 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
           team: game.teamPlayer
         }
 
-        await sendAlterator(game.gameId, newDirectioner)
+        sound = await sendAlterator(game.gameId, newDirectioner)
+        if (sound) playSound(directSound)
       } else if (alteratorName === 'TELEPORTER') {
         if (alteratorDirection === 'IN') {
           newBoard[row][col].alterator = newAlterator
+          playSound(inSound)
           setAlter(alterator.TELEPORTER_OUT)
           setTeleporterEnabled(false)
           setTeleportX(row)
@@ -80,7 +89,8 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
             team: game.teamPlayer
           }
           // esto retorna si se seteo
-          await sendAlterator(game.gameId, newTeleport)
+          sound = await sendAlterator(game.gameId, newTeleport)
+          if (sound) playSound(uotSound)
           setAlter(null)
           setTeleporterEnabled(true)
         }
