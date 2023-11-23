@@ -27,6 +27,7 @@ function App () {
     // eslint-disable-next-line no-undef
     const audio = new Audio(sound)
     audio.play()
+    return audio
   }
 
   useEffect(() => {

@@ -27,7 +27,8 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     } else {
       // Después de ocultar el componente, ejecuta la función countdown
       countdown()
-      playSound(gameSound)
+      // const audio = playSound(gameSound)
+      // audio.loop = true
     }
 
     const handleGameUpdate = (data) => {
@@ -86,6 +87,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         setAlter={setAlterator}
         setTeleporterEnabled={setTeleporterEnabled}
         teleporterEnabled={teleporterEnabled}
+        playSound={playSound}
       />
       <section className='statsGame'>
         <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
