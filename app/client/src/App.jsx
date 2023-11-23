@@ -23,6 +23,12 @@ function App () {
   })
   const [originalBoard, setOriginalBoard] = useState(null)
 
+  const playSound = (sound) => {
+    // eslint-disable-next-line no-undef
+    const audio = new Audio(sound)
+    audio.play()
+  }
+
   useEffect(() => {
     let sse
 
@@ -93,6 +99,7 @@ function App () {
           <Menu
             game={game}
             setGame={setGame}
+            playSound={playSound}
           />
       }
       {
@@ -101,6 +108,7 @@ function App () {
             game={game}
             setGame={setGame}
             startGame={startGame}
+            playSound={playSound}
             originalBoard={originalBoard}
           />
       }

@@ -1,6 +1,7 @@
 import './Login.css'
+import buttonSound from '../../sound/select.mp3'
 
-export function Login ({ game, setNameGreen, cuandoSeJoinea, nameGreen, message, playHoverSound }) {
+export function Login ({ game, setNameGreen, cuandoSeJoinea, nameGreen, playSound }) {
   return (
     <section className='box-login'>
       <label>
@@ -16,7 +17,7 @@ export function Login ({ game, setNameGreen, cuandoSeJoinea, nameGreen, message,
         <button
           onClick={() => cuandoSeJoinea('GREEN', nameGreen, game.gameId)}
           disabled={!nameGreen}
-          onMouseEnter={playHoverSound}
+          onMouseEnter={() => playSound(buttonSound)}
           className='btn-login'
         >
           Join

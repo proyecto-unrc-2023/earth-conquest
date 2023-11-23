@@ -5,9 +5,10 @@ import { Timer } from '../Timer/Timer'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
+import gameSound from '../../sound/game.mp3'
 import './Game.css'
 
-export function Game ({ game, setGame, originalBoard }) {
+export function Game ({ game, setGame, originalBoard, playSound }) {
   const [alter, setAlterator] = useState(null)
   const [aliens, setAliens] = useState([])
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
@@ -22,10 +23,11 @@ export function Game ({ game, setGame, originalBoard }) {
     if (showTimer) {
       timer = setTimeout(() => {
         setShowTimer(false) // Oculta el componente después de 4 segundos
-      }, 4000)
+      }, 5500)
     } else {
       // Después de ocultar el componente, ejecuta la función countdown
       countdown()
+      playSound(gameSound)
     }
 
     const handleGameUpdate = (data) => {
@@ -75,7 +77,7 @@ export function Game ({ game, setGame, originalBoard }) {
 
   return (
     <>
-      {showTimer && <Timer />}
+      {showTimer && <Timer playSound={playSound} />}
       <Board
         game={game}
         teleportIn={teleportIn}

@@ -1,23 +1,36 @@
 import { useState, useEffect } from 'react'
+import './Timer.css'
 
-export function Timer () {
-  const [counter, setCounter] = useState(0)
+import timmer from '../../sound/timer.mp3'
+import start from '../../sound/start.mp3'
 
-  if (counter <= 3) {
-    useEffect(() => {
+export function Timer ({ playSound }) {
+  const [counter, setCounter] = useState(4)
+
+  useEffect(() => {
+    if ([1, 2, 3].includes(counter)) {
+      playSound(timmer)
+    }
+    if (counter === 0) playSound(start)
+    if (counter > -1) {
       const interval = setInterval(() => {
-        setCounter((prevCounter) => prevCounter + 1)
+        setCounter((prevCounter) => prevCounter - 1)
       }, 1000)
 
       return () => clearInterval(interval)
-    }, [counter])
-  }
+    }
+  }, [counter])
 
   return (
     <section className='box-timer'>
-      {counter === 1 && <img src='../1.png' className='image' alt='1' />}
-      {counter === 2 && <img src='../2.png' className='image' alt='2' />}
-      {counter === 3 && <img src='../3.png' className='image' alt='3' />}
+      {[3, 2, 1, 0].map((num) => (
+        <img
+          key={num}
+          src={`../${num}.png`}
+          className={`image ${counter === num ? 'show' : ''}`}
+          alt={num.toString()}
+        />
+      ))}
     </section>
   )
 }

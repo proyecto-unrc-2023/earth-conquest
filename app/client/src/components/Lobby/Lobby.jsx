@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import './Lobby.css'
+import buttonSound from '../../sound/select.mp3'
 
-export const Lobby = ({ allGames, cuandoSeJoinea }) => {
+export const Lobby = ({ allGames, cuandoSeJoinea, playSound }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
 
   const handleNameBlueChange = (name, index) => {
@@ -46,6 +47,7 @@ export const Lobby = ({ allGames, cuandoSeJoinea }) => {
                     <button
                       onClick={() => handleJoinPlayer(index, game.game_id)}
                       disabled={!nameBlue[index]}
+                      onMouseEnter={() => playSound(buttonSound)}
                       className='btn-lobby'
                     >Join
                     </button>
