@@ -32,18 +32,15 @@ export const handleHash = (cells, newBoard, setTeleportIn, setTeleportOut) => {
 
 export const handleAliens = (aliens, cells) => {
   const newAliens = [...aliens]
-  if (aliens.length === 0) {
-    return initAliens(aliens, cells)
+  // console.log('ALIENS LLEGA', newAliens)
+  if (newAliens.length === 0) {
+    return initAliens(newAliens, cells)
   } else {
-    Object.entries(cells).forEach(([position, cell]) => {
-      const [row, col] = position.slice(1, -1).split(', ').map(Number)
-      updateAliensPositions(newAliens, cell.aliens, row, col)
-    })
+    return updateAliensPositions(newAliens, cells)
   }
-  return newAliens
 }
 
-const initAliens = (aliens, cells) => {
+export const initAliens = (aliens, cells) => {
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
     cell.aliens.forEach((alien) => {
@@ -53,17 +50,21 @@ const initAliens = (aliens, cells) => {
   return aliens
 }
 
-const updateAliensPositions = (aliens, cellAliens, row, col) => {
-  cellAliens.forEach((cellAlien) => {
-    const alien = aliens.find(alien => alien.id === cellAlien.id)
+const updateAliensPositions = (aliens, cells) => {
+  Object.entries(cells).forEach(([position, cell]) => {
+    const [row, col] = position.slice(1, -1).split(', ').map(Number)
+    cell.aliens.forEach((cellAlien) => {
+      const alien = aliens.find(alien => alien.id === cellAlien.id)
 
-    if (alien) {
-      // si el alien ya existe en la lista, actualiza su posición
-      alien.oldPosition = { row: alien.newPosition.row, col: alien.newPosition.col }
-      alien.newPosition = { row, col }
-      aliens.filter(alien => alien.id !== cellAlien.id)
-    } // si no existe, puede existir en otra celda
+      if (alien) {
+        // si el alien ya existe en la lista, actualiza su posición
+        alien.oldPosition = { row: alien.newPosition.row, col: alien.newPosition.col }
+        alien.newPosition = { row, col }
+        aliens.filter(alien => alien.id !== cellAlien.id) // al que ya actualice lo saco del arreglo
+      } // si no existe, puede existir en otra celda
+    })
   })
+  return aliens
 }
 
 /*

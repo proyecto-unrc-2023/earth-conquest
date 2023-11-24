@@ -3,7 +3,7 @@ import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState } from '../../services/appService'
-import { handleHash, handleAliens, getAliensDirections } from '../../services/alienService'
+import { handleHash, handleAliens, getAliensDirections, initAliens } from '../../services/alienService'
 import './Game.css'
 
 export function Game ({ game, setGame, originalBoard }) {
@@ -13,6 +13,7 @@ export function Game ({ game, setGame, originalBoard }) {
   const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
   const [aliensDirections, setAliensDirections] = useState([])
   const [aliensPosition, setAliensPosition] = useState([])
+
   useEffect(() => {
     let sse
     const handleGameUpdate = (data) => {
@@ -27,12 +28,13 @@ export function Game ({ game, setGame, originalBoard }) {
       }))
     }
 
-    const moveAliens = (cells) => {
-      const newAliensPosition = handleAliens(aliensPosition, cells)
+    const moveAliens = (aliens, cells) => {
+      console.log('MOVING ALIENS', aliens)
+      const newAliensPosition = handleAliens(aliens, cells)
       setAliensPosition(newAliensPosition)
-      console.log('NEW ALIENS POSITION: ', aliensPosition)
       const newAliensDirections = getAliensDirections(newAliensPosition)
       setAliensDirections(newAliensDirections)
+      console.log('NEW ALIENS POSITIONS', newAliensPosition)
     }
 
     const startSSE = () => {
@@ -40,8 +42,15 @@ export function Game ({ game, setGame, originalBoard }) {
       sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       sse.onmessage = (e) => {
         const data = JSON.parse(e.data)
-        moveAliens(data.board.cells) // lo hace en el refresh y el act aca, necesito una bandera para que solo lo haga en el refresh
-        handleGameUpdate(data)
+        if (data.refresh) {
+          moveAliens(aliensPosition, data.board.cells)
+        }
+
+        setTimeout(() => {
+          moveAliens([], data.board.cells)
+          handleGameUpdate(data)
+          console.log('HANDLE GAME UPDATE')
+        }, 700)
       }
 
       sse.onerror = (e) => {
@@ -61,7 +70,6 @@ export function Game ({ game, setGame, originalBoard }) {
 
   async function countdown () {
     if (game.host) {
-      console.log('HAGO NEXT STATE')
       await nextState(game.gameId)
       setTimeout(countdown, 3000)
     }

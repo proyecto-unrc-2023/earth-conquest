@@ -22,7 +22,7 @@
 
 @keyframes right {
   to {
-    transform: translateX(55px);
+    transform: translateX(56px);
   }
 }
 
@@ -32,7 +32,7 @@
 
 @keyframes left {
   to {
-    transform: translateX(-55px);
+    transform: translateX(-56px);
   }
 }
 
@@ -42,7 +42,7 @@
 
 @keyframes up {
   to {
-    transform: translateY(-55px);
+    transform: translateY(-56px);
   }
 }
 
@@ -52,6 +52,6 @@
 
 @keyframes down {
   to {
-    transform: translateY(55px);
+    transform: translateY(56px);
   }
 }

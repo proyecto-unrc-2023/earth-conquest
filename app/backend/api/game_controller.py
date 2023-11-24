@@ -114,7 +114,13 @@ class GameController:
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
-            r.set('game_status', json.dumps(game_schema.dump(game)))
+            game_schema_data = game_schema.dump(game)
+
+            # Agrego el atributo 'refresh'
+            game_schema_data['refresh'] = True
+
+            r.set('game_status', json.dumps(game_schema_data))
+            # r.set('game_status', json.dumps(game_schema.dump(game)))
             
             time.sleep(2)
             
@@ -125,7 +131,10 @@ class GameController:
             game.act_board()
             print("=====================ACTUOOOOOOOOOOOO=============")
             games_dict[id] = game
-            r.set('game_status', json.dumps(game_schema.dump(game)))
+            game_schema_data['refresh'] = False
+            r.set('game_status', json.dumps(game_schema_data))
+
+            # r.set('game_status', json.dumps(game_schema.dump(game)))
 
         except Exception as e:
             message = json.dumps(
@@ -323,6 +332,7 @@ class GameController:
                 
                 if old_status != new_status:
                     status_data = json.loads(new_status) if new_status else {}
+                    
                     yield f'data: {json.dumps(status_data)}\n\n'
 
                     old_status = new_status
