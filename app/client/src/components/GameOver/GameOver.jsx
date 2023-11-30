@@ -7,7 +7,7 @@ export function GameOver ({ game }) {
   return (
     <div className={containerClassName}>
       <h1>Game Over</h1>
-      <p>¡{name} From The {team} Team Wins¡</p>
+      <p>¡ {name} From The {team} Team Wins !</p>
 
     </div>
   )

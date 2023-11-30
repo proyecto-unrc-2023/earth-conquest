@@ -15,9 +15,9 @@ export function Menu ({ game, setGame, playSound }) {
   const [showLogin, setShowLogin] = useState(false)
   const [showLobby, setShowLobby] = useState(false)
 
+  // Crea un nuevo juego
   const handleNewGameClick = () => {
     createGame().then((data) => {
-      console.log('CREATE GAME: ', data)
       toast.success(data.message) // mensaje de inicio de juego creado
       setGame((prevState) => ({
         ...prevState,
@@ -28,6 +28,7 @@ export function Menu ({ game, setGame, playSound }) {
     })
   }
 
+  // Entra a un juego
   const handleJoinGameClick = async () => {
     const games = await getAllGames()
     setAllGames(games)
@@ -36,13 +37,13 @@ export function Menu ({ game, setGame, playSound }) {
     if (!showLobby) setShowLobby(true)
   }
 
+  // Joinea a un usuario a un juego creado
   const cuandoSeJoinea = (team, name, currentId) => {
     joinAs(team, name, currentId).then((data) => {
       toast.success(data.message) // mensaje de 'join success'
     })
 
     getGame(currentId).then((game) => {
-      console.log('GAME: ', game)
       if (team === 'GREEN') {
         setGame((prevState) => ({
           ...prevState,

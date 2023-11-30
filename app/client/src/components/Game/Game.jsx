@@ -5,9 +5,8 @@ import { Timer } from '../Timer/Timer'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState, API } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
-import gameSound from '../../sound/game.mp3'
+// import gameSound from '../../sound/game.mp3'
 import './Game.css'
-import { gameStatus } from '../../constants'
 
 export function Game ({ game, setGame, originalBoard, playSound }) {
   const [alter, setAlterator] = useState(null)
@@ -21,7 +20,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     let sse
     let timer
 
-    // funcion para que arranque el contador
+    // arranca el contador luego de mostrar los numeros
     if (showTimer) {
       timer = setTimeout(() => {
         setShowTimer(false)
@@ -32,6 +31,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
       // audio.loop = true
     }
 
+    // Actualiza constantemente los datos del juego
     const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
@@ -43,7 +43,6 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         aliveBlueAliens: data.alive_blue_aliens,
         winner: data.winner
       }))
-      console.log('ESTE ES EL ESTADO DEL JUEGO', game.statusGame)
     }
 
     const startSSE = () => {
@@ -70,11 +69,10 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     }
   }, [showTimer])
 
+  // Funcion que pide el nextState
   async function countdown () {
     if (game.host) {
-      console.log('HAGO NEXT STATE')
       await nextState(game.gameId)
-
       setTimeout(countdown, 500)
     }
   }

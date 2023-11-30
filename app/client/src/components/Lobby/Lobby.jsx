@@ -5,12 +5,14 @@ import buttonSound from '../../sound/select.mp3'
 export const Lobby = ({ allGames, cuandoSeJoinea, playSound }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
 
+  // Setea el usuario BLUE en la posicion correspondiente del lobby
   const handleNameBlueChange = (name, index) => {
     const updatedNameBlue = [...nameBlue]
     updatedNameBlue[index] = name
     setNameBlue(updatedNameBlue)
   }
 
+  // Joinea en jugador que entro en el lobby
   const handleJoinPlayer = (index, currentGameId) => {
     cuandoSeJoinea('BLUE', nameBlue[index], currentGameId)
   }
