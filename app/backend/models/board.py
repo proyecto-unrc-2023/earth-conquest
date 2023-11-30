@@ -13,8 +13,8 @@ from app.backend.models.directioner import Directioner
 from app.backend.models.team import Team
 from app.backend.models.teleporter import Teleporter
 
-GREEN_OVNI_LIFE = 3
-BLUE_OVNI_LIFE = 3
+GREEN_OVNI_LIFE = 100
+BLUE_OVNI_LIFE = 100
 
 
 class Board:
