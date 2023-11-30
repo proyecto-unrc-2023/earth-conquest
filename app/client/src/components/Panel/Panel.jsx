@@ -32,7 +32,7 @@ export const Panel = ({ setAlter, teleporterEnabled, team }) => {
             <button onClick={() => handleAlterator(alterator.TRAP)}>
               <img className='button_img_trap' src='/../trap.png' alt='Trap' />
               <section className='box-value'>
-                <img src={`../${teamLower}_alien.png`} className='alien' />
+                <img src={`../${teamLower}_alien.png`} className='alien-value' />
                 <p className='value'>4</p>
               </section>
             </button>
@@ -42,7 +42,7 @@ export const Panel = ({ setAlter, teleporterEnabled, team }) => {
                 <img className='button_img_teleport1' src='/../teleport_out.gif' alt='Teleporter' />
               </section>
               <section className='box-value'>
-                <img src={`../${teamLower}_alien.png`} className='alien' />
+                <img src={`../${teamLower}_alien.png`} className='alien-value' />
                 <p className='value'>6</p>
               </section>
             </button>
@@ -54,7 +54,7 @@ export const Panel = ({ setAlter, teleporterEnabled, team }) => {
                 <img className='button_img_dir1' src='/../directioner_left.png' alt='Directioner' />
               </section>
               <section className='box-value'>
-                <img src={`../${teamLower}_alien.png`} className='alien' />
+                <img src={`../${teamLower}_alien.png`} className='alien-value' />
                 <p className='value'>4</p>
               </section>
             </button>
