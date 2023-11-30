@@ -7,6 +7,7 @@ import { nextState } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
 import gameSound from '../../sound/game.mp3'
 import './Game.css'
+import { gameStatus } from '../../constants'
 
 export function Game ({ game, setGame, originalBoard, playSound }) {
   const [alter, setAlterator] = useState(null)
@@ -35,12 +36,14 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
       setGame((prevState) => ({
         ...prevState,
         board: handleHash(aliens, data.board.cells, originalBoard, setTeleportIn, setTeleportOut),
-        setStatusGame: data.status,
+        statusGame: data.status,
         blueOvniLife: data.board.blue_ovni_life,
         greenOvniLife: data.board.green_ovni_life,
         aliveGreenAliens: data.alive_green_aliens,
-        aliveBlueAliens: data.alive_blue_aliens
+        aliveBlueAliens: data.alive_blue_aliens,
+        winner: data.winner
       }))
+      console.log('ESTE ES EL ESTADO DEL JUEGO', game.statusGame)
     }
 
     const startSSE = () => {
@@ -72,7 +75,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
       console.log('HAGO NEXT STATE')
       await nextState(game.gameId)
 
-      setTimeout(countdown, 1000)
+      setTimeout(countdown, 500)
     }
   }
 
