@@ -2,6 +2,7 @@ import { Cell } from '../Cell/Cell'
 import { alterator, team } from '../../constants.js'
 import './Board.css'
 import { useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { isFreePosition, sendAlterator } from '../../services/appService'
 import directSound from '../../sound/directioner.mp3'
 import trapSound from '../../sound/trap.mp3'
@@ -48,7 +49,10 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
   // Envia a la API el nuevo alterador
   const updateBoard = async (row, col) => {
     if (newAlterator === null) return
-    if (!await isFreePosition(row, col, game.gameId)) return
+    if (!await isFreePosition(row, col, game.gameId)) {
+      toast.error('This is not a free position')
+      return
+    }
     if ((newAlterator === alterator.TELEPORTER_OUT) && outOfTeleportRange(row, col, teleportX, teleportY)) return
 
     const newBoard = [...game.board]
@@ -58,8 +62,10 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
   const setAlteratorInCell = async (row, col, newAlterator, newBoard) => {
     if (newAlterator === alterator.TRAP) {
       const newTrap = generateAlterator(newAlterator, { x: row, y: col }, { x: -1, y: -1 }, '-', game.teamPlayer)
+      const data = await sendAlterator(game.gameId, newTrap)
+      sound = data.success
+      if (data.errors) toast.error(data.errors)
 
-      sound = await sendAlterator(game.gameId, newTrap)
       if (sound) playSound(trapSound)
     } else {
       const alteratorSplit = newAlterator.split('_')
@@ -69,7 +75,10 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
       if (alteratorName === 'DIRECTIONER') {
         const newDirectioner = generateAlterator(alteratorName, { x: row, y: col }, { x: -1, y: -1 }, alteratorDirection, game.teamPlayer)
 
-        sound = await sendAlterator(game.gameId, newDirectioner)
+        const data = await sendAlterator(game.gameId, newDirectioner)
+        sound = data.success
+        if (data.errors) toast.error(data.errors)
+
         if (sound) playSound(directSound)
       } else if (alteratorName === 'TELEPORTER') {
         if (alteratorDirection === 'IN') {
@@ -82,8 +91,10 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
         } else {
           const newTeleport = generateAlterator(alteratorName, { x: teleportX, y: teleportY }, { x: row, y: col }, alteratorDirection, game.teamPlayer)
 
-          // esto retorna si se seteo
-          sound = await sendAlterator(game.gameId, newTeleport)
+          const data = await sendAlterator(game.gameId, newTeleport)
+          sound = data.success
+          if (data.errors) toast.error(data.errors)
+
           if (sound) playSound(uotSound)
           setAlter(null)
           setTeleporterEnabled(true)
@@ -116,11 +127,13 @@ export const Board = ({ game, teleportIn, teleportOut, newAlterator, setAlter, s
                 >
                   {cell}
                 </Cell>
+
               )
             })
           )
         })
       }
+      <Toaster />
     </section>
   )
 }

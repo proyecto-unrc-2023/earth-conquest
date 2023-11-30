@@ -82,7 +82,7 @@ export const sendAlterator = async (gameId, newAlterator) => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    return data.success
+    return data
   } catch (error) {
     console.error('Error set alterator', error)
   }
