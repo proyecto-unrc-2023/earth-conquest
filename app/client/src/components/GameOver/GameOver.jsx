@@ -1,12 +1,14 @@
-import React from 'react'
+import './GameOver.css'
 
 export function GameOver ({ game }) {
-  console.log('ESTO VIENE EN GAME DE GAME OVER', game.winner)
   const { 0: name, 1: team } = game.winner
+  const containerClassName = `game-over container ${team.toLowerCase()}`
+
   return (
-    <div>
+    <div className={containerClassName}>
       <h1>Game Over</h1>
-      <p>¡El ganador es {name} del equipo {team}</p>
+      <p>¡{name} From The {team} Team Wins¡</p>
+
     </div>
   )
 }

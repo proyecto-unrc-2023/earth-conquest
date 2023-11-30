@@ -88,14 +88,6 @@ function App () {
     }
   }, [game.playerBlue, game.playerGreen])
 
-  /* const handleRestart = () => {
-    setGame((prevState) => ({
-      ...prevState,
-      winner: null,
-      statusGame: game.NOT_SARTED
-    }))
-  } */
-
   return (
     <main>
       {
@@ -117,7 +109,6 @@ function App () {
       {game.statusGame === gameStatus.OVER &&
         <GameOver
           game={game}
-          /* handleRestart={handleRestart} */
         />}
 
     </main>
