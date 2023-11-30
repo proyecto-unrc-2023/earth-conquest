@@ -5,19 +5,21 @@ import { team, alterator } from '../../constants.js'
 import './Cell.css'
 
 export const Cell = ({ updateBoard, row, col, children, blueBase, greenBase, teleportX, teleportY, teleporterEnabled, teleportIn, teleportOut, outOfTeleportRange, isBase }) => {
+  // Funcion para ver si un par es entrada de un teleport
   const isTeleportIn = (x, y) => {
     return (
       teleportIn.find(teleport => teleport.row === x && teleport.col === y) !== undefined
     )
   }
 
+  // Funcion para ver si un par es salida de un teleport
   const isTeleportOut = (x, y) => {
     return (
-
       teleportOut.find(teleport => teleport.row === x && teleport.col === y) !== undefined
     )
   }
 
+  // Actualiza el tablero
   const handleClick = () => {
     updateBoard(row, col)
   }

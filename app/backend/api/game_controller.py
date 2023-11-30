@@ -249,7 +249,7 @@ class GameController:
                     'errors': str(e)
                 }
             )
-            return Response(message, status=400, mimetype='application/json')
+            return Response(message, status=200, mimetype='application/json')
 
         games_dict[id] = game
         game_schema = GameAliensSchema()

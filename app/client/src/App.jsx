@@ -25,6 +25,9 @@ function App () {
   })
   const [originalBoard, setOriginalBoard] = useState(null)
 
+  /*
+    Funcion que reproduce sonidos pasando la ruta como parametro
+  */
   const playSound = (sound) => {
     // eslint-disable-next-line no-undef
     const audio = new Audio(sound)
@@ -34,7 +37,7 @@ function App () {
 
   useEffect(() => {
     let sse
-
+    // actualiza atributos de game
     const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
@@ -43,7 +46,6 @@ function App () {
       setOriginalBoard(data.board.grid)
 
       if (data.status !== gameStatus.STARTED) {
-        console.log('status no es started', data)
         setGame((prevState) => ({
           ...prevState,
           board: data.board.grid,
@@ -53,14 +55,13 @@ function App () {
           playerBlue: data.blue_player,
           playerGreen: data.green_player
         }))
+
         if (game.playerBlue && game.playerGreen) {
-          console.log('STARTEO DESDE SSE')
           if (!game.host) startGame(game.gameId)
           setGame((prevState) => ({
             ...prevState,
             statusGame: gameStatus.STARTED
           }))
-          console.log('ORIGINAL BOARD', originalBoard)
           sse.close()
         }
       }
@@ -68,27 +69,21 @@ function App () {
 
     const startSEE = () => {
       sse = new window.EventSource(API + `games/sse/${game.gameId}`)
-      console.log('SSE ACTIVO')
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
-        console.log('Esto viene en el sse de app:', data)
         handleGameUpdate(data)
       }
 
       sse.onerror = () => {
-        // error log here
         sse.close()
       }
     }
 
     if (game.gameId) {
       startSEE()
-    } else {
-      console.log('Entre al else del sse')
     }
 
     return () => {
-      console.log('SE CERRO SSE DE APP CON RETURN')
       if (sse) {
         sse.close()
       }

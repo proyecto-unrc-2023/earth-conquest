@@ -7,16 +7,19 @@ export const Panel = ({ setAlter, teleporterEnabled, team }) => {
   const [showAlterators, setshowAlterators] = useState(true)
   const teamLower = team.toLowerCase()
 
+  // Setea el alterador para colocar en el tablero
   const handleAlterator = (newAlterator) => {
     if (!teleporterEnabled) return
     setAlter(newAlterator) // setea el objeto
   }
 
+  // Muestra las direcciones del Directioner
   const handleShowDirections = () => {
     setShowDirections(true)
     setshowAlterators(false)
   }
 
+  // Setea las direcciones del Directioner
   const handleDirectionClick = (direction) => {
     setShowDirections(false)
     setshowAlterators(true)

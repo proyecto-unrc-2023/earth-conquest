@@ -7,7 +7,6 @@ import { nextState, API } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
 import gameSound from '../../sound/game.mp3'
 import './Game.css'
-import { gameStatus } from '../../constants'
 
 export function Game ({ game, setGame, originalBoard, playSound }) {
   const [alter, setAlterator] = useState(null)
@@ -16,22 +15,26 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
   const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
   const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
   const [showTimer, setShowTimer] = useState(true)
+  // eslint-disable-next-line no-undef
+  const [audio] = useState(new Audio(gameSound))
+  const [isPlaying, setIsPlaying] = useState(true)
 
   useEffect(() => {
     let sse
     let timer
 
-    // funcion para que arranque el contador
+    // arranca el contador luego de mostrar los numeros
     if (showTimer) {
       timer = setTimeout(() => {
         setShowTimer(false)
       }, 5500)
     } else {
       countdown()
-      // const audio = playSound(gameSound)
-      // audio.loop = true
+      audio.loop = true
+      audio.play()
     }
 
+    // Actualiza constantemente los datos del juego
     const handleGameUpdate = (data) => {
       setGame((prevState) => ({
         ...prevState,
@@ -43,7 +46,6 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         aliveBlueAliens: data.alive_blue_aliens,
         winner: data.winner
       }))
-      console.log('ESTE ES EL ESTADO DEL JUEGO', game.statusGame)
     }
 
     const startSSE = () => {
@@ -70,11 +72,19 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     }
   }, [showTimer])
 
+  const toggleSound = () => {
+    if (isPlaying) {
+      audio.pause()
+    } else {
+      audio.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
+  // Funcion que pide el nextState
   async function countdown () {
     if (game.host) {
-      console.log('HAGO NEXT STATE')
       await nextState(game.gameId)
-
       setTimeout(countdown, 500)
     }
   }
@@ -93,9 +103,24 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         playSound={playSound}
       />
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
-        <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
+        <StatsGame
+          team='green'
+          lifeOvni={game.greenOvniLife}
+          liveAliens={game.aliveGreenAliens}
+          playerName={game.playerGreen}
+        />
+        <StatsGame
+          team='blue'
+          lifeOvni={game.blueOvniLife}
+          liveAliens={game.aliveBlueAliens}
+          playerName={game.playerBlue}
+        />
       </section>
+      <button onClick={toggleSound} className='btn-play-pause'>
+        {isPlaying
+          ? <img src='../pause.png' alt='pause' className='icons-play-pause' />
+          : <img src='../play.png' alt='pause' className='icons-play-pause' />}
+      </button>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} team={game.teamPlayer} />
     </>
   )
