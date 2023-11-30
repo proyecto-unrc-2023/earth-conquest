@@ -22,3 +22,15 @@ body {
   margin: 20px 10px;
 }
 
+.btn-play-pause{
+  width: 20px;
+  height: auto;
+  background: url(../pause.png);
+  background-color: rgb(93, 99, 99);
+  border-radius: 100%;
+}
+
+.icons-play-pause{
+  width: 20px;
+  height: auto;
+}

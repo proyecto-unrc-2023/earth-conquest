@@ -5,7 +5,7 @@ import { Timer } from '../Timer/Timer'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState, API } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
-// import gameSound from '../../sound/game.mp3'
+import gameSound from '../../sound/game.mp3'
 import './Game.css'
 
 export function Game ({ game, setGame, originalBoard, playSound }) {
@@ -15,6 +15,9 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
   const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
   const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
   const [showTimer, setShowTimer] = useState(true)
+  // eslint-disable-next-line no-undef
+  const [audio] = useState(new Audio(gameSound))
+  const [isPlaying, setIsPlaying] = useState(true)
 
   useEffect(() => {
     let sse
@@ -27,8 +30,8 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
       }, 5500)
     } else {
       countdown()
-      // const audio = playSound(gameSound)
-      // audio.loop = true
+      audio.loop = true
+      audio.play()
     }
 
     // Actualiza constantemente los datos del juego
@@ -69,6 +72,15 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     }
   }, [showTimer])
 
+  const toggleSound = () => {
+    if (isPlaying) {
+      audio.pause()
+    } else {
+      audio.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
   // Funcion que pide el nextState
   async function countdown () {
     if (game.host) {
@@ -91,9 +103,24 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         playSound={playSound}
       />
       <section className='statsGame'>
-        <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
-        <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
+        <StatsGame
+          team='green'
+          lifeOvni={game.greenOvniLife}
+          liveAliens={game.aliveGreenAliens}
+          playerName={game.playerGreen}
+        />
+        <StatsGame
+          team='blue'
+          lifeOvni={game.blueOvniLife}
+          liveAliens={game.aliveBlueAliens}
+          playerName={game.playerBlue}
+        />
       </section>
+      <button onClick={toggleSound} className='btn-play-pause'>
+        {isPlaying
+          ? <img src='../pause.png' alt='pause' className='icons-play-pause' />
+          : <img src='../play.png' alt='pause' className='icons-play-pause' />}
+      </button>
       <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} team={game.teamPlayer} />
     </>
   )
