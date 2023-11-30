@@ -3,7 +3,7 @@ import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { Timer } from '../Timer/Timer'
 import { StatsGame } from '../StatGame/StatsGame'
-import { nextState } from '../../services/appService'
+import { nextState, API } from '../../services/appService'
 import { handleHash } from '../../services/alienService'
 import gameSound from '../../sound/game.mp3'
 import './Game.css'
@@ -21,12 +21,12 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
     let sse
     let timer
 
+    // funcion para que arranque el contador
     if (showTimer) {
       timer = setTimeout(() => {
-        setShowTimer(false) // Oculta el componente después de 4 segundos
+        setShowTimer(false)
       }, 5500)
     } else {
-      // Después de ocultar el componente, ejecuta la función countdown
       countdown()
       // const audio = playSound(gameSound)
       // audio.loop = true
@@ -48,7 +48,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
 
     const startSSE = () => {
       // eslint-disable-next-line no-undef
-      sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      sse = new EventSource(API + `games/sse/${game.gameId}`)
       sse.onmessage = (e) => {
         const data = JSON.parse(e.data)
         handleGameUpdate(data)
@@ -96,7 +96,7 @@ export function Game ({ game, setGame, originalBoard, playSound }) {
         <StatsGame team='green' lifeOvni={game.greenOvniLife} liveAliens={game.aliveGreenAliens} playerName={game.playerGreen} />
         <StatsGame team='blue' lifeOvni={game.blueOvniLife} liveAliens={game.aliveBlueAliens} playerName={game.playerBlue} />
       </section>
-      <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} />
+      <Panel setAlter={setAlterator} teleporterEnabled={teleporterEnabled} team={game.teamPlayer} />
     </>
   )
 }

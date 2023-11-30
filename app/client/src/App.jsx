@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
-import { startGame } from './services/appService'
+import { startGame, API } from './services/appService'
 import { GameOver } from './components/GameOver/GameOver'
 
 function App () {
@@ -67,7 +67,7 @@ function App () {
     }
 
     const startSEE = () => {
-      sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      sse = new window.EventSource(API + `games/sse/${game.gameId}`)
       console.log('SSE ACTIVO')
       sse.onmessage = e => {
         const data = JSON.parse(e.data)
