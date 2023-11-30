@@ -11,7 +11,7 @@ export const StatsGame = ({ team, lifeOvni, liveAliens, playerName }) => {
       <section className={`${team}_user_info`}>
 
         <section className={`live_alien_${team}`}>
-          <img src={`../${team}_alien.png`} className={`${team}_alien`} alt='' />
+          <img src={`../${team}_alien.png`} className={`${team}_alien`} alt='alien' />
           <p> {liveAliens} </p>
         </section>
 

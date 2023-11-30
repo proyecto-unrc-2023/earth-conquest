@@ -30,10 +30,11 @@
 
 button {
   display: flex;
-  width: 4vw;
-  height: 7vh;
-  justify-content: center;
+  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
+  width: 130px;
+  height: 80px;
   border-radius: 8px;
   border: 1px solid #bb01a2c0;
   padding: 0.6em 1.2em;
@@ -59,7 +60,7 @@ button:focus-visible {
 }
 
 .button_img_trap{
-  width: 1.5vw;
+  width: 24px;
 }
 
 .button_img_teleport{
@@ -76,4 +77,19 @@ button:focus-visible {
 
 .button_img_dir1{
   width: 1vw;
+}
+
+.box-value{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 40px;
+}
+.value{
+  font-size: 1em;
+}
+
+.alien{
+  position: relative;
+  width: 30px;
 }
