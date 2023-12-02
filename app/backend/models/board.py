@@ -31,6 +31,7 @@ class Board:
         self.create_board()
         self.green_ovni_life = GREEN_OVNI_LIFE
         self.blue_ovni_life = BLUE_OVNI_LIFE
+        self.movements_history = {} # Dictionary with Key = id of the alien, Value = direction of the movement
 
     """
     Creates the initial board full of Cells and
@@ -220,7 +221,7 @@ class Board:
     Updates the board by moving each alien to a free random adjoining position.
     """
     def refresh_board(self):
-
+        self.movements_history = {}
         copy = {}
         for pos in self.aliens.keys():
             for alien in self.aliens[pos]:
@@ -242,7 +243,7 @@ class Board:
     It also solves any action that may occur between aliens and Alterators/Modifiers.
     """
     def act_board(self):
-
+        self.movements_history = {}
         for key in list(self.aliens.keys()):
             x, y = key[0], key[1]
             cell = self.get_cell(x, y)
@@ -266,6 +267,7 @@ class Board:
     """
     def move_alien(self, x, y, alien):
         if not self.get_cell(x, y).aliens.__contains__(alien):
+            print("Exception Board, move_alien: alien not found in position")
             raise ValueError("alien not found in position")
 
         alterator = self.get_cell(x, y).alterator  # alterator on the cell
@@ -276,6 +278,9 @@ class Board:
             new_x, new_y = self.new_alien_pos_with_directioner(x, y, alterator)
         else:
             new_x, new_y = self.get_adjoining_valid_pos(x, y)
+
+        self.movements_history[alien.id] = self.generate_movement_dictionary(x, y, new_x, new_y)
+        print("movements history: ", self.movements_history)
 
         self.remove_alien_from_board(x, y, alien)
         self.set_alien(new_x, new_y, alien)
@@ -328,6 +333,23 @@ class Board:
                         return new_x, new_y
                     else:
                         return x, y
+
+    """
+    Returns the direction in which the alien is moving
+    """
+    def generate_movement_dictionary(old_x, old_y, new_x, new_y):
+        if new_x > old_x:
+            direction = 'right'
+        elif new_x < old_x:
+            direction = 'left'
+        elif new_y > old_y:
+            direction = 'down'
+        elif new_y < old_y:
+            direction = 'up'
+        else:
+            direction = 'none'
+
+        return direction
 
     """
     Returns a position that 
@@ -574,3 +596,4 @@ class BoardSchema(Schema):
     green_ovni_life = fields.Integer()
     blue_ovni_life = fields.Integer()
     grid = fields.List(fields.List(fields.Nested(CellSchema())), attribute='board')
+    movements_history = fields.Dict()

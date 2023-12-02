@@ -3,6 +3,7 @@ import { Board } from '../Board/Board'
 import { Panel } from '../Panel/Panel'
 import { StatsGame } from '../StatGame/StatsGame'
 import { nextState } from '../../services/appService'
+import { gameStatus } from '../../constants'
 import { handleHash, handleAliens, getAliensDirections, initAliens } from '../../services/alienService'
 import './Game.css'
 
@@ -11,8 +12,7 @@ export function Game ({ game, setGame, originalBoard }) {
   const [teleporterEnabled, setTeleporterEnabled] = useState(true)
   const [teleportIn, setTeleportIn] = useState([{ row: null, col: null }])
   const [teleportOut, setTeleportOut] = useState([{ row: null, col: null }])
-  const [aliensDirections, setAliensDirections] = useState([])
-  const [aliensPosition, setAliensPosition] = useState([])
+  const [aliensDirections, setAliensDirections] = useState({})
 
   useEffect(() => {
     let sse
@@ -28,29 +28,16 @@ export function Game ({ game, setGame, originalBoard }) {
       }))
     }
 
-    const moveAliens = (aliens, cells) => {
-      console.log('MOVING ALIENS', aliens)
-      const newAliensPosition = handleAliens(aliens, cells)
-      setAliensPosition(newAliensPosition)
-      const newAliensDirections = getAliensDirections(newAliensPosition)
-      setAliensDirections(newAliensDirections)
-      console.log('NEW ALIENS POSITIONS', newAliensPosition)
-    }
-
     const startSSE = () => {
-      // eslint-disable-next-line no-undef
-      sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
+      sse = new window.EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
       sse.onmessage = (e) => {
         const data = JSON.parse(e.data)
         if (data.refresh) {
-          moveAliens(aliensPosition, data.board.cells)
+          setAliensDirections(data.board.movements_history)
         }
-
         setTimeout(() => {
-          moveAliens([], data.board.cells)
           handleGameUpdate(data)
-          console.log('HANDLE GAME UPDATE')
-        }, 700)
+        }, 500)
       }
 
       sse.onerror = (e) => {
@@ -69,7 +56,7 @@ export function Game ({ game, setGame, originalBoard }) {
   }, [])
 
   async function countdown () {
-    if (game.host) {
+    if (game.host && game.statusGame !== gameStatus.STARTED) {
       await nextState(game.gameId)
       setTimeout(countdown, 3000)
     }

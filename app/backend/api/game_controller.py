@@ -110,17 +110,14 @@ class GameController:
         try:
             # REFRESH: Move aliens 
             game.refresh_board()
-            print("==================== HICE EL REFRESH =============")
+            print("==================== HICE EL REFRESH ====================")
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
             game_schema_data = game_schema.dump(game)
-
-            # Agrego el atributo 'refresh'
-            game_schema_data['refresh'] = True
+            game_schema_data["refres"] = True
 
             r.set('game_status', json.dumps(game_schema_data))
-            # r.set('game_status', json.dumps(game_schema.dump(game)))
             
             time.sleep(2)
             
@@ -129,12 +126,11 @@ class GameController:
                 game.spawn_aliens()
             
             game.act_board()
-            print("=====================ACTUOOOOOOOOOOOO=============")
+            print("===================== ACTUO ====================")
             games_dict[id] = game
-            game_schema_data['refresh'] = False
+            game_schema_data = game_schema.dump(game)
+            game_schema_data["refres"] = False
             r.set('game_status', json.dumps(game_schema_data))
-
-            # r.set('game_status', json.dumps(game_schema.dump(game)))
 
         except Exception as e:
             message = json.dumps(

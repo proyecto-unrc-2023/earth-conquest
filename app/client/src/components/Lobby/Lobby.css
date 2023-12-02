@@ -21,6 +21,12 @@ table {
   padding: 8px; 
 }
 
+.label-lobby{
+  display: flex;  
+  justify-content: center;
+  align-items: center;
+}
+
 .btn-lobby{
   background-image: url('../boton.png');
   background-size: contain; 

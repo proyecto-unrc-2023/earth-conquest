@@ -88,6 +88,7 @@ class Game:
 
     def refresh_board(self):
         if not self.board:
+            print("Exception in Game, refresh_board: No board created")
             raise Exception("No board created")
         self.board.refresh_board()
 
@@ -312,4 +313,4 @@ class GameAliensSchema(Schema):
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
-    board = fields.Nested(BoardSchema(), only=('blue_ovni_life', 'green_ovni_life', 'cells'))
+    board = fields.Nested(BoardSchema(), only=('blue_ovni_life', 'green_ovni_life', 'cells', 'movements_history'))

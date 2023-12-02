@@ -46,7 +46,7 @@ export const Cell = ({ aliensDirections, updateBoard, row, col, children, blueBa
 
       {
         children.aliens.map((alien) => {
-          const alienDirection = aliensDirections.find((alienDir) => alien.id === alienDir.id)?.direction
+          const alienDirection = aliensDirections[alien.id]
           return (
             <Alien key={alien.id} id={alien.id} team={alien.team} eyes={alien.eyes} direction={alienDirection} />
           )

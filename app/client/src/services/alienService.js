@@ -1,8 +1,7 @@
 /*
-* Esta función toma un arreglo de aliens, el hash de celdas, y el board del comienzo
-* de la partida. Luego, actualiza el arreglo de aliens con la posición. Si existe
-* el alien, actualiza su posición. Si no existe, lo agrega.
-* Tambien actualiza el board con la informacion del hash.
+* Esta función toma el hash de celdas, y el board del comienzo
+* de la partida.
+* Actualiza el board con la informacion del hash.
 */
 
 export const handleHash = (cells, newBoard, setTeleportIn, setTeleportOut) => {
@@ -32,7 +31,6 @@ export const handleHash = (cells, newBoard, setTeleportIn, setTeleportOut) => {
 
 export const handleAliens = (aliens, cells) => {
   const newAliens = [...aliens]
-  // console.log('ALIENS LLEGA', newAliens)
   if (newAliens.length === 0) {
     return initAliens(newAliens, cells)
   } else {
@@ -40,6 +38,9 @@ export const handleAliens = (aliens, cells) => {
   }
 }
 
+/*
+ * Inicia la lista de aliens con la informacion del hash.
+*/
 export const initAliens = (aliens, cells) => {
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
@@ -50,6 +51,9 @@ export const initAliens = (aliens, cells) => {
   return aliens
 }
 
+/*
+ * Actualiza la lista de aliens con la informacion del hash.
+*/
 const updateAliensPositions = (aliens, cells) => {
   Object.entries(cells).forEach(([position, cell]) => {
     const [row, col] = position.slice(1, -1).split(', ').map(Number)
@@ -57,11 +61,10 @@ const updateAliensPositions = (aliens, cells) => {
       const alien = aliens.find(alien => alien.id === cellAlien.id)
 
       if (alien) {
-        // si el alien ya existe en la lista, actualiza su posición
         alien.oldPosition = { row: alien.newPosition.row, col: alien.newPosition.col }
         alien.newPosition = { row, col }
-        aliens.filter(alien => alien.id !== cellAlien.id) // al que ya actualice lo saco del arreglo
-      } // si no existe, puede existir en otra celda
+        aliens.filter(alien => alien.id !== cellAlien.id)
+      }
     })
   })
   return aliens

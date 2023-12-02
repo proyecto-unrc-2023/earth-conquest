@@ -36,7 +36,7 @@ export const Lobby = ({ allGames, cuandoSeJoinea }) => {
                 <td>{game.green_player}</td>
                 <td>{game.status}</td>
                 <td>
-                  <label>
+                  <label className='label-lobby'>
                     <input
                       type='text'
                       placeholder='Insert name'
