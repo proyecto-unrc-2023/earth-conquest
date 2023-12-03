@@ -38,6 +38,8 @@ def test_set_invalid_board_dimensions(init_a_default_game):
 
 def test_set_alterator_not_enough_aliens(init_a_default_game):
     game = init_a_default_game
+    game.board.get_cell(5, 1).modifier = None
+
     with pytest.raises(Exception) as exc_info:
         game.set_alterator(Alterator.TRAP, Team.GREEN, 5, 1)
     assert str(exc_info.value) == "not enough aliens to put a TRAP"
@@ -78,6 +80,7 @@ def test_set_initial_crew(init_a_default_game):
 def test_refresh_board_alien_cant_move_diagonally(init_a_default_game):
     game = init_a_default_game
     alien = Alien(Team.GREEN)
+    game.board.get_cell(5, 1).modifier = None
     game.set_alien(5, 3, alien)
 
     game.refresh_board()

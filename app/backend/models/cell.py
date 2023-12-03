@@ -189,6 +189,12 @@ class Cell:
             if self.alterator == alterator_type:  # Check for equality, not isinstance
                 return alterator_str
 
+        if isinstance(self.alterator, Directioner):
+            return 'D'
+        elif isinstance(self.alterator, Teleporter):
+            return 'TEL'
+    
+
         return ' '
 
     @staticmethod

@@ -111,9 +111,11 @@ class Board:
     """
 
     def is_free_position(self, x, y):
-        return (self.is_within_board_range(x, y)
-                and self.get_cell(x, y).modifier is None
-                and self.get_cell(x, y).alterator is None)
+        if not self.is_within_board_range(x, y):
+            return False
+        
+        cell = self.get_cell(x,y)
+        return cell.modifier is None and cell.alterator is None
 
     """
     Returns True if the position is on any of the ranges of the ovnis
@@ -269,7 +271,7 @@ class Board:
             cell.action()
             self.aliens[(x, y)] = cell.aliens.copy()   # updates the dict
 
-            # atack enemy ovni
+            # attack enemy ovni
             if len(cell.aliens) == 1:
                 alien = cell.aliens[0]
                 if (alien.team == Team.BLUE and self.is_position_in_green_range(x, y)
@@ -394,7 +396,7 @@ class Board:
     """
 
     def can_alien_move_to_pos(self, x, y):
-        return 0 <= x < self.rows and 0 <= y < self.cols and self.get_cell(x, y).modifier is not Modifier.MOUNTAIN_RANGE
+        return self.is_within_board_range(x, y) and self.get_cell(x, y).modifier is not Modifier.MOUNTAIN_RANGE
 
     """
     Methods that sets an alien on the board at a given position.
@@ -402,6 +404,11 @@ class Board:
     """
 
     def set_alien(self, x, y, alien):
+        if not self.is_within_board_range(x, y):
+            raise IndexError("Invalid position: outside the board")
+        if not self.can_alien_move_to_pos(x, y):
+            raise IndexError("Position occupied by a mountain, alien cannot be positioned there")
+        
         self.get_cell(x, y).add_alien(alien)
         self.set_alien_in_dictionary(x, y, alien)
 
@@ -456,12 +463,6 @@ class Board:
         if (x, y) in self.aliens:
             self.remove_alien_from_board(x, y, alien)
 
-    '''
-    The method returns True if any of the OVNI's life is 0.
-    '''
-
-    def any_ovni_destroyed(self):
-        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
     @staticmethod
     def _row_to_string(row):

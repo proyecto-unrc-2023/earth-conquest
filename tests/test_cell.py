@@ -702,3 +702,11 @@ def test_action_alterator_trap():
 
     # Assert
     assert len(cell.aliens) == 0
+
+
+def test_cell_with_alterator_trap():
+    cell = Cell()
+    cell.alterator = Alterator.TRAP
+    cell.add_alien(Team.GREEN)
+    cell.action()
+    assert cell.aliens == []

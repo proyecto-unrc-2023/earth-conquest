@@ -25,5 +25,5 @@ Feature: Alien Movement on the Board
         | row    | column | 
         |     2  |      2 |
         |     5  |      5 | 
-        |     3  |      7 |
+        |     3  |      8 |
         |     8  |      0 |
