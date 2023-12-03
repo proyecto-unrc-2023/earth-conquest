@@ -2,7 +2,7 @@ from app.backend.api import *
 from app.backend.api.game_controller import GameController
 
 from flask_restful import Resource, request
-
+import json
 
 class GamesResource(Resource):
     def get(self):
@@ -32,7 +32,10 @@ class IsFreePosition(Resource):
 
 class SetAlterator(Resource):
     def put(self, game_id):
-        data = request.json  # data is sent as JSON in the body of the petition
+        print(f"Received request to {request.path} with data: {request.data}")
+        data = request.json
+        print(f"Parsed JSON data: {data}")
+
         return GameController.set_alterator(game_id, data)
 
 

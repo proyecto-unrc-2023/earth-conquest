@@ -1,0 +1,24 @@
+.modifier{
+  display: grid;
+  place-items: center;
+  position: absolute;
+}
+
+.img_mountain{
+  width: 60px;
+  height: 50px;
+}
+
+.img_killer{
+  width: 40px;
+  height: 40px;
+  z-index: 5;
+}
+
+.img_multiplier{
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  z-index: 5;
+}
+
