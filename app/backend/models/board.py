@@ -113,8 +113,8 @@ class Board:
     def is_free_position(self, x, y):
         if not self.is_within_board_range(x, y):
             return False
-        
-        cell = self.get_cell(x,y)
+
+        cell = self.get_cell(x, y)
         return cell.modifier is None and cell.alterator is None
 
     """
@@ -159,6 +159,15 @@ class Board:
             self.alterators_positioned[(x, y)] = Alterator.TRAP
         else:
             raise ValueError("Position isn't free or valid")
+
+    def any_ovni_destroyed(self):
+        """
+        Check if any OVNI has been destroyed.
+
+        Returns:
+            bool: True if any OVNI has been destroyed, False otherwise.
+        """
+        return self.green_ovni_life <= 0 or self.blue_ovni_life <= 0
 
     """ 
     Sets a Teleporter on two specific Cells (door and exit) only if on those 
@@ -407,8 +416,9 @@ class Board:
         if not self.is_within_board_range(x, y):
             raise IndexError("Invalid position: outside the board")
         if not self.can_alien_move_to_pos(x, y):
-            raise IndexError("Position occupied by a mountain, alien cannot be positioned there")
-        
+            raise IndexError(
+                "Position occupied by a mountain, alien cannot be positioned there")
+
         self.get_cell(x, y).add_alien(alien)
         self.set_alien_in_dictionary(x, y, alien)
 
@@ -433,7 +443,6 @@ class Board:
             self.aliens.pop((x, y))
         elif self.aliens[(x, y)].__len__() > 1:
             self.aliens[(x, y)].remove(alien)
-
 
     """
     Given an alien, this method returns the position were the alien is placed
@@ -462,7 +471,6 @@ class Board:
 
         if (x, y) in self.aliens:
             self.remove_alien_from_board(x, y, alien)
-
 
     @staticmethod
     def _row_to_string(row):
@@ -605,4 +613,5 @@ class BoardSchema(Schema):
     cells = AliensPositionField(attribute='aliens')
     green_ovni_life = fields.Integer()
     blue_ovni_life = fields.Integer()
-    grid = fields.List(fields.List(fields.Nested(CellSchema())), attribute='board')
+    grid = fields.List(fields.List(
+        fields.Nested(CellSchema())), attribute='board')

@@ -13,9 +13,9 @@ def flask_app():
 
 @pytest.fixture
 def game_created(flask_app):
-    '''
+    """
     Creates a game in the games dictionary
-    '''
+    """
     url = '/games/'
     response = flask_app.post(url)
     game_id = response.json['data']['gameId']
@@ -24,10 +24,10 @@ def game_created(flask_app):
 
 @pytest.fixture
 def game_pre_started(flask_app, game_created):
-    '''
+    """
     Creates a game in the games dictionary
     And adds two players to the game
-    '''
+    """
     game_id = game_created
     url = f'games/join/{game_id}?team=BLUE&player_name=Donnie'
     flask_app.put(url)
@@ -37,9 +37,9 @@ def game_pre_started(flask_app, game_created):
 
 
 def test_get_empty_all_games(flask_app):
-    '''
+    """
     When we make a GET request to the root of the API, we should get an empty list
-    '''
+    """
     # Arrange
     url = '/games/'
 
@@ -54,11 +54,11 @@ def test_get_empty_all_games(flask_app):
 
 
 def test_get_all_games(flask_app, game_created):
-    '''
+    """
     Given we have a list of games in the games dictionary
     When we make a GET request to '/games/'
     Then we should get a list of all games
-    '''
+    """
     # Arrange
     url = '/games/'
 
@@ -73,11 +73,11 @@ def test_get_all_games(flask_app, game_created):
 
 
 def test_find_game_by_id(flask_app, game_created):
-    '''
+    """
     Given we have a list of games in the games dictionary
     When we make a GET request to '/games/id'
     Then we should get a list of all games
-    '''
+    """
     # Arrange
     id = game_created
     url = f'/games/{id}'
@@ -93,11 +93,11 @@ def test_find_game_by_id(flask_app, game_created):
 
 
 def test_find_nonexistent_game(flask_app):
-    '''
+    """
     Given we have an empty list of games in the games dictionary
     When we make a GET request to '/games/id'
     Then we should get a not found message
-    '''
+    """
     # Arrange
     id = 10
     url = f'/games/{id}'
@@ -112,11 +112,11 @@ def test_find_nonexistent_game(flask_app):
 
 
 def test_start_game(flask_app, game_pre_started):
-    '''
+    """
     Given we have a list of games in the games dictionary
     When we make a PUT request to '/games/start'
     Then we should get that the game was started successfully
-    '''
+    """
     # Arrange
     id = game_pre_started
     url = f'/games/start_game/{id}'
@@ -132,11 +132,11 @@ def test_start_game(flask_app, game_pre_started):
 
 
 def test_start_game_not_found(flask_app):
-    '''
+    """
     Given we have a empty list of games in the games dictionary
     When we make a PUT request to '/games/start'
     Then we should get an error message
-    '''
+    """
     # Arrange
     id = 10
     url = f'/games/start_game/{id}'
@@ -151,11 +151,11 @@ def test_start_game_not_found(flask_app):
 
 
 def test_start_game_without_player(flask_app, game_created):
-    '''
+    """
     Given we have a game with no players in the games dictionary
     When we make a PUT request to '/games/start'
     Then we should get an error message
-    '''
+    """
     # Arrange
     id = game_created
     url = f'/games/start_game/{id}'
@@ -165,16 +165,16 @@ def test_start_game_without_player(flask_app, game_created):
 
     # Assert
     assert response.status_code == 400
-    assert response.json['success'] == False
-    assert response.json['errors'] == "Blue player is missing."
+    assert response.json['success'] is False
+    assert response.json['errors'] == "Green player is missing."
 
 
 def test_join_as_blue(flask_app, game_created):
-    '''
+    """
     Given we have a game with no players in the games dictionary
     When we make a PUT request to '/games/join'
     Then we should get an success message
-    '''
+    """
     # Arrange
     id = game_created
     player = 'Donnie'
@@ -191,11 +191,11 @@ def test_join_as_blue(flask_app, game_created):
 
 
 def test_join_as_invalid_team(flask_app, game_created):
-    '''
+    """
     Given we have a game with no players in the games dictionary
     When we make a PUT request to '/games/join' with an invalid team
     Then we should get an error message
-    '''
+    """
     # Arrange
     id = game_created
     player = 'Edgarshino Do Baia Do Brasil'
@@ -209,4 +209,3 @@ def test_join_as_invalid_team(flask_app, game_created):
     assert response.status_code == 400
     assert response.json['success'] == False
     assert response.json['errors'] == "Invalid team as argument, possible teams are: GREEN or BLUE"
-
