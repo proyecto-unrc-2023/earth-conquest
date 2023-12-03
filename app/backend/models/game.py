@@ -17,6 +17,9 @@ INIT_CREW = 6
 class Game:
 
     def __init__(self):
+        """
+        Initializes the game. Sets the initial values for the attributes.
+        """
         self.status = TGame.NOT_STARTED
         self.green_player = None
         self.blue_player = None
@@ -27,6 +30,9 @@ class Game:
         self.spawn_aliens_tick = 0
 
     def join_as_green(self, name):
+        """
+        Joins a player as green. If the player is already taken or the name is already taken, raises an exception.
+        """
         if self.green_player is not None:
             raise Exception("Player green is already taken")
         if name == self.blue_player:
@@ -42,27 +48,64 @@ class Game:
 
     def set_board_dimensions(self, rows, cols):
         if rows < 4 or rows > 25 or cols < 6 or cols > 45:
-            raise Exception("Invalid dimensions. Minimum board is 4x6. Max is 25x45")
-        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))  # raiz cuadrada del 10% del area de la matriz
+            raise Exception(
+                "Invalid dimensions. Minimum board is 4x6. Max is 25x45")
+        # raiz cuadrada del 10% del area de la matriz
+        self.board = Board(rows, cols, round((rows * cols * 0.1) ** 0.5))
 
     def start_game(self):
-        if (self.status is TGame.NOT_STARTED and
-                self.blue_player is not None and
-                self.green_player is not None):
-            self.set_initial_crew()
-            self.status = TGame.STARTED
-        else:
-            raise Exception("can not start the game, some player is left or game status is not NOT_STARTED")
+        """
+        Starts the game. It validates if the game can be started and sets the initial crew.
+        """
+        self.validate_game_start()
+        self.set_initial_crew()
+        self.status = TGame.STARTED
+
+    def validate_game_start(self):
+        """
+        Validates if the game can be started. Checks the following conditions:
+        - The game has not already started.
+        - The blue player is not missing.
+        - The green player is not missing.
+
+        Raises:
+            Exception: If any of the conditions are not met.
+        """
+        conditions = {
+            self.status is not TGame.NOT_STARTED: "The game has already started.",
+            self.blue_player is None: "Blue player is missing.",
+            self.green_player is None: "Green player is missing."
+        }
+
+        for condition, message in conditions.items():
+            if condition:
+                raise Exception(message)
 
     def set_initial_crew(self):
+        """
+        The initial crew is set in the board. It checks if the game has not started yet.
+
+        Raises:
+            Exception: If the game status is not NOT_STARTED.
+        """
         if self.status is TGame.NOT_STARTED:
             for i in range(INIT_CREW):
-                self.add_alien_to_range(team.Team.BLUE)
-                self.add_alien_to_range(team.Team.GREEN)
+                self.spawn_aliens()
         else:
-            raise Exception("initial crew cannot be launched. Game status is not NOT_STARTED")
+            raise Exception(
+                "initial crew cannot be launched. Game status is not NOT_STARTED")
 
     def add_alien_to_range(self, t):
+        """
+        Adds an alien of the specified team to a random position within the team's range on the game board.
+
+        Args:
+            t (team.Team): The team of the alien to be added.
+
+        Raises:
+            Exception: If an invalid team is provided.
+
+        """
         if t == team.Team.GREEN:
             x0, y0 = self.board.green_ovni_range
             f = random.randint(0, x0)
@@ -71,7 +114,6 @@ class Game:
             x0, y0 = self.board.blue_ovni_range
             f = random.randint(x0, self.board.rows - 1)
             c = random.randint(y0, self.board.cols - 1)
-
         else:
             raise Exception("Invalid team")
 
@@ -87,43 +129,68 @@ class Game:
                 self.alive_blue_aliens += 1
 
     def refresh_board(self):
+        """Refreshes the game board.
+
+        This method is responsible for refreshing the game board. 
+        It checks if a board has been created and then calls the `refresh_board` method of the board object.
+
+        Raises:
+            Exception: If no board has been created.
+        """
         if not self.board:
             raise Exception("No board created")
         self.board.refresh_board()
 
     def act_board(self):
+        """Act on the game board.
+
+        This method performs an action on the game board. It checks if the board has been created,
+        raises an exception if it hasn't, and updates the game status and winner if necessary.
+        It also updates the counts of alive aliens for each team.
+
+        Raises:
+            Exception: If no board has been created.
+        """
         if not self.board:
             raise Exception("No board created")
         res = self.board.act_board()
         if res is not None:
             self.status = TGame.OVER
-            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (self.blue_player, Team.BLUE)
+            self.winner = (self.green_player, Team.GREEN) if res == Team.GREEN else (
+                self.blue_player, Team.BLUE)
 
-        # Updates cants of aliens
-        self.alive_green_aliens = self.board.get_aliens_cant_of_team(Team.GREEN)
+        # Updates counts of aliens
+        self.alive_green_aliens = self.board.get_aliens_cant_of_team(
+            Team.GREEN)
         self.alive_blue_aliens = self.board.get_aliens_cant_of_team(Team.BLUE)
 
     def has_game_ended(self):
+        """Check if the game has ended.
+
+        Returns:
+            bool: True if the game has ended, False otherwise.
+        """
         return self.board.green_ovni_life <= 0 or self.board.blue_ovni_life <= 0
 
-    """
-    ends the game if some player wants to leave
-    """
-
     def end_game(self):
+        """
+        Ends the game if some player wants to leave
+        """
         self.blue_player = None
         self.green_player = None
         self.status = TGame.OVER
 
     def set_alterator(self, alterator, team, x=None, y=None):
+        """
+        This method sets an alterator in the board. It checks if the position is free and if the team has enough aliens to put the alterator.
+        """
 
         # chose the team
         alive_team_aliens = self.alive_green_aliens if team == Team.GREEN else self.alive_blue_aliens
 
         if isinstance(alterator, Directioner):
             if alive_team_aliens >= 4:
-                self.board.set_directioner(alterator)  # hara el chequeo de si la pos es valida antes de matar a los
-                # aliens
+                self.board.set_directioner(alterator)
                 self.board.kill_aliens(team, 4)
             else:
                 raise Exception("not enough aliens to put a Directioner")
@@ -145,11 +212,8 @@ class Game:
                 raise Exception("not enough aliens to put a TRAP")
         else:
             raise Exception("invalid alterator")
-        self.update_aliens_cant(team)   # updates de attribute with the new aliens cant
-
-    '''
-    
-    '''
+        # updates de attribute with the new aliens cant
+        self.update_aliens_cant(team)
 
     def update_aliens_cant(self, team):
         new_aliens_cant = self.board.list_aliens_of_team(team).__len__()
@@ -160,29 +224,16 @@ class Game:
 
     def get_team_winner(self):
         return self.winner[1]
-    
-    '''
-        This method add a blue alien and a green alien in a randomly position of theirs respective ranges.
-    '''
-    
+
     def spawn_aliens(self):
         self.add_alien_to_range(Team.GREEN)
         self.add_alien_to_range(Team.BLUE)
 
-    '''
-    This method sets a modifier on the given position if this one's free and valid.
-    '''
-
     def set_modifier_in_position(self, modifier, x, y):
         self.board.set_modifier(modifier, x, y)
 
-    '''
-    This method gets the modifier that's on the given position
-    '''
-
     def get_modifier_in_position(self, x, y):
         return self.board.get_modifier(x, y)
-        # return self.board.get_cell(x,y).modifier
 
     def get_alien_position(self, alien):
         return self.board.get_alien_position(alien)
@@ -229,67 +280,32 @@ class Game:
     def get_cell(self, x, y):
         return self.board.get_cell(x, y)
 
-    '''
-    This method returns the team of a specific alien in the board.
-    '''
-
     def get_alien_team_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).team
-
-    '''
-    This method sets an alien on a given position of a respective team
-    '''
 
     def create_an_alien_in_pos(self, x, y, team):
         alien = Alien(team)
         self.board.set_alien(x, y, alien)
 
-    '''
-    This method sets a specific ammount of aliens in a given position of a respective team
-    '''
-
     def creates_aliens_in_pos(self, x, y, cant, team):
         for i in range(cant):
             self.board.set_alien(x, y, Alien(team))
 
-    '''
-    This method returns the number of aliens in a given position
-    '''
-
     def get_num_aliens_in_position(self, x, y):
         return self.board.get_num_aliens_in_position(x, y)
-
-    '''
-    This method returns the alien in a given position
-    '''
 
     def get_alien_in_position(self, x, y, index):
         return self.board.get_alien_in_position(x, y, index)
 
-    '''
-    This method returns the number of eyes of a specific alien in the board
-    '''
-
     def get_alien_eyes_in_position(self, x, y, alien_pos_in_list):
         return self.board.get_alien_in_position(x, y, alien_pos_in_list).eyes
 
-    '''
-    This method adds eyes to a specific alien in the board
-    '''
-
     def add_eyes_to_alien(self, x, y, alien_pos_in_list, eyes):
-        self.board.get_alien_in_position(x, y, alien_pos_in_list).add_eyes(eyes)
-
-    '''
-    This method returns the aliens list in a given position
-    '''
+        self.board.get_alien_in_position(
+            x, y, alien_pos_in_list).add_eyes(eyes)
 
     def get_aliens_in_pos(self, x, y):
         return self.board.get_cell(x, y).aliens
-
-    '''
-    This method returns True if an ovni has been destroyed
-    '''
 
     def any_ovni_destroyed(self):
         return self.board.any_ovni_destroyed()
@@ -312,4 +328,5 @@ class GameAliensSchema(Schema):
     winner = fields.Tuple((fields.Str(), fields.Enum(Team)))
     alive_green_aliens = fields.Integer()
     alive_blue_aliens = fields.Integer()
-    board = fields.Nested(BoardSchema(), only=('cells',))
+    board = fields.Nested(BoardSchema(), only=(
+        'blue_ovni_life', 'green_ovni_life', 'cells'))

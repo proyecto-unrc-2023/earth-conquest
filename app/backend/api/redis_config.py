@@ -6,11 +6,13 @@ r = redis.Redis(
     port=6379,
 )
 
+
 def check_redis_connection():
     try:
         r.ping()
         print('=== Connected to Redis')
     except redis.ConnectionError:
-        print('===Cannot connect to Redis')
+        print('=== Cannot connect to Redis')
+
 
 check_redis_connection()
