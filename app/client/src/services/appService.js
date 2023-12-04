@@ -1,13 +1,14 @@
 export const API = 'http://127.0.0.1:5000/'
 const CREATE_GAME = 'games/'
 const START_GAME = 'games/start_game/'
-const GET_GAME = `${API}games/`
-const GET_ALL_GAMES = `${API}games`
-const FREE_POSITION = `${API}games/is_free_position`
-const SEND_ALTERATOR = `${API}games/set_alterator`
-const REFRESH = `${API}games/refresh_board`
-const ACT = `${API}games/act_board`
-const SPAWN_ALIENS = `${API}games/spawn_aliens`
+const GET_GAME = API + 'games/'
+const GET_ALL_GAMES = API + 'games'
+const FREE_POSITION = API + 'games/is_free_position'
+const SEND_ALTERATOR = API + 'games/set_alterator'
+const REFRESH = API + 'games/next_state/'
+const ACT = API + 'games/act_board'
+const SPAWN_ALIENS = API + 'games/spawn_aliens'
+const JOIN_AS = API + 'games/join/'
 
 export const createGame = async () => {
   try {
@@ -21,7 +22,7 @@ export const createGame = async () => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    return data.data
+    return data
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -35,8 +36,6 @@ export const startGame = async (currentGameId) => {
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
-    const data = await response.json()
-    console.log('START GAME:', data)
   } catch (error) {
     console.error('Error fetching data: ', error)
   }
@@ -69,10 +68,9 @@ export const isFreePosition = async (row, col, gameId) => {
   }
 }
 
-export const sendAlterator = async (newAlterator) => {
-  console.log('esto es lo que mando a la api: ', JSON.stringify(newAlterator))
+export const sendAlterator = async (gameId, newAlterator) => {
   try {
-    const response = await fetch(`${SEND_ALTERATOR}/${game.gameId}`, {
+    const response = await fetch(`${SEND_ALTERATOR}/${gameId}`, {
       method: 'PUT',
       headers:
       {
@@ -84,13 +82,13 @@ export const sendAlterator = async (newAlterator) => {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    console.log(data)
+    return data
   } catch (error) {
     console.error('Error set alterator', error)
   }
 }
 
-export const refresh = async (gameId) => {
+export const nextState = async (gameId) => {
   try {
     const response = await fetch(REFRESH + gameId, {
       method: 'PUT'
@@ -129,14 +127,30 @@ export const spawnAliens = async (gameId) => {
   }
 }
 
-const getGame = async (currentGameId) => {
+// Menu service
+export const joinAs = async (team, playerName, currentGameId) => {
+  try {
+    const response = await fetch(`${JOIN_AS}${currentGameId}?team=${team}&player_name=${playerName}`, {
+      method: 'PUT'
+    })
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching data: ', error)
+  }
+}
+
+export const getGame = async (currentGameId) => {
   try {
     const response = await fetch(GET_GAME + currentGameId)
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
     const data = await response.json()
-    console.log('GET BOARD:', data)
+    return data.data.game
   } catch (error) {
     console.error('Error get game:', error)
   }

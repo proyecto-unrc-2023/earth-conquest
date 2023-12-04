@@ -18,3 +18,7 @@
 *npm install --save-dev @testing-library/react -D*  
 *npm install --save-dev @testing-library/jest-dom -D*
 *npm install react-scripts --save-dev  -D*
+
+### **Toaster**
+1. Estar en /earth-conquest/client
+2. Escribir el siguiente comando: *npm install react-hot-toast*

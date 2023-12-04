@@ -1,0 +1,104 @@
+  {
+    "blue_ovni_range": {"x": 1, "y":2},
+
+    "green_ovni_range": {"x": 5, "y":6},
+    
+    "grid": [
+              [
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": "mountain"
+                },
+                {
+                  "aliens": [
+                    {
+                      "id": 2,
+                      "eyes": 1,
+                      "team": "blue"
+                    }
+                  ],
+                  "alterator": "trap",
+                  "modifier": null
+                },
+                {
+                  "aliens": [
+                    {
+                      "id": 3,
+                      "eyes": 1,
+                      "team": "blue"
+                    }
+                  ],
+                  "alterator": null,
+                  "modifier": null
+                }
+              ],
+              [
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": "mountain"
+                },
+                {
+                  "aliens": [
+                    {
+                      "id": 5,
+                      "eyes": 1,
+                      "team": "blue"
+                    }
+                  ],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
+                  "aliens": [
+                    {
+                      "id": 6,
+                      "eyes": 1,
+                      "team": "blue"
+                    }
+                  ],
+                  "alterator": null,
+                  "modifier": null
+                }
+              ],
+              [
+                {
+                  "aliens": [],
+                  "alterator": "trap",
+                  "modifier": null
+                },
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
+                  "aliens": [
+                    {
+                      "id": 8,
+                      "eyes": 1,
+                      "team": "blue"
+                    }
+                  ],
+                  "alterator": null,
+                  "modifier": null
+                },
+                {
+                  "aliens": [],
+                  "alterator": null,
+                  "modifier": null
+                }
+              ]
+            ]
+}

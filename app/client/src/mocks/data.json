@@ -1,0 +1,469 @@
+// CREATE
+{
+  "success": true,
+  "message": "Game created successfull  y",
+  "data": {
+      "gameId": 1,
+      "game": {
+          "status": "NOT_STARTED",
+          "green_player": null,
+          "blue_player": null,
+          "board": {
+              "blue_ovni_range": [
+                  6,
+                  11
+              ],
+              "green_ovni_range": [
+                  3,
+                  3
+              ],
+              "base_range_dimentions": 4,
+              "cells": {},
+              "green_ovni_life": 100,
+              "blue_ovni_life": 100,
+              "grid": [
+                  [
+
+                  ]
+              ]
+          },
+          "winner": [
+              null,
+              null
+          ],
+          "alive_green_aliens": 0,
+          "alive_blue_aliens": 0
+      }
+  }
+}
+// ACT
+
+{
+  "status": "STARTED",
+  "green_player": "pepito2",
+  "blue_player": "pepito",
+  "board": {
+    "cells": {
+      "(6, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 3)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 0)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 12)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 2)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(6, 13)": {
+        "aliens": [
+          {
+            "id": 38,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 3)": {
+        "aliens": [
+          {
+            "id": 41,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(7, 14)": {
+        "aliens": [
+          {
+            "id": 44,
+            "eyes": 2,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 2)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 11)": {
+        "aliens": [
+          {
+            "id": 42,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 0)": {
+        "aliens": [
+          {
+            "id": 43,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 4)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(9, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 1)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 13)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 1)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(7, 13)": {
+        "aliens": [
+          {
+            "id": 45,
+            "eyes": 2,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 3)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(0, 0)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(4, 4)": {
+        "aliens": [
+          {
+            "id": 33,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(9, 13)": {
+        "aliens": [
+          {
+            "id": 46,
+            "eyes": 2,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(4, 1)": {
+        "aliens": [
+          {
+            "id": 35,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 0)": {
+        "aliens": [
+          {
+            "id": 37,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 4)": {
+        "aliens": [
+          {
+            "id": 39,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      }
+    }
+  },
+  "winner": [
+    null,
+    null
+  ],
+  "alive_green_aliens": 6,
+  "alive_blue_aliens": 5
+}
+
+// REFRESH 
+{
+  "status": "STARTED",
+  "green_player": "pepito2",
+  "blue_player": "pepito",
+  "board": {
+    "aliens": {
+      "(6, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 3)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 0)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 12)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 2)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(6, 13)": {
+        "aliens": [
+          {
+            "id": 38,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 3)": {
+        "aliens": [
+          {
+            "id": 41,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(7, 14)": {
+        "aliens": [
+          {
+            "id": 40,
+            "eyes": 1,
+            "team": "BLUE"
+          },
+          {
+            "id": 40,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 2)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 11)": {
+        "aliens": [
+          {
+            "id": 42,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 0)": {
+        "aliens": [
+          {
+            "id": 43,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 4)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(9, 14)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(3, 1)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(8, 13)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 1)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(7, 13)": {
+        "aliens": [
+          {
+            "id": 32,
+            "eyes": 1,
+            "team": "BLUE"
+          },
+          {
+            "id": 32,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 3)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(0, 0)": {
+        "aliens": [],
+        "modifier": null,
+        "alterator": null
+      },
+      "(4, 4)": {
+        "aliens": [
+          {
+            "id": 33,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(9, 13)": {
+        "aliens": [
+          {
+            "id": 34,
+            "eyes": 1,
+            "team": "BLUE"
+          },
+          {
+            "id": 36,
+            "eyes": 1,
+            "team": "BLUE"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(4, 1)": {
+        "aliens": [
+          {
+            "id": 35,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(2, 0)": {
+        "aliens": [
+          {
+            "id": 37,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      },
+      "(1, 4)": {
+        "aliens": [
+          {
+            "id": 39,
+            "eyes": 1,
+            "team": "GREEN"
+          }
+        ],
+        "modifier": null,
+        "alterator": null
+      }
+    }
+  },
+  "winner": [
+    null,
+    null
+  ],
+  "alive_green_aliens": 6,
+  "alive_blue_aliens": 6
+}
