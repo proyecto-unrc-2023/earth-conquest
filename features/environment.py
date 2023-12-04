@@ -33,6 +33,8 @@ def table_to_string(table):
                 curr_row.append(' G ')
             elif col == 'D':
                 curr_row.append(' D ')
+            elif col == 'TEL':
+                curr_row.append(' TEL ')
             elif col == 'K':
                 curr_row.append(' K ')
             elif col == 'M':

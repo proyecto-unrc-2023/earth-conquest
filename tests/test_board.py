@@ -2,6 +2,7 @@ import pytest
 
 from app.backend.models import team
 from app.backend.models.alien import Alien
+from app.backend.models.alterator import Alterator
 from app.backend.models.board import Board, GREEN_OVNI_LIFE, BLUE_OVNI_LIFE
 from app.backend.models.directioner import Directioner
 from app.backend.models.modifier import Modifier
@@ -26,9 +27,52 @@ def test_att(init_a_default_board):
 def test_set_alien(init_a_default_board):
     board = init_a_default_board
     alien = Alien(team.Team.GREEN)
+    board.get_cell(5, 5).modifier = None
     board.set_alien(5, 5, alien)
     assert board.aliens.__len__() == 1
     assert board.aliens[(5, 5)] == [alien]
+
+def test_set_alien_outside_the_board(init_a_default_board):
+    board = init_a_default_board
+    alien = Alien(team.Team.BLUE)
+    with pytest.raises(Exception) as exc_info:
+        board.set_alien(11, 16, alien)
+    assert str(exc_info.value) == "Invalid position: outside the board"
+
+
+def test_set_alien_on_top_of_a_mountain(init_a_default_board):
+    board = init_a_default_board
+    alien = Alien(team.Team.BLUE)
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).modifier = Modifier.MOUNTAIN_RANGE
+
+    with pytest.raises(Exception) as exc_info:
+        board.set_alien(5, 5, alien)
+    assert str(exc_info.value) == "Position occupied by a mountain, alien cannot be positioned there"
+
+
+def test_position_not_free_occupied_by_modifier(init_a_default_board):
+    board = init_a_default_board
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).modifier = Modifier.KILLER
+    assert board.is_free_position(5, 5) == False
+    
+def test_position_not_free_occupied_by_alterator(init_a_default_board):
+    board = init_a_default_board
+    board.get_cell(5, 5).modifier = None
+    board.get_cell(5, 5).alterator = Alterator.TRAP
+    assert board.is_free_position(5, 5) == False
+
+
+def test_position_in_blue_range(init_a_default_board):
+    board = init_a_default_board
+    assert board.is_position_in_blue_range(9, 14) == True
+
+
+def test_position_in_green_range(init_a_default_board):
+    board = init_a_default_board
+    assert board.is_position_in_green_range(3, 3) == True
+
 
 
 def test_blue_alien_attack_green_base(init_a_default_board):
@@ -46,6 +90,7 @@ def test_blue_alien_attack_green_base(init_a_default_board):
 def test_remove_alien_from_board(init_a_default_board):
     board = init_a_default_board
     alien = Alien(Team.BLUE, 3)
+    board.get_cell(4, 5).modifier = None    # para que no haya una mountain
     board.set_alien(4, 5, alien)
     board.remove_alien_from_board(4, 5, alien)
     assert not alien in board.aliens
@@ -54,6 +99,8 @@ def test_remove_alien_from_board(init_a_default_board):
 def test_remove_only_one_alien_from_board(init_a_default_board):
     board = init_a_default_board
     alien = Alien(Team.BLUE, 3)
+    board.get_cell(5, 5).modifier = None    # para que no haya una mountain
+    board.get_cell(4, 5).modifier = None
     board.set_alien(4, 5, alien)
     board.set_alien(5, 5, alien)
     board.remove_alien_from_board(4, 5, alien)
@@ -127,6 +174,15 @@ def test_set_invalid_directioner(init_a_default_board):
     assert str(exc_info.value) == "Positions of the directioner aren't free or valid"
 
 
+def test_set_modifier_in_occupied_cell(init_a_default_board):
+    board = init_a_default_board
+    board.get_cell(5, 5).modifier = None
+    board.set_modifier(Modifier.KILLER, 5, 5)
+    with pytest.raises(Exception) as exc_info:
+        board.set_modifier(Modifier.MULTIPLIER, 5, 5)
+    assert str(exc_info.value) == "There's already a Modifier on that cell"
+
+
 def test_remove_alien_from_board(init_a_default_board):
     board = init_a_default_board
     alien = Alien(Team.GREEN)
@@ -154,6 +210,7 @@ def test_multiplier_act(init_a_default_board):
     board = init_a_default_board
     alien = (Alien(Team.GREEN))
     alien.add_eyes(1)
+    board.get_cell(5, 5).modifier = None
     board.set_alien(5, 5, alien)
     board.set_modifier(Modifier.MULTIPLIER, 5, 5)
 
@@ -161,3 +218,17 @@ def test_multiplier_act(init_a_default_board):
 
     assert len(board.aliens[(5, 5)]) == 2
     assert board.get_num_aliens_in_position(5, 5) == 2
+
+
+def test_killer_act(init_a_default_board):
+    board = init_a_default_board
+    alien = (Alien(Team.BLUE))
+    board.get_cell(5, 5).modifier = None
+    board.set_alien(5, 5, alien)
+    board.set_modifier(Modifier.KILLER, 5, 5)
+
+    board.act_board()
+
+    assert len(board.aliens[(5, 5)]) == 0
+    assert board.get_num_aliens_in_position(5, 5) == 0
+
