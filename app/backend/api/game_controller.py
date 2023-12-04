@@ -30,7 +30,9 @@ class GameController:
                     "message": "Game not found with id: %d" % id
                 }
             )
-            response = Response(message, status=404, mimetype='application/json')
+            response = Response(message,
+                                status=404,
+                                mimetype='application/json')
             return response
 
     def get_game_by_id(id):
@@ -108,19 +110,19 @@ class GameController:
         game = games_dict.get(id)
 
         try:
-            # REFRESH: Move aliens 
+            # REFRESH: Move aliens
             game.refresh_board()
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
             r.set('game_status', json.dumps(game_schema.dump(game)))
-            
+
             time.sleep(2)
-            
+
             # ACT: Act cells on board
             if game.spawn_aliens_tick % SPAWN_TIME == 0:
                 game.spawn_aliens()
-            
+
             game.act_board()
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
@@ -198,9 +200,9 @@ class GameController:
         info = {
             "alterator": data.get("alterator").get("name"),
             "initPos": (
-            data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
+                data.get("alterator").get("positionInit").get("x"), data.get("alterator").get("positionInit").get("y")),
             "endPos": (
-            data.get("alterator").get("positionEnd").get("x"), data.get("alterator").get("positionEnd").get("y")),
+                data.get("alterator").get("positionEnd").get("x"), data.get("alterator").get("positionEnd").get("y")),
             "direction": data.get("alterator").get("direction"),
             "team": data.get("team")
         }
@@ -237,7 +239,8 @@ class GameController:
 
         try:
             if alterator == Alterator.TRAP:
-                game.set_alterator(alterator, team, info["initPos"][0], info["initPos"][1])
+                game.set_alterator(
+                    alterator, team, info["initPos"][0], info["initPos"][1])
             else:
                 game.set_alterator(alterator, team)
         except Exception as e:
@@ -318,7 +321,7 @@ class GameController:
 
             while True:
                 new_status = r.get('game_status')
-                
+
                 if old_status != new_status:
                     status_data = json.loads(new_status) if new_status else {}
                     yield f'data: {json.dumps(status_data)}\n\n'

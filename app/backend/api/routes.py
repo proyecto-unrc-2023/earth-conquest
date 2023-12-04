@@ -38,7 +38,7 @@ class SetAlterator(Resource):
 
         return GameController.set_alterator(game_id, data)
 
-      
+
 class NextState(Resource):
     def put(self, game_id):
         return GameController.next_state(game_id)
@@ -57,11 +57,19 @@ class Sse(Resource):
         return GameController.sse(game_id)
 
 
+# get all games
 api.add_resource(GamesResource, '/')
-api.add_resource(GameDetails, '/<int:game_id>')                 # get details of a game by its id
-api.add_resource(StartGame, '/start_game/<int:game_id>')        # launch initial crew and set status game as STARTED
-api.add_resource(NextState, '/next_state/<int:game_id>')          # moves and act all aliens, 2 secs interval
-api.add_resource(JoinAs, '/join/<int:game_id>')                 # player joins to a game as blue or green player with his name
-api.add_resource(IsFreePosition, '/is_free_position/<int:game_id>')  # get position info of a game with its id
-api.add_resource(SetAlterator, '/set_alterator/<int:game_id>')  # set alterator on board of game with id
-api.add_resource(Sse, '/sse/<int:game_id>')                     # server sent events for game with id
+# get details of a game by its id
+api.add_resource(GameDetails, '/<int:game_id>')
+# launch initial crew and set status game as STARTED
+api.add_resource(StartGame, '/start_game/<int:game_id>')
+# moves and act all aliens, 3 secs interval
+api.add_resource(NextState, '/next_state/<int:game_id>')
+# player joins to a game as blue or green player with his name
+api.add_resource(JoinAs, '/join/<int:game_id>')
+# get position info of a game with its id
+api.add_resource(IsFreePosition, '/is_free_position/<int:game_id>')
+# set alterator on board of game with id
+api.add_resource(SetAlterator, '/set_alterator/<int:game_id>')
+# server sent events for game with id
+api.add_resource(Sse, '/sse/<int:game_id>')
