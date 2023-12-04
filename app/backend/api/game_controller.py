@@ -110,7 +110,6 @@ class GameController:
         try:
             # REFRESH: Move aliens 
             game.refresh_board()
-            print("==================== HICE EL REFRESH =============")
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
@@ -123,7 +122,6 @@ class GameController:
                 game.spawn_aliens()
             
             game.act_board()
-            print("=====================ACTUOOOOOOOOOOOO=============")
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
 

@@ -22,7 +22,6 @@
 
 .in {
   background-color: rgba(174, 0, 255, 0.407);
-  /* background-image: url('../teleport_in.gif'); */
   z-index: 100;
 }
 

@@ -39,7 +39,7 @@ export const Lobby = ({ allGames, cuandoSeJoinea, playSound }) => {
                 <td>{game.green_player}</td>
                 <td>{game.status}</td>
                 <td>
-                  <label>
+                  <label className='lobby-label'>
                     <input
                       type='text'
                       placeholder='Insert name'

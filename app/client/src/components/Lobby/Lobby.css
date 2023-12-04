@@ -39,6 +39,12 @@ table {
   transition: border-color 0.25s;
 }
 
+.lobby-label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn-lobby:hover {
   border-color: #646cff;
   color: #f7f56d;
