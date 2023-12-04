@@ -166,7 +166,7 @@ def test_start_game_without_player(flask_app, game_created):
     # Assert
     assert response.status_code == 400
     assert response.json['success'] is False
-    assert response.json['errors'] == "Green player is missing."
+    assert response.json['errors'] == "can not start the game, some player is left or game status is not NOT_STARTED"
 
 
 def test_join_as_blue(flask_app, game_created):

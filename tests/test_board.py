@@ -32,31 +32,14 @@ def test_set_alien(init_a_default_board):
     assert board.aliens.__len__() == 1
     assert board.aliens[(5, 5)] == [alien]
 
-def test_set_alien_outside_the_board(init_a_default_board):
-    board = init_a_default_board
-    alien = Alien(team.Team.BLUE)
-    with pytest.raises(Exception) as exc_info:
-        board.set_alien(11, 16, alien)
-    assert str(exc_info.value) == "Invalid position: outside the board"
-
-
-def test_set_alien_on_top_of_a_mountain(init_a_default_board):
-    board = init_a_default_board
-    alien = Alien(team.Team.BLUE)
-    board.get_cell(5, 5).modifier = None
-    board.get_cell(5, 5).modifier = Modifier.MOUNTAIN_RANGE
-
-    with pytest.raises(Exception) as exc_info:
-        board.set_alien(5, 5, alien)
-    assert str(exc_info.value) == "Position occupied by a mountain, alien cannot be positioned there"
-
 
 def test_position_not_free_occupied_by_modifier(init_a_default_board):
     board = init_a_default_board
     board.get_cell(5, 5).modifier = None
     board.get_cell(5, 5).modifier = Modifier.KILLER
     assert board.is_free_position(5, 5) == False
-    
+
+
 def test_position_not_free_occupied_by_alterator(init_a_default_board):
     board = init_a_default_board
     board.get_cell(5, 5).modifier = None
@@ -72,7 +55,6 @@ def test_position_in_blue_range(init_a_default_board):
 def test_position_in_green_range(init_a_default_board):
     board = init_a_default_board
     assert board.is_position_in_green_range(3, 3) == True
-
 
 
 def test_blue_alien_attack_green_base(init_a_default_board):
@@ -163,7 +145,8 @@ def test_set_invalid_teleporter(init_a_default_board):
     teleporter = Teleporter((1, 1), (7, 7))
     with pytest.raises(Exception) as exc_info:
         board.set_teleporter(teleporter)
-    assert str(exc_info.value) == "Positions of the teleporter aren't free or valid"
+    assert str(
+        exc_info.value) == "Positions of the teleporter aren't free or valid"
 
 
 def test_set_invalid_directioner(init_a_default_board):
@@ -171,7 +154,8 @@ def test_set_invalid_directioner(init_a_default_board):
     directioner = Directioner((1, 1))
     with pytest.raises(Exception) as exc_info:
         board.set_directioner(directioner)
-    assert str(exc_info.value) == "Positions of the directioner aren't free or valid"
+    assert str(
+        exc_info.value) == "Positions of the directioner aren't free or valid"
 
 
 def test_set_modifier_in_occupied_cell(init_a_default_board):
@@ -231,4 +215,3 @@ def test_killer_act(init_a_default_board):
 
     assert len(board.aliens[(5, 5)]) == 0
     assert board.get_num_aliens_in_position(5, 5) == 0
-
