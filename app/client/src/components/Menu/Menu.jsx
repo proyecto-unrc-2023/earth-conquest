@@ -1,107 +1,109 @@
 import { Lobby } from '../Lobby/Lobby'
+import { Login } from '../Login/Login'
 import { useState } from 'react'
-import { createGame, getAllGames, API } from '../../services/appService'
+import toast, { Toaster } from 'react-hot-toast'
+import { createGame, getAllGames, joinAs, getGame } from '../../services/appService'
+import buttonSound from '../../sound/select.mp3'
+
 import './Menu.css'
 
-export function Menu ({ game, setGame }) {
+export function Menu ({ game, setGame, playSound }) {
   const [nameGreen, setNameGreen] = useState('')
   const [allGames, setAllGames] = useState([])
   const [newGameClicked, setNewGameClicked] = useState(false)
   const [joinGameClicked, setJoinGameClicked] = useState(false)
-  const [message, setMessage] = useState('')
-  const JOIN_AS = `${API}games/join`
+  const [showLogin, setShowLogin] = useState(false)
+  const [showLobby, setShowLobby] = useState(false)
 
-  const joinAs = async (team, playerName, currentGameId) => {
-    console.log('JOIN AS: ', JOIN_AS, currentGameId, team, playerName)
-    try {
-      const response = await fetch(`${JOIN_AS}/${currentGameId}?team=${team}&player_name=${playerName}`, {
-        method: 'PUT'
-      })
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log(data)
-      if (team === 'GREEN') {
-        setGame((prevState) => ({
-          ...prevState,
-          host: true,
-          playerGreen: playerName
-        }))
-        console.log(`seteo jugador ${playerName} al equipo ${team}, gameId: ${currentGameId}`)
-      } else {
-        setGame((prevState) => ({
-          ...prevState,
-          host: false,
-          teamPlayer: 'BLUE',
-          playerBlue: playerName,
-          gameId: currentGameId
-        }))
-        // const guestPlayer = { playerName, team, game.gameId }
-        // // eslint-disable-next-line no-undef
-        // localStorage.setItem('guestPlayer', JSON.stringify(guestPlayer))
-      }
-    } catch (error) {
-      console.error('Error fetching data: ', error)
-    }
+  // Crea un nuevo juego
+  const handleNewGameClick = () => {
+    createGame().then((data) => {
+      toast.success(data.message) // mensaje de inicio de juego creado
+      setGame((prevState) => ({
+        ...prevState,
+        gameId: data.data.gameId
+      }))
+      setJoinGameClicked(true)
+      setShowLogin(true)
+    })
   }
 
-  const handleNewGameClick = async () => {
-    const data = await createGame()
-    console.log('CREATE GAME: ', data)
-    setGame((prevState) => ({
-      ...prevState,
-      board: data.game.board.grid, // ver bien como llega
-      host: true,
-      teamPlayer: 'GREEN',
-      gameId: data.gameId
-    }))
-    setMessage(data.message)
-    setJoinGameClicked(true)
-  }
-
+  // Entra a un juego
   const handleJoinGameClick = async () => {
     const games = await getAllGames()
     setAllGames(games)
     setNewGameClicked(true)
-    document.getElementById('join').innerText = 'Refresh games'
+    document.getElementById('join').innerText = 'REFRESH GAMES'
+    if (!showLobby) setShowLobby(true)
+  }
+
+  // Joinea a un usuario a un juego creado
+  const cuandoSeJoinea = (team, name, currentId) => {
+    joinAs(team, name, currentId).then((data) => {
+      toast.success(data.message) // mensaje de 'join success'
+    })
+
+    getGame(currentId).then((game) => {
+      if (team === 'GREEN') {
+        setGame((prevState) => ({
+          ...prevState,
+          host: true,
+          board: game.board.grid,
+          teamPlayer: team,
+          playerGreen: name
+        }))
+      } else {
+        setGame((prevState) => ({
+          ...prevState,
+          host: false,
+          teamPlayer: team,
+          cleanBoard: game.board.grid,
+          board: game.board.grid,
+          playerBlue: name,
+          gameId: currentId
+        }))
+      }
+    })
   }
 
   return (
     <>
-      <h2>Main menu</h2>
-      <button onClick={handleNewGameClick} disabled={newGameClicked}>New Game</button>
-      <button onClick={handleJoinGameClick} disabled={joinGameClicked} id='join'>Join game</button>
+      <img className='tittle-main' src='../tittle.png' alt='tittle' />
+      {!showLogin && !showLobby && (
+        <>
+          <h2>MENU</h2>
+          <button className='btn' onClick={handleNewGameClick} disabled={newGameClicked} onMouseEnter={() => playSound(buttonSound)}>
+            NEW GAME
+          </button>
+          <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={() => playSound(buttonSound)} id='join'>
+            JOIN GAME
+          </button>
+
+        </>
+      )}
       {
-        message.length !== 0 &&
+      showLogin &&
+        <Login
+          game={game}
+          setNameGreen={setNameGreen}
+          cuandoSeJoinea={cuandoSeJoinea}
+          nameGreen={nameGreen}
+          playSound={playSound}
+        />
+      }
+      {
+        showLobby && (
           <>
-            <p className='message'>{message}</p>
-            <p className='message'>Game id: {game.gameId}</p>
+            <button className='btn' onClick={handleJoinGameClick} disabled={joinGameClicked} onMouseEnter={() => playSound(buttonSound)} id='join'>
+              REFRESH GAMES
+            </button>
+            {
+              allGames.length > 0 && <Lobby allGames={allGames} cuandoSeJoinea={cuandoSeJoinea} playSound={playSound} />
+            }
           </>
+        )
       }
-      {
-        game.gameId !== null && // revisar esto
-          <>
-            <label>
-              <input
-                type='text'
-                placeholder='Insert name'
-                value={nameGreen}
-                onChange={(e) => {
-                  setNameGreen(e.target.value)
-                }}
-              />
-              <button
-                onClick={() => joinAs('GREEN', nameGreen, game.gameId)}
-                disabled={!nameGreen}
-              >Join
-              </button>
-            </label>
-          </>
-      }
-      {
-        allGames.length > 0 && <Lobby allGames={allGames} joinAs={joinAs} />
-      }
+      <Toaster />
     </>
   )
 }

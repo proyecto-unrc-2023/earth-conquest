@@ -15,8 +15,8 @@ from app.backend.models.teleporter import Teleporter
 
 MODIFIERS_CANT = 2
 
-GREEN_OVNI_LIFE = 100
-BLUE_OVNI_LIFE = 100
+GREEN_OVNI_LIFE = 10
+BLUE_OVNI_LIFE = 10
 
 
 class Board:

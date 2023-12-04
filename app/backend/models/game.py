@@ -330,3 +330,4 @@ class GameAliensSchema(Schema):
     alive_blue_aliens = fields.Integer()
     board = fields.Nested(BoardSchema(), only=(
         'blue_ovni_life', 'green_ovni_life', 'cells'))
+

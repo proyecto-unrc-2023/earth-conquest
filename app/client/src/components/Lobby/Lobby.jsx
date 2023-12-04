@@ -1,31 +1,35 @@
 import { useState } from 'react'
 import './Lobby.css'
+import buttonSound from '../../sound/select.mp3'
 
-export const Lobby = ({ allGames, joinAs }) => {
+export const Lobby = ({ allGames, cuandoSeJoinea, playSound }) => {
   const [nameBlue, setNameBlue] = useState(new Array(allGames.length).fill(''))
 
+  // Setea el usuario BLUE en la posicion correspondiente del lobby
   const handleNameBlueChange = (name, index) => {
     const updatedNameBlue = [...nameBlue]
     updatedNameBlue[index] = name
     setNameBlue(updatedNameBlue)
   }
 
-  const handleJoinPlayer = (index, gameId) => {
-    joinAs('BLUE', nameBlue[index], gameId)
+  // Joinea en jugador que entro en el lobby
+  const handleJoinPlayer = (index, currentGameId) => {
+    cuandoSeJoinea('BLUE', nameBlue[index], currentGameId)
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Game Id</th>
-          <th>Blue Player</th>
-          <th>Green Player</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
+    <div className='tabla-scroll'>
+      <table>
+        <thead>
+          <tr>
+            <th>Game Id</th>
+            <th>Blue Player</th>
+            <th>Green Player</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
           allGames.map((game, index) => {
             return (
 
@@ -45,6 +49,8 @@ export const Lobby = ({ allGames, joinAs }) => {
                     <button
                       onClick={() => handleJoinPlayer(index, game.game_id)}
                       disabled={!nameBlue[index]}
+                      onMouseEnter={() => playSound(buttonSound)}
+                      className='btn-lobby'
                     >Join
                     </button>
                   </label>
@@ -54,7 +60,8 @@ export const Lobby = ({ allGames, joinAs }) => {
             )
           })
         }
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   )
 }

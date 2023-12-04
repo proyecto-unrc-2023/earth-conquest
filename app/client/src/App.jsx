@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { Game } from './components/Game/Game'
 import { Menu } from './components/Menu/Menu'
 import { gameStatus } from './constants'
-import { startGame } from './services/appService'
+import { startGame, API } from './services/appService'
+import { GameOver } from './components/GameOver/GameOver'
 
 function App () {
   const [game, setGame] = useState({
     gameId: null,
     board: null,
-    statusGame: gameStatus.NOT_STARTED,
+    cleanBoard: null,
+    statusGame: null,
     host: null,
     playerBlue: null,
     playerGreen: null,
@@ -18,111 +20,100 @@ function App () {
     blueOvniLife: null,
     greenOvniLife: null,
     aliveGreenAliens: null,
-    aliveBlueAliens: null
+    aliveBlueAliens: null,
+    winner: null
   })
-  /*
-  setGame((prevState) => ({
-    ...prevState,
-    board: nuevoValorDeLaTabla,
-  }))
-  */
+  const [originalBoard, setOriginalBoard] = useState(null)
 
   /*
-  const hash = {
-    '(6, 14)': {
-      aliens: [],
-      modifier: null,
-      alterator: null
-    },
-    '(6, 13)': {
-      aliens: [
-        {
-          id: 38,
-          eyes: 1,
-          team: 'BLUE'
-        }
-      ],
-      modifier: null,
-      alterator: null
-    }
-  }
+    Funcion que reproduce sonidos pasando la ruta como parametro
   */
-  /*
-  const actualizarBoardConHash = (nuevoHash) => {
-    const newBoard = [...game.board]
-    for (const position in nuevoHash) {
-      if (nuevoHash.hasOwnProperty(position)) {
-        const [row, col] = position
-          .slice(1, -1)
-          .split(', ')
-          .map(coord => Number(coord))
-
-        // Actualizar la matriz board con los datos de la celda correspondiente.
-        newBoard[row][col] = nuevoHash[position]
-      }
-    }
+  const playSound = (sound) => {
+    // eslint-disable-next-line no-undef
+    const audio = new Audio(sound)
+    audio.play()
+    return audio
   }
-  */
 
   useEffect(() => {
-    if (game.gameId) {
-      // eslint-disable-next-line no-undef
-      const sse = new EventSource(`http://localhost:5000/games/sse/${game.gameId}`)
-      console.log('SSE ACTIVO')
+    let sse
+    // actualiza atributos de game
+    const handleGameUpdate = (data) => {
+      setGame((prevState) => ({
+        ...prevState,
+        statusGame: data.status
+      }))
+      setOriginalBoard(data.board.grid)
 
-      sse.onmessage = e => {
-        const data = JSON.parse(e.data)
+      if (data.status !== gameStatus.STARTED) {
         setGame((prevState) => ({
           ...prevState,
-          statusGame: data.status
+          board: data.board.grid,
+          cleanBoard: data.board.grid,
+          greenOvniRange: data.board.green_ovni_range,
+          blueOvniRange: data.board.blue_ovni_range,
+          playerBlue: data.blue_player,
+          playerGreen: data.green_player
         }))
-        if (data.status !== gameStatus.STARTED) {
-          console.log(data)
+
+        if (game.playerBlue && game.playerGreen) {
+          if (!game.host) startGame(game.gameId)
           setGame((prevState) => ({
             ...prevState,
-            greenOvniRange: data.board.green_ovni_range,
-            blue_ovni_range: data.board.blue_ovni_range,
-            playerBlue: data.blue_player,
-            playerGreen: data.green_player
+            statusGame: gameStatus.STARTED
           }))
-          actualizarBoardConHash(data.board.cells)
-          if (game.playerBlue && game.playerGreen) {
-            console.log('STARTEO DESDE SSE')
-            if (!game.host) startGame(game.gameId)
-          }
+          sse.close()
         }
+      }
+    }
+
+    const startSEE = () => {
+      sse = new window.EventSource(API + `games/sse/${game.gameId}`)
+      sse.onmessage = e => {
+        const data = JSON.parse(e.data)
+        handleGameUpdate(data)
       }
 
       sse.onerror = () => {
-        // error log here
         sse.close()
       }
+    }
 
-      return () => {
+    if (game.gameId) {
+      startSEE()
+    }
+
+    return () => {
+      if (sse) {
         sse.close()
       }
-    } else {
-      console.log('Entre al else del sse')
     }
   }, [game.playerBlue, game.playerGreen])
 
   return (
     <main>
       {
-          game.statusGame !== gameStatus.STARTED &&
-            <Menu
-              game={game}
-              setGame={setGame}
-            />
-        }
+        (game.statusGame === gameStatus.NOT_STARTED || game.statusGame === null) &&
+          <Menu
+            game={game}
+            setGame={setGame}
+            playSound={playSound}
+          />
+      }
       {
-          game.statusGame === gameStatus.STARTED &&
-            <Game
-              game={game}
-              setGame={setGame}
-              startGame={startGame}
-            />
-        }
+        game.statusGame === gameStatus.STARTED &&
+          <Game
+            game={game}
+            setGame={setGame}
+            startGame={startGame}
+            playSound={playSound}
+            originalBoard={originalBoard}
+          />
+      }
+      {game.statusGame === gameStatus.OVER &&
+        <GameOver
+          game={game}
+        />}
 
     </main>
   )

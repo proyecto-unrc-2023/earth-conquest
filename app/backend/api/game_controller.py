@@ -112,6 +112,7 @@ class GameController:
         try:
             # REFRESH: Move aliens
             game.refresh_board()
+            print("==================== HICE EL REFRESH =============")
             game.spawn_aliens_tick += 1
             games_dict[id] = game
             game_schema = GameAliensSchema()
@@ -124,6 +125,7 @@ class GameController:
                 game.spawn_aliens()
 
             game.act_board()
+            print("=====================ACTUOOOOOOOOOOOO=============")
             games_dict[id] = game
             r.set('game_status', json.dumps(game_schema.dump(game)))
 
@@ -250,7 +252,7 @@ class GameController:
                     'errors': str(e)
                 }
             )
-            return Response(message, status=400, mimetype='application/json')
+            return Response(message, status=200, mimetype='application/json')
 
         games_dict[id] = game
         game_schema = GameAliensSchema()
@@ -284,6 +286,8 @@ class GameController:
                 return Response(message, status=400, mimetype='application/json')
 
             games_dict[id] = game  # save the game on the dict
+            game_schema = GameSchema()
+            r.set('game_status', json.dumps(game_schema.dump(game)))
         except Exception as e:
             message = json.dumps(
                 {
