@@ -1,0 +1,55 @@
+.box-login{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 800px;
+  height: 450px;
+  border: 2px solid rgba(237, 195, 6, 0.844);
+  border-radius: 10px;
+  background-color: #000000ba;
+}
+
+.input{
+  width: 100%;
+  height: 15%;
+  background: transparent;
+  border: none;
+  padding-top: 10px;
+  outline: 0px;
+  border-bottom: 1px solid #eccd08;
+}
+
+.btn-login {
+  background-image: url('../boton.png');
+  background-size: contain; /* Cambio a 'contain' para ajustar la imagen sin distorsionar */
+  background-repeat: no-repeat; /* Evita la repetición de la imagen */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  width: 200px; /* Reduje el ancho del botón */
+  height: 100px; /* Reduje la altura del botón */
+  margin: 15px;
+  padding: 0.6em 1.2em;
+  font-size: 2em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+
+.tittle-main{
+  font-size: 7em;
+}
+
+
+.btn-login:hover {
+  border-color: #646cff;
+  color: #f7f56d;
+}
+.btn-login:focus,
+.btn-login:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+

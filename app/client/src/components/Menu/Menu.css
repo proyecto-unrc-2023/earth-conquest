@@ -1,0 +1,39 @@
+body{
+  background-image: url('../fondo8bit.jpg');
+}
+
+.btn{
+  background-image: url('../boton.png');
+  background-size: cover;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  width: 300px;
+  height: 140px;
+  margin: 15px;
+  padding: 0.6em 1.2em;
+  font-size: 2em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.tittle-main{
+  height: 270px;
+}
+
+
+.btn:hover {
+  border-color: #646cff;
+  color: #f7f56d;
+}
+.btn:focus,
+.btn :focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.message {
+  color: #0fd119;
+  font-weight: bold;
+}

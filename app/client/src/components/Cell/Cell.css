@@ -1,0 +1,57 @@
+.cell {
+  display: grid;
+  place-items: center;
+  width: 55px;
+  height: 55px;
+  border: 1px solid #00dc3b4b;
+  cursor: pointer;
+}
+
+.green{
+  background-image: url('../cesped2.png');
+  background-size: cover;
+}
+
+.blue{
+  background-color: rgba(0, 115, 255, 0.407);
+}
+
+.grey{
+  background-color: rgba(0, 0, 0, 0.407);
+}
+
+.in {
+  background-color: rgba(174, 0, 255, 0.407);
+  z-index: 100;
+}
+
+.green_nave{
+  display: grid;
+  place-items: center;
+  position: absolute;
+  width: 10vw;
+  transform: translate(-5px, -50px);
+  rotate: -1deg;
+  opacity: 90%;
+  animation: levitar 2s ease-in-out infinite;
+  z-index: 99;
+}
+
+.blue_nave{
+  position: absolute;
+  width: 10vw;
+  transform: translate(10px, -40px);
+  rotate: 1deg;
+  opacity: 90%;
+  animation: levitar 2s ease-in-out infinite;
+  z-index: 99;
+}
+
+@keyframes levitar {
+  0%, 100% {
+      transform: translate(0, 0);
+  }
+  50% {
+      transform: translate(0, -10px); /* Cambia la distancia de levitación */
+  }
+}

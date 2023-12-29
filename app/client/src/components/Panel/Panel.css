@@ -1,0 +1,95 @@
+.alterators-panel{
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center; 
+  border: 1px solid rgba(211, 6, 181, 0.328);
+  background-color: #161616c0;
+  width: 50%; 
+  margin: 0 auto; /* Centrar la sección horizontalmente */
+  padding: 3px;
+}
+
+.tittle{
+  font-size: 1.1em;
+}
+
+.buttons{
+  display: flex;
+  flex-wrap: wrap; /* Permite que los botones se envuelvan a la siguiente línea */
+  justify-content: space-evenly; /* Espaciado entre botones */
+  gap: 10px; /* Espacio entre botones */
+}
+
+.type_dir{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly; /* Espaciado entre botones */
+  gap: 5px; /* Espacio entre botones */
+}
+
+button {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  width: 130px;
+  height: 80px;
+  border-radius: 8px;
+  border: 1px solid #bb01a2c0;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #161616;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.button_img_trap{
+  width: 24px;
+}
+
+.button_img_teleport{
+  width: 4vw;
+}
+
+.button_img_dir{
+  width: 3vw;
+}
+
+.button_img_teleport1{
+  width: 2vw;
+}
+
+.button_img_dir1{
+  width: 1vw;
+}
+
+.box-value{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 40px;
+}
+.value{
+  font-size: 1em;
+}
+
+.alien-value{
+  position: relative;
+  width: 30px;
+}

@@ -1,0 +1,55 @@
+table {
+  overflow: auto;
+}
+
+.tabla-scroll {
+  width: 1100px;
+  height: 400px;
+  background-color: #131313;
+  border-radius: 10px;
+  border: #919191 solid 1px;
+  overflow: auto; /* Permite el desplazamiento cuando el contenido excede el tamaño especificado */
+}
+
+.tabla-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-scroll th, .tabla-scroll td {
+  border: 1px solid #000; 
+  padding: 8px; 
+}
+
+.btn-lobby{
+  background-image: url('../boton.png');
+  background-size: contain; 
+  background-repeat: no-repeat; 
+  border-radius: 8px;
+  border: 1px solid transparent;
+  width: 100px; 
+  height: 50px; 
+  margin: 15px;
+  padding: 0.6em 1.2em;
+  font-size: 1.3em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1e1e1e;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.lobby-label{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-lobby:hover {
+  border-color: #646cff;
+  color: #f7f56d;
+}
+.btn-lobby:focus,
+.btn-lobby:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

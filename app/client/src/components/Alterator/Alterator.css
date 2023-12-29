@@ -1,0 +1,24 @@
+.alterator {
+  display: grid;
+  place-items: center;
+  position: absolute;
+}
+
+.img_trap{
+  width: 40px;
+  height: 60px;
+  position: absolute;
+  z-index: 20;
+}
+
+.img_directioner{
+  width: 40px;
+  height: 40px;
+  z-index: 5;
+}
+
+.img_teleporter {
+  width: 120px;
+  height: 90px;
+  z-index: 5;
+}

@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image: url('../fondo_estrella.jpg');
+  background-size: cover;
+  margin: 0%;
+  top: 0%;
+}
+
+.statsGame {
+  display: grid;
+  justify-items: center;
+  width: 90%;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns:repeat(2, 1fr);
+  grid-template-areas: 
+    "health-bar-green health-bar-blue"
+    "green_user_info blue_user_info";
+  margin: 20px 10px;
+}
+
+.btn-play-pause{
+  width: 20px;
+  height: auto;
+  background: url(../pause.png);
+  background-color: rgb(93, 99, 99);
+  border-radius: 100%;
+}
+
+.icons-play-pause{
+  width: 20px;
+  height: auto;
+}
